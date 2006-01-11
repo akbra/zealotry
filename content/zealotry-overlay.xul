@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<overlay id="zealotryOverlay" 
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <menupopup id="menu_ToolsPopup">
+    <menuitem label="Hello World" position="1" />
+  </menupopup>
+
+</overlay>
