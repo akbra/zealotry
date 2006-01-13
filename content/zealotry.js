@@ -26,7 +26,7 @@
  *
  */
 
-const ZEALOUS_VERSION = "0.7a";
+const ZEALOUS_VERSION = "0.7.3";
 const POLL_DELAY = 50;
 
 var munge_buffer = "";
@@ -259,7 +259,7 @@ function mainStep()
                           );
 
     /* window.client.connection.onClose = onClose; */
-    displayLine("SVN Zealous version " + ZEALOUS_VERSION + " loading...");
+    displayLine("SVN Zealotry version " + ZEALOUS_VERSION + " loading...");
 
     var obj = document.getElementById("input");
 
