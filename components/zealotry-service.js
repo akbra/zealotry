@@ -43,6 +43,7 @@ const kPROTOCOL_CONTRACTID = "@mozilla.org/network/protocol;1?name=" + kSCHEME;
 const kPROTOCOL_CID = Components.ID("c8c7dbba-8405-11da-b434-00a0cc5ad2cf");
 
 // Mozilla defined
+const kCHROMEHANDLER_CID_STR = "{61ba33c0-3031-11d3-8cd0-0060b0fc14a3}";
 const kSIMPLEURI_CONTRACTID = "@mozilla.org/network/simple-uri;1";
 const kIOSERVICE_CONTRACTID = "@mozilla.org/network/io-service;1";
 const nsISupports = Components.interfaces.nsISupports;
@@ -86,6 +87,9 @@ Protocol.prototype =
             // aURI is a nsIUri, so get a string from it using .spec
             var myURL = aURI.spec;
 
+            var chrome_service = Components.classesByID[kCHROMEHANDLER_CID_STR].getService()
+            .QueryInterface(nsIProtocolHandler);
+            
             // strip away the kSCHEME: part
             myURL = myURL.substring(myURL.indexOf(":") + 1, myURL.length);
 
@@ -131,7 +135,13 @@ Protocol.prototype =
             /* create dummy nsIURI and nsIChannel instances */
             var ios = Components.classes[kIOSERVICE_CONTRACTID].getService(nsIIOService);
 
-            return ios.newChannel("chrome://zealotry/content/zealotry.xul?char=" + ugArr[0] + "&baseurl=" + ugArr[1], null, null);
+            var yuri = ios.newURI("chrome://zealotry/content/zealotry.xul", null, null);
+            
+            return ios.newChannel("chrome://zealotry/content/zealotry.xul?char=" + ugArr[0] + "&baseurl=" + ugArr[1], null, yuri);
+            
+            // return chrome_service.newChannel(furry);
+            // return ios.newChannel("chrome://zealotry/content/zealotry.xul?char=" + ugArr[0] + "&baseurl=" + ugArr[1]);
+            // return ios.newChannel("javascript:document.location.href='zealotry.xul?char=" + ugArr[0] + "&baseurl=" + ugArr[1] + "';", null, null);
         },
     }
 
