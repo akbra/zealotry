@@ -172,7 +172,7 @@ function zealotry_doContent(contentType, preferred, request, contentHandler, cou
     args.url = channel.URI.spec;
 
     hiddenWin.ZealotryStarting = new Date();
-    hiddenWin.openDialog("chrome://zealotry/content/zealous.xul", "_blank",
+    hiddenWin.openDialog("chrome://zealotry/content/zealotry.xul", "_blank",
                          "chrome,menubar,toolbar,status,resizable,dialog=no",
                          args);
     
@@ -255,6 +255,7 @@ var ZEALOTRYProtocolHandlerFactory = new Object();
 ZEALOTRYProtocolHandlerFactory.createInstance =
 function zealotryphf_createInstance(outer, iid)
 {
+    alert("zealotryphf_createInstance(" + outer + ", " + iid + ")");
     if (outer != null) {
         throw Components.results.NS_ERROR_NO_AGGREGATION;
     }
