@@ -133,8 +133,8 @@ function onMainLoad()
         window.charName = ugArr[0];
         window.baseURL = "http://" + ugArr[1] + "/";
             
-        if (args["baseurl"]) {
-            h = args["baseurl"];
+        if (ugArr[1]) {
+            h = ugArr[1]; // args["baseurl"];
             ix = h.indexOf(".");
             if (ix >= 0) {
                 window.gameName = h.substring(0, ix);
