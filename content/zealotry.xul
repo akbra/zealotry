@@ -304,49 +304,51 @@
   <vbox style="-moz-box-flex: 1">
     <toolbox>
      <menubar id="sample-menubar">
-       <menu id="file-menu" label="File">
+       <menu id="file-menu" label="File" accesskey="F">
          <menupopup id="file-popup" onpopupshowing="fileMenuInit();">
-           <menuitem id="menuitem_logging" type="checkbox"
+           <menuitem id="menuitem_logging" type="checkbox" accesskey="L"
                      label="Logging..." oncommand="onToggleLogging(event);"/>
-           <menuitem id="menuitem_autolog" type="checkbox"
+           <menuitem id="menuitem_autolog" type="checkbox" accesskey="A"
                      label="AutoLog..." oncommand="onToggleAutoLog(event);"/>
-           <menuitem id="menuitem_echo" type="checkbox"
+           <menuitem id="menuitem_echo" type="checkbox" acesskey="E" 
                      label="Echo" oncommand="onToggleEcho(event);"/>
            <menuseparator/>
-           <menuitem label="Exit" oncommand="window.close();"/>
+           <menuitem label="Exit" oncommand="window.close();" keycode="VK_F4"/>
          </menupopup>
        </menu>
-       <menu id="edit-menu" label="Edit">
+       <menu id="edit-menu" label="Edit" accesskey="E">
          <menupopup id="edit-popup" onpopupshowing="editMenuInit();">
-           <menuitem id="menuitem_copy" label="Copy"   oncommand="onCopy();"/>
-           <menuitem id="menuitem_paste" label="Paste" oncommand="onPaste();"/>
+           <menuitem id="menuitem_copy" label="Copy"   oncommand="onCopy();" accesskey="C"/>
+           <menuitem id="menuitem_paste" label="Paste" oncommand="onPaste();" accesskey="P"/>
            <menuseparator/>
-           <menuitem label="Load Macros" oncommand="window.myMacros.processMacroCommand('LOAD');"/>
-           <menuitem label="Save Macros" oncommand="window.myMacros.processMacroCommand('STORE');"/>
+           <menuitem label="Load Macros" accesskey="O" oncommand="window.myMacros.processMacroCommand('LOAD');"/>
+           <menuitem label="Save Macros" accesskey="A" oncommand="window.myMacros.processMacroCommand('STORE');"/>
            <menuseparator/>
-           <menuitem label="Load Config" oncommand="readConfigurationFile('menu');"/>
-           <menuitem label="Save Config" oncommand="writeConfigurationFile();"/>
+           <menuitem label="Load Config" accesskey="L" oncommand="readConfigurationFile('menu');"/>
+           <menuitem label="Save Config" accesskey="S" oncommand="writeConfigurationFile();"/>
          </menupopup>
        </menu>
-       <menu id="font-and-size" label="Font">
+       <menu id="font-and-size" label="Options" accesskey="O">
          <menupopup id="fonts-and-sizes-menu">
-           <menu id="fonts" label="Style">
+           <menu id="fonts" label="Style" accesskey="S">
              <menupopup id="font-list">
              </menupopup>
            </menu>
-           <menu id="sizes" label="Size">
+           <menu id="sizes" label="Size" accesskey="Z">
              <menupopup id="sizes-menu"/>
            </menu>
+  	   <menuseparator/>
+	   <menuitem label="Dictionary Lookup" key="dict-key" oncommand="helpMenuInit('dictionary');"/>
+           <menuseparator/>
+           <menuitem label="Change Background" accesskey="C" oncommand="changeBg();"/>
          </menupopup>
        </menu>
-       <menu id="help" label="Help">
+       <menu id="help" label="Help" accesskey="H">
 	<menupopup id="help-popup">
-	  <menuitem label="Help Contents" oncommand="helpMenuInit('content');"/>
-          <menuitem label="Changelog Notes" oncommand="helpMenuInit('changelog');"/>
+	  <menuitem label="Help Contents" oncommand="helpMenuInit('content');" accesskey="H"/>
+          <menuitem label="Changelog Notes" oncommand="helpMenuInit('changelog');" accesskey="C"/>
 	  <menuseparator/>
-          <menuitem label="Dictionary Lookup" key="dict-key" oncommand="helpMenuInit('dictionary');"/>
-          <menuseparator/>
-	  <menuitem label="About Zealotry" oncommand="helpMenuInit('about');"/>
+	  <menuitem label="About Zealotry" oncommand="helpMenuInit('about');" accesskey="A"/>
 	</menupopup>
        </menu>
      </menubar>

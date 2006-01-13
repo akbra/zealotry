@@ -1362,3 +1362,31 @@ function doBgSetup(arr)
     document.getElementById('center-frame').style.background = 'white url(' + this.bgImage + ') no-repeat';
     document.getElementById('scrollback').style.background = 'white url(' + this.bgImage + ') no-repeat';
 }
+
+function changeBg()
+{
+    try {
+        pm.enablePrivilege(privs);
+    } catch (err) {
+        alert("I failed enablePrivilege: " + err);
+        return;
+    }
+
+    var url = prompt("What is the URL to the background image you'd like to use?");
+    if (url) {
+	document.getElementById('center-frame').style.background = 'white url(' + url + ') no-repeat';
+	if (confirm("Is this ok?")) {
+		try {
+        		pm.enablePrivilege(privs);
+   	    	} catch (err) {
+        		alert("I failed enablePrivilege: " + err);
+        		return;
+    	    	}
+	        var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+        	pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+        	pref.setCharPref(zealousPreference("background"), url);
+	} else {
+		doBgSetup();
+	}
+    }
+}
