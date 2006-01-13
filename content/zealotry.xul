@@ -4,7 +4,7 @@
 	xmlns:html="http://www.w3.org/1999/xhtml"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	onload="onMainLoad();" onunload="onUnLoad();"
-	style="width:760px; height:480px"
+	style="width:760px; height:480px;"
 	title="Zealotry"
 	orient="vertical" persist="width height" windowtype="skotos:zealotry">
 
@@ -79,6 +79,7 @@
     	var fontNameStr;
     	var fontName;
         var found     = new Array();
+        var i, j;
 
     	for (i = 0; i < lsz; i++) {
     	    for (j = 0; j < fsz; j++) {
@@ -109,7 +110,7 @@
         		elements[letter] = d.createElement('menupopup');
         		elements[letter].setAttribute('id', 'p_' + letter);
             }
-           var item = d.createElement('menuitem');
+            var item = d.createElement('menuitem');
             item.setAttribute('id', 'fm_' + menuitems[z]);
             item.setAttribute('label', menuitems[z]);
             item.setAttribute('oncommand', 'setFont("' + menuitems[z] + '");');
@@ -118,7 +119,7 @@
         }
     	// Loop over 'A' to 'Z":
     	for (var z = 65; z <= 90; z++) {
-    	    chr = String.fromCharCode(z);
+    	    var chr = String.fromCharCode(z);
     	    if (elements[chr]) {
         		var menu = d.createElement('menu');
         		menu.setAttribute('id', 'm_'+chr);
@@ -297,6 +298,9 @@
 	  style="-moz-box-flex: 0; width: 145px; height=100%; overflow: hidden"
 	  src="about:blank"/>
 
+  <keyset>
+    <key id="dict-key" keycode="VK_F2" oncommand="helpMenuInit('dictionary');"/>
+  </keyset>
   <vbox style="-moz-box-flex: 1">
     <toolbox>
      <menubar id="sample-menubar">
@@ -320,7 +324,7 @@
            <menuitem label="Load Macros" oncommand="window.myMacros.processMacroCommand('LOAD');"/>
            <menuitem label="Save Macros" oncommand="window.myMacros.processMacroCommand('STORE');"/>
            <menuseparator/>
-           <menuitem label="Load Config" oncommand="readConfigurationFile();"/>
+           <menuitem label="Load Config" oncommand="readConfigurationFile('menu');"/>
            <menuitem label="Save Config" oncommand="writeConfigurationFile();"/>
          </menupopup>
        </menu>
@@ -335,6 +339,16 @@
            </menu>
          </menupopup>
        </menu>
+       <menu id="help" label="Help">
+	<menupopup id="help-popup">
+	  <menuitem label="Help Contents" oncommand="helpMenuInit('content');"/>
+          <menuitem label="Changelog Notes" oncommand="helpMenuInit('changelog');"/>
+	  <menuseparator/>
+          <menuitem label="Dictionary Lookup" key="dict-key" oncommand="helpMenuInit('dictionary');"/>
+          <menuseparator/>
+	  <menuitem label="About Zealotry" oncommand="helpMenuInit('about');"/>
+	</menupopup>
+       </menu>
      </menubar>
     </toolbox>
     <!-- html:div
@@ -347,8 +361,7 @@
 	type="content" 
 	style="min-height: 70%; max-height: 70%;" src="about:blank"/>
     <splitter id="scroll_splitter" state="collapsed" collapse="before"/>
-    <iframe name="center-frame" id="center-frame" type="content" flex="1"
-	    src="about:blank"/>
+    <iframe name="center-frame" id="center-frame" type="content" flex="1" src="about:blank"/>
     <splitter state="open" collapse="before"/>
     <textbox autostretch="true" style="margin: 0; padding: 0" onkeypress="onInput();" rows="2" multiline="true" id="input"/>
   </vbox>

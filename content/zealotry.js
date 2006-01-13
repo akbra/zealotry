@@ -26,7 +26,7 @@
  *
  */
 
-const ZEALOUS_VERSION = "0.6";
+const ZEALOUS_VERSION = "0.7a";
 const POLL_DELAY = 50;
 
 var munge_buffer = "";
@@ -35,6 +35,7 @@ var scroll_splitter = null;
 var scrollback = null;
 var scrolling = false;
 var scrolltarg = null;
+
 
 function makeCharName()
 {
@@ -182,6 +183,7 @@ function onMainLoad()
     cf.setAttribute("src", baseURL + "Center.sam?zealous=" + ZEALOUS_VERSION);
     rf.setAttribute("src", baseURL + "Right.sam?zealous="  + ZEALOUS_VERSION);
 
+    doBgSetup();
 
     // we have to use a polling system to support mozilla 1.0
     
@@ -257,7 +259,7 @@ function mainStep()
                           );
 
     /* window.client.connection.onClose = onClose; */
-    displayLine("SVN Zealous loading...");
+    displayLine("SVN Zealous version " + ZEALOUS_VERSION + " loading...");
 
     var obj = document.getElementById("input");
 
@@ -320,8 +322,8 @@ function onWindowKeyPress(e)
                 // scrollback.contentDocument.body.
                 //     setAttribute('style', window.client.topmost_output.getAttribute('style'));
                 scroll_splitter.setAttribute('state', 'open');
-		scrollback.contentDocument.body.scrollTop = scrollback.contentDocument.body.scrollHeight;
                 doScroll();
+	        scrollback.contentDocument.body.scrollTop = scrollback.contentDocument.body.scrollHeight;
                 scrolling = true;
             }
             onPageUp();
@@ -360,6 +362,7 @@ function onPageDown()
     else
         w.scrollTo(w.pageXOffset, (w.innerHeight + w.pageYOffset));
     return newOfs < w.scrollMaxY;
+
 }
 
 function onPageUp()
@@ -367,11 +370,17 @@ function onPageUp()
     pm.enablePrivilege(privs);
     var w = scrollback.contentWindow; // window.center_frame;
 
-    newOfs = w.pageYOffset - (w.innerHeight / 2);
+    if (w.scrollMaxY == w.pageYOffset) {
+	newOfs = w.pageYOffset - 1;
+    } else {
+	newOfs = w.pageYOffset - (w.innerHeight / 2);
+    }
+
     if (newOfs > 0)
         w.scrollTo(w.pageXOffset, newOfs);
     else
         w.scrollTo(w.pageXOffset, 0);
+
 }
 
 function handleInputLine(str) {
@@ -853,7 +862,7 @@ function escapeSkotosLink(s)
 }
 
 function mungeForDisplay(str) {
-    var element, style, pop;
+    var element, style, pop, arr;
 
     /*
      * Add chopped munge-data.
@@ -871,9 +880,8 @@ function mungeForDisplay(str) {
         element = document.createElementNS("http://www.w3.org/1999/xhtml",
                                            "html:pre");
     } else if (arr = (/<body bgcolor=\'([^\']*)\' text=\'([^\']*)\'[^>]*>/i).exec(str)) {
-        frames["center-frame"].document.body.style.backgroundColor = arr[1];
-        frames["center-frame"].document.body.style.color           = arr[2];
-        scrollback.contentDocument.body.style.backgroundColor = arr[1];
+	doBgSetup(arr);
+        frames["center-frame"].document.body.style.color = arr[2];
         scrollback.contentDocument.body.style.color = arr[2];
     } else if (arr = (/<a xch_cmd='([^>]*)'>/i).exec(str)) {
         element = document.createElementNS("http://www.w3.org/1999/xhtml",
@@ -1018,7 +1026,7 @@ function safe(s) {
     return s.replace(/[\/\:]/g, "_");
 }
 
-function readConfigurationFile() {
+function readConfigurationFile(str) {
     try {
         pm.enablePrivilege(privs);
     } catch (err) {
@@ -1061,6 +1069,27 @@ function readConfigurationFile() {
         }
         configFile.close();
         outputLine("[CONFIG: Finished reading configuration]");
+        return;
+    }
+
+    // Unable to locate the config file.. lets give them a chance to locate it manually
+    if(str == "menu") {
+	var nsIFilePicker = Components.interfaces.nsIFilePicker;
+	var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+  	filePicker.init(window, "Please Select Your Zealous Config File...", nsIFilePicker.modeGetFile);
+       	var res = filePicker.show();
+   	if (res == nsIFilePicker.returnCancel) {
+        return;
+	}
+  	var configFile = new File(filePicker.file.path);
+	configFile.open("r");
+	while(!configFile.EOF) {
+		var configLine = configFile.readline();
+		handleCommands(configLine);
+	}
+	configFile.close();
+	outputLine("[CONFIG: Finished reading configuration]");
+	return;
     }
 }
 
@@ -1268,4 +1297,52 @@ function doFontStyleAndSize()
 
     setSize(this.fontSize);
     // frames["center-frame"].document.body.style.fontSize = this.fontSize;
+}
+
+function helpMenuInit(str) 
+{
+    switch(str) {
+	case "about": // Open about dialog
+		window.open("aboutzealous.html", "aboutWindow", 'width=400, height=550, screenX=100, screenY=100');
+		return;
+
+	case "changelog": // Open changelog dialog
+		window.open("changelog.html", "changeWindow", 'width=450, height=500, screenX=100, screenY=100, scrollbars=yes');
+		return;
+	case "dictionary": // Open dictionary prompt
+		var word = prompt("What word do you wish to define?");
+		if (word) {
+			var DICT = "http://www.dictionary.net/";
+		        window.open(DICT + word, 'Dictionary', 'height=200,width=650,scrollbars=yes,screenX=100,screenY=100');
+		}
+		return;	
+	case "content": // Open help contents dialog
+		window.open("aboutzealous.html", "aboutContent", 'width=400, height=550, screenX=100, screenY=100');
+		return;
+    }
+}
+
+function doBgSetup(arr)
+{
+    try {
+        pm.enablePrivilege(privs);
+    } catch (err) {
+        alert("I failed enablePrivilege: " + err);
+        return;
+    }
+
+    try {
+	var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+	pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+        this.bgImage = pref.getCharPref(zealousPreference("background"));
+    } catch (err) {
+	if (arr) {
+	        document.getElementById('center-frame').style.background = arr[1];
+		document.getElementById('scrollback').style.background = arr[1];
+		return;
+	}
+	return;
+    }
+    document.getElementById('center-frame').style.background = 'white url(' + this.bgImage + ') no-repeat';
+    document.getElementById('scrollback').style.background = 'white url(' + this.bgImage + ') no-repeat';
 }
