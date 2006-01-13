@@ -65,7 +65,7 @@ Protocol.prototype =
         },
 
         scheme: kSCHEME,
-        defaultPort: -1,
+        defaultPort: 12645,
         protocolFlags: nsIProtocolHandler.URI_NORELATIVE |
         nsIProtocolHandler.URI_NOAUTH,
 
@@ -83,6 +83,7 @@ Protocol.prototype =
 
         newChannel: function(aURI)
         {
+            alert("newChannel");
             // aURI is a nsIUri, so get a string from it using .spec
             var myURL = aURI.spec;
 
@@ -122,9 +123,9 @@ ProtocolFactory.createInstance = function (outer, iid)
  * us with a starting point.
  */
 
-var TestModule = new Object();
+var ZealotryModule = new Object();
 
-TestModule.registerSelf = function (compMgr, fileSpec, location, type)
+ZealotryModule.registerSelf = function (compMgr, fileSpec, location, type)
 {
     compMgr = compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
     compMgr.registerFactoryLocation(kPROTOCOL_CID,
@@ -135,7 +136,7 @@ TestModule.registerSelf = function (compMgr, fileSpec, location, type)
                                     type);
 }
 
-TestModule.getClassObject = function (compMgr, cid, iid)
+ZealotryModule.getClassObject = function (compMgr, cid, iid)
 {
     if (!cid.equals(kPROTOCOL_CID))
     throw Components.results.NS_ERROR_NO_INTERFACE;
@@ -146,12 +147,12 @@ TestModule.getClassObject = function (compMgr, cid, iid)
     return ProtocolFactory;
 }
 
-TestModule.canUnload = function (compMgr)
+ZealotryModule.canUnload = function (compMgr)
 {
     return true;
 }
 
 function NSGetModule(compMgr, fileSpec)
 {
-    return TestModule;
+    return ZealotryModule;
 }
