@@ -23,6 +23,7 @@
 	</em:file>
 	
 	<em:name>Skotos Zealotry</em:name>
+	<em:updateURL>http://zealotry.enrogue.com/update.rdf</em:updateURL>
 	<em:description>A Mozilla extension based on Skotos' Zealous MUD client</em:description>
 	<em:creator>Skotos Tech</em:creator>
 	<em:contributor>Erwin Harte</em:contributor>
