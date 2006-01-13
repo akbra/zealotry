@@ -94,12 +94,11 @@ function onMainLoad()
         h = h.substr(9);
 
         // we should now have [user]@[game]
-        var ugArr = myURL.split("@");
+        var ugArr = h.split("@");
         if (ugArr.length != 2) {
             // failed to parse that url. maybe it's just the server. let's change user to *.
-            ugArr = ["*", myURL];
+            ugArr = ["*", h];
         }
-        // myURL = encodeURI(myURL);
         // do we recognize this server?
         var servList =
             {cm  : "marrach.skotos.net/Marrach/Zealous",
