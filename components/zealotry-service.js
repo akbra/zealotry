@@ -83,7 +83,6 @@ Protocol.prototype =
 
         newChannel: function(aURI)
         {
-            alert("newChannel");
             // aURI is a nsIUri, so get a string from it using .spec
             var myURL = aURI.spec;
 
