@@ -3,8 +3,8 @@
 <project name="zealotry" default="createxpi">
     
     <target name="createjar">
-	<zip destfile="zealotry.jar" basedir="." 
-	    includes="content/**" />
+	<zip destfile="chrome/zealotry.jar" basedir="chrome" 
+	    includes="content**" />
     </target>
 
     <target name="createxpi" depends="createjar">
@@ -12,7 +12,7 @@
 	    <zipfileset dir="." includes="zealotry.jar" 
 		prefix="chrome" />
 	    <zipfileset dir="." includes="install.rdf" />
-	    <zipfileset dir="." includes="components" />
+	    <zipfileset dir="." includes="components/**" />
 	</zip>
     </target>
     
