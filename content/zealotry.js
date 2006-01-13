@@ -102,12 +102,12 @@ function onMainLoad()
         // do we recognize this server?
         var servList =
             {cm  : "marrach.skotos.net/Marrach/Zealous",
-             mv  : "mv.skotos.net", // prolly need special stuff on that one, I think, but we'll see.
-             lc  : "lovecraft.skotos.net",
-             s7  : "skotos-seven.skotos.net",
-             laz : "lazarus.skotos.net",
-             ic  : "ironclaw.skotos.net",
-             stages : "stages.skotos.net"};
+             mv  : "mv.skotos.net/SAM/Prop/Mortalis:Theatre:Web:Zealous",
+             lc  : "lovecraft.skotos.net/Theatre/Zealous",
+             s7  : "skotos-seven.skotos.net/Theatre/Zealous",
+             laz : "lazarus.skotos.net/Theatre/Zealous",
+             ic  : "ironclaw.skotos.net/Theatre/Zealous",
+             stages : "stages.skotos.net/Theatre/Zealous"};
         
         var servMap =
             {cm : "cm",
