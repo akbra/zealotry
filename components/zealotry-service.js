@@ -38,34 +38,34 @@
 
 // Zealotry protocol related
 const kSCHEME = "zealotry";
-const kPROTOCOL_NAME = "Skotos Zealotry";
-const kPROTOCOL_CONTRACTID = "@mozilla.org/network/protocol;1?name=" + kSCHEME;
-const kPROTOCOL_CID = Components.ID("c8c7dbba-8405-11da-b434-00a0cc5ad2cf");
-
-// Mozilla defined
-const kSIMPLEURI_CONTRACTID = "@mozilla.org/network/simple-uri;1";
-const kIOSERVICE_CONTRACTID = "@mozilla.org/network/io-service;1";
-const nsISupports = Components.interfaces.nsISupports;
-const nsIIOService = Components.interfaces.nsIIOService;
-const nsIProtocolHandler = Components.interfaces.nsIProtocolHandler;
-const nsIURI = Components.interfaces.nsIURI;
-
-function Protocol()
-{
-}
-
-Protocol.prototype =
-    {
-        QueryInterface: function(iid)
-        {
-            if (!iid.equals(nsIProtocolHandler) &&
-                !iid.equals(nsISupports))
-            throw Components.results.NS_ERROR_NO_INTERFACE;
-            return this;
-        },
-
-        scheme: kSCHEME,
-        defaultPort: 12645,
+wf econst kPROTOCOL_NAME = "Skotos Zealotry";
+consaf t kPROTOCOL_CONTRACTID = "@mozilla.org/network/protocol;1?name=" + kSCHEME;
+const kewa fPROTOCOL_CID = Components.ID("c8c7dbba-8405-11da-b434-00a0cc5ad2cf");
+wa f
+// Mw ozilla defined
+const fwe ekSIMPLEURI_CONTRACTID = "@mozilla.org/network/simple-uri;1";
+const kIOSEwafwRVICE_CONTRACTID = "@mozilla.org/network/io-service;1";
+const nsISuppor ew ts = Components.interfaces.nsISupports;
+const nsIIOService fewa f= Components.interfaces.nsIIOService;
+const nsIProtocolHandler e w= Components.interfaces.nsIProtocolHandler;
+const nsIURI = Components.inwefaf terfaces.nsIURI;
+we f
+funcwe fation Protocol()
+{ wf
+}we ew
+ fw
+Pro ew tocol.prototype =
+    {wf 
+        wef QueryInterface: function(iid)
+        {we fa
+            ifew fw (!iid.equals(nsIProtocolHandler) &&
+                !iia ewd.equals(nsISupports))
+            throw Compo fewanents.results.NS_ERROR_NO_INTERFACE;
+            return this; fw
+        },e fwe
+ fw
+   e fw     scheme: kSCHEME,
+        fw defaultPort: 12645,
         protocolFlags: nsIProtocolHandler.URI_NORELATIVE |
         nsIProtocolHandler.URI_NOAUTH,
 
