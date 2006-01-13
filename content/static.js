@@ -96,6 +96,7 @@ client.SLOPPY_NETWORKS = true; /* true if msgs from a network can be displayed
                                 */
 client.DOUBLETAB_TIME = 500;
 client.IMAGEDIR = "chrome://zealotry/skin/images/";
+// See image dir there? We can add Age's mascot there. :)
 client.HIDE_CODES = true;      /* true if you'd prefer to show numeric response
                                 * codes as some default value (ie, "===") */
 /* true if the browser widget shouldn't be allowed to take focus.  windows, and
@@ -120,22 +121,22 @@ client.lastTabUp = new Date();
 client.awayMsgs = new Array();
 client.awayMsgCount = 5;
 
-CIRCNetwork.prototype.INITIAL_CHANNEL = "";
-CIRCNetwork.prototype.MAX_MESSAGES = 100;
-CIRCNetwork.prototype.IGNORE_MOTD = false;
-CIRCNetwork.prototype.RECLAIM_WAIT = 15000;
-CIRCNetwork.prototype.RECLAIM_TIMEOUT = 400000;
-CIRCNetwork.prototype.MIN_RECONNECT_MS = 15 * 1000;             // 15s
-CIRCNetwork.prototype.MAX_RECONNECT_MS = 2 * 60 * 60 * 1000;    // 2h
+CZEALOTRYNetwork.prototype.INITIAL_CHANNEL = "";
+CZEALOTRYNetwork.prototype.MAX_MESSAGES = 100;
+CZEALOTRYNetwork.prototype.IGNORE_MOTD = false;
+CZEALOTRYNetwork.prototype.RECLAIM_WAIT = 15000;
+CZEALOTRYNetwork.prototype.RECLAIM_TIMEOUT = 400000;
+CZEALOTRYNetwork.prototype.MIN_RECONNECT_MS = 15 * 1000;             // 15s
+CZEALOTRYNetwork.prototype.MAX_RECONNECT_MS = 2 * 60 * 60 * 1000;    // 2h
 
-CIRCServer.prototype.READ_TIMEOUT = 0;
-CIRCServer.prototype.PRUNE_OLD_USERS = 0; // prune on user quit.
+CZEALOTRYServer.prototype.READ_TIMEOUT = 0;
+CZEALOTRYServer.prototype.PRUNE_OLD_USERS = 0; // prune on user quit.
 
-CIRCUser.prototype.MAX_MESSAGES = 200;
+CZEALOTRYUser.prototype.MAX_MESSAGES = 200;
 
-CIRCChannel.prototype.MAX_MESSAGES = 300;
+CZEALOTRYChannel.prototype.MAX_MESSAGES = 300;
 
-CIRCChanUser.prototype.MAX_MESSAGES = 200;
+CZEALOTRYChanUser.prototype.MAX_MESSAGES = 200;
 
 function init()
 {
@@ -174,7 +175,7 @@ function init()
     initHandlers();
 
     // Create DCC handler.
-    client.dcc = new CIRCDCC(client);
+    client.dcc = new CZEALOTRYDCC(client);
 
     // start logging.  nothing should call display() before this point.
     if (client.prefs["log"])
@@ -294,7 +295,7 @@ function initStatic()
             ua = "XULRunner " + app.platformVersion + "/" + app.platformBuildID;
 
             // "XULRunner 1.7+/2005071506, Windows"
-            CIRCServer.prototype.HOST_RPLY = ua + ", " + client.platform;
+            CZEALOTRYServer.prototype.HOST_RPLY = ua + ", " + client.platform;
         }
         else
         {
@@ -308,7 +309,7 @@ function initStatic()
                 ua += "??????????";
 
             // "Mozilla Firefox 1.0+, Windows"
-            CIRCServer.prototype.HOST_RPLY = app.vendor + " " + app.name + " " +
+            CZEALOTRYServer.prototype.HOST_RPLY = app.vendor + " " + app.name + " " +
                                              app.version + ", " + client.platform;
         }
     }
@@ -324,13 +325,13 @@ function initStatic()
                 ua = client.entities.brandShortName + " " + ary[1]; // Suite
             ua = ua + "/" + ary[2];
         }
-        CIRCServer.prototype.HOST_RPLY = client.entities.brandShortName + ", " +
+        CZEALOTRYServer.prototype.HOST_RPLY = client.entities.brandShortName + ", " +
                                          client.platform;
     }
 
     client.userAgent = getMsg(MSG_VERSION_REPLY, [ver, ua]);
-    CIRCServer.prototype.VERSION_RPLY = client.userAgent;
-    CIRCServer.prototype.SOURCE_RPLY = MSG_SOURCE_REPLY;
+    CZEALOTRYServer.prototype.VERSION_RPLY = client.userAgent;
+    CZEALOTRYServer.prototype.SOURCE_RPLY = MSG_SOURCE_REPLY;
 
     client.statusBar = new Object();
 
@@ -440,7 +441,7 @@ function initApplicationCompatibility()
 
     client.hostPlatform = client.host + client.platform;
 
-    CIRCServer.prototype.OS_RPLY = navigator.oscpu + " (" +
+    CZEALOTRYServer.prototype.OS_RPLY = navigator.oscpu + " (" +
                                    navigator.platform + ")";
 
     // Windows likes \r\n line endings, as wussy-notepad can't cope with just
@@ -561,11 +562,11 @@ function getFindData(e)
 function importFromFrame(method)
 {
     client.__defineGetter__(method, import_wrapper);
-    CIRCNetwork.prototype.__defineGetter__(method, import_wrapper);
-    CIRCChannel.prototype.__defineGetter__(method, import_wrapper);
-    CIRCUser.prototype.__defineGetter__(method, import_wrapper);
-    CIRCDCCChat.prototype.__defineGetter__(method, import_wrapper);
-    CIRCDCCFileTransfer.prototype.__defineGetter__(method, import_wrapper);
+    CZEALOTRYNetwork.prototype.__defineGetter__(method, import_wrapper);
+    CZEALOTRYChannel.prototype.__defineGetter__(method, import_wrapper);
+    CZEALOTRYUser.prototype.__defineGetter__(method, import_wrapper);
+    CZEALOTRYDCCChat.prototype.__defineGetter__(method, import_wrapper);
+    CZEALOTRYDCCFileTransfer.prototype.__defineGetter__(method, import_wrapper);
 
     function import_wrapper()
     {
@@ -709,7 +710,7 @@ function processStartupURLs()
         if (url.search(/^zealotrys?:\/?\/?\/?$/i) == -1)
         {
             /* if the url is not zealotry: zealotry:/, zealotry://, or zealotrys equiv then go to it. */
-            gotoIRCURL(url);
+            gotoZEALOTRYURL(url);
             wentSomewhere = true;
         }
     }
@@ -726,7 +727,7 @@ function processStartupURLs()
             {
                 /* if the url is not "zealotry://", "zealotry:///" or an zealotrys equiv then
                    go to it. */
-                gotoIRCURL(url);
+                gotoZEALOTRYURL(url);
                 wentSomewhere = true;
             }
         }
@@ -752,7 +753,7 @@ function processStartupURLs()
                 client.prefs["initialURLs"].update();
             }
             if (ary[i] && ary[i] != "zealotry://")
-                gotoIRCURL(ary[i]);
+                gotoZEALOTRYURL(ary[i]);
         }
     }
 
@@ -1560,8 +1561,8 @@ function playEventSounds(type, event)
         return;
 
     // Converts .TYPE values into the event object names.
-    // IRCChannel => channel, IRCUser => user, etc.
-    if (type.match(/^IRC/))
+    // ZEALOTRYChannel => channel, ZEALOTRYUser => user, etc.
+    if (type.match(/^ZEALOTRY/))
         type = type.substr(3, type.length).toLowerCase();
 
     var ev = type + "." + event;
@@ -1601,8 +1602,8 @@ function blockEventSounds(type, event)
         return;
 
     // Converts .TYPE values into the event object names.
-    // IRCChannel => channel, IRCUser => user, etc.
-    if (type.match(/^IRC/))
+    // ZEALOTRYChannel => channel, ZEALOTRYUser => user, etc.
+    if (type.match(/^ZEALOTRY/))
         type = type.substr(3, type.length).toLowerCase();
 
     var ev = type + "." + event;
@@ -1763,7 +1764,7 @@ function getObjectDetails (obj, rv)
 
     switch (obj.TYPE)
     {
-        case "IRCChannel":
+        case "ZEALOTRYChannel":
             rv.viewType = MSG_CHANNEL;
             rv.channel = obj;
             rv.channelName = obj.unicodeName;
@@ -1771,7 +1772,7 @@ function getObjectDetails (obj, rv)
             rv.network = rv.server.parent;
             break;
 
-        case "IRCUser":
+        case "ZEALOTRYUser":
             rv.viewType = MSG_USER;
             rv.user = obj;
             rv.userName = obj.unicodeName;
@@ -1779,7 +1780,7 @@ function getObjectDetails (obj, rv)
             rv.network = rv.server.parent;
             break;
 
-        case "IRCChanUser":
+        case "ZEALOTRYChanUser":
             rv.viewType = MSG_USER;
             rv.user = obj;
             rv.userName = obj.unicodeName;
@@ -1788,7 +1789,7 @@ function getObjectDetails (obj, rv)
             rv.network = rv.server.parent;
             break;
 
-        case "IRCNetwork":
+        case "ZEALOTRYNetwork":
             rv.network = obj;
             rv.viewType = MSG_NETWORK;
             if ("primServ" in rv.network)
@@ -1797,24 +1798,24 @@ function getObjectDetails (obj, rv)
                 rv.server = null;
             break;
 
-        case "IRCClient":
+        case "ZEALOTRYClient":
             rv.viewType = MSG_TAB;
             break;
 
-        case "IRCDCCUser":
+        case "ZEALOTRYDCCUser":
             //rv.viewType = MSG_USER;
             rv.user = obj;
             rv.userName = obj.unicodeName;
             break;
 
-        case "IRCDCCChat":
+        case "ZEALOTRYDCCChat":
             //rv.viewType = MSG_USER;
             rv.chat = obj;
             rv.user = obj.user;
             rv.userName = obj.unicodeName;
             break;
 
-        case "IRCDCCFileTransfer":
+        case "ZEALOTRYDCCFileTransfer":
             //rv.viewType = MSG_USER;
             rv.file = obj;
             rv.user = obj.user;
@@ -1906,7 +1907,7 @@ function doURLTest()
     for (var u in testURLs)
     {
         dd ("testing url \"" + testURLs[u] + "\"");
-        var o = parseIRCURL(testURLs[u]);
+        var o = parseZEALOTRYURL(testURLs[u]);
         if (!o)
             dd ("PARSE FAILED!");
         else
@@ -1915,7 +1916,7 @@ function doURLTest()
     }
 }
 
-function parseIRCURL (url)
+function parseZEALOTRYURL (url)
 {
     var specifiedHost = "";
 
@@ -1941,7 +1942,7 @@ function parseIRCURL (url)
     var ary = url.match (/^zealotrys?:\/\/([^\/\s]+)?(\/[^\s]*)?$/i);
     if (!ary || !ary[1])
     {
-        dd ("parseIRCURL: initial split failed");
+        dd ("parseZEALOTRYURL: initial split failed");
         return null;
     }
     var host = ary[1];
@@ -1951,7 +1952,7 @@ function parseIRCURL (url)
     ary = host.match (/^([^\:]+)?(\:\d+)?$/);
     if (!ary)
     {
-        dd ("parseIRCURL: host/port split failed");
+        dd ("parseZEALOTRYURL: host/port split failed");
         return null;
     }
 
@@ -1959,7 +1960,7 @@ function parseIRCURL (url)
     {
         if (!arrayHasElementAt(ary, 2))
         {
-            dd ("parseIRCURL: port with no host");
+            dd ("parseZEALOTRYURL: port with no host");
             return null;
         }
         specifiedHost = rv.host = ary[1].toLowerCase();
@@ -1978,7 +1979,7 @@ function parseIRCURL (url)
         ary = rest.match (/^\/([^\?\s\/,]*)?\/?(,[^\?]*)?(\?.*)?$/);
         if (!ary)
         {
-            dd ("parseIRCURL: rest split failed ``" + rest + "''");
+            dd ("parseZEALOTRYURL: rest split failed ``" + rest + "''");
             return null;
         }
 
@@ -1986,7 +1987,7 @@ function parseIRCURL (url)
 
         if (rv.target.search(/[\x07,:\s]/) != -1)
         {
-            dd ("parseIRCURL: invalid characters in channel name");
+            dd ("parseZEALOTRYURL: invalid characters in channel name");
             return null;
         }
 
@@ -1999,7 +2000,7 @@ function parseIRCURL (url)
                 (params.search (/,isnick(?:,|$)/) != -1);
             if (rv.isnick && !rv.target)
             {
-                dd ("parseIRCURL: isnick w/o target");
+                dd ("parseZEALOTRYURL: isnick w/o target");
                 /* isnick w/o a target is bogus */
                 return null;
             }
@@ -2012,7 +2013,7 @@ function parseIRCURL (url)
 
             if (rv.isserver && !specifiedHost)
             {
-                dd ("parseIRCURL: isserver w/o host");
+                dd ("parseZEALOTRYURL: isserver w/o host");
                     /* isserver w/o a host is bogus */
                 return null;
             }
@@ -2064,15 +2065,15 @@ function parseIRCURL (url)
 
 }
 
-function gotoIRCURL (url)
+function gotoZEALOTRYURL (url)
 {
     var urlspec = url;
     if (typeof url == "string")
-        url = parseIRCURL(url);
+        url = parseZEALOTRYURL(url);
 
     if (!url)
     {
-        window.alert (getMsg(MSG_ERR_BAD_IRCURL, urlspec));
+        window.alert (getMsg(MSG_ERR_BAD_ZEALOTRYURL, urlspec));
         return;
     }
 
@@ -2116,7 +2117,7 @@ function gotoIRCURL (url)
         if (!alreadyThere)
         {
             /*
-            dd ("gotoIRCURL: not already connected to " +
+            dd ("gotoZEALOTRYURL: not already connected to " +
                 "server " + url.host + " trying to connect...");
             */
             network = dispatch((url.scheme == "zealotrys" ? "sslserver" : "server"),
@@ -2140,7 +2141,7 @@ function gotoIRCURL (url)
         if (!network.isConnected())
         {
             /*
-            dd ("gotoIRCURL: not already connected to " +
+            dd ("gotoZEALOTRYURL: not already connected to " +
                 "network " + url.host + " trying to connect...");
             */
             client.connectToNetwork(network, (url.scheme == "zealotrys" ? true : false));
@@ -2152,7 +2153,7 @@ function gotoIRCURL (url)
     }
 
     /* already connected, do whatever comes next in the url */
-    //dd ("gotoIRCURL: connected, time to finish parsing ``" + url + "''");
+    //dd ("gotoZEALOTRYURL: connected, time to finish parsing ``" + url + "''");
     if (url.target)
     {
         var targetObject;
@@ -2203,7 +2204,7 @@ function gotoIRCURL (url)
                     target = "#" + target;
                 }
 
-                var chan = new CIRCChannel(serv, null, target);
+                var chan = new CZEALOTRYChannel(serv, null, target);
 
                 d = { channelName: chan.unicodeName, key: key,
                       charset: url.charset };
@@ -2336,7 +2337,7 @@ function updateTitle (obj)
 
     switch (client.currentObject.TYPE)
     {
-        case "IRCNetwork":
+        case "ZEALOTRYNetwork":
             var serv = "", port = "";
             if (client.currentObject.isConnected())
             {
@@ -2353,7 +2354,7 @@ function updateTitle (obj)
             }
             break;
 
-        case "IRCChannel":
+        case "ZEALOTRYChannel":
             var chan = "", mode = "", topic = "";
             if ("me" in o.parent)
             {
@@ -2384,7 +2385,7 @@ function updateTitle (obj)
             tstring = getMsg(MSG_TITLE_CHANNEL, [nick, chan, mode, topic]);
             break;
 
-        case "IRCUser":
+        case "ZEALOTRYUser":
             nick = client.currentObject.unicodeName;
             var source = "";
             if (client.currentObject.name)
@@ -2396,7 +2397,7 @@ function updateTitle (obj)
             nick = "me" in o.parent ? o.parent.me.unicodeName : MSG_TITLE_NONICK;
             break;
 
-        case "IRCClient":
+        case "ZEALOTRYClient":
             nick = client.prefs["nickname"];
 
         default:
@@ -2572,7 +2573,7 @@ function setCurrentObject (obj)
     {
         var co = client.currentObject;
         // Save any nicknames selected
-        if (client.currentObject.TYPE == "IRCChannel")
+        if (client.currentObject.TYPE == "ZEALOTRYChannel")
             co.userlistSelection = getSelectedNicknames(userList);
         tb = getTabForObject(co);
     }
@@ -2593,7 +2594,7 @@ function setCurrentObject (obj)
         if (userList.view && userList.view.selection)
             userList.view.selection.select(-1);
 
-        if (obj.TYPE == "IRCChannel")
+        if (obj.TYPE == "ZEALOTRYChannel")
         {
             client.rdf.setTreeRoot("user-list", obj.getGraphResource());
             reSortUserlist(userList);
@@ -2806,7 +2807,7 @@ function updateUserList()
 
     // We'll lose the selection in a bit, if we don't save it if necessary:
     if (("currentObject" in client) && client.currentObject &&
-        client.currentObject.TYPE == "IRCChannel")
+        client.currentObject.TYPE == "ZEALOTRYChannel")
     {
         chan = client.currentObject;
         chan.userlistSelection = getSelectedNicknames(node, chan);
@@ -2862,7 +2863,7 @@ function getFrameForDOMWindow(window)
 
 function replaceColorCodes(msg)
 {
-    // mIRC codes: underline, bold, Original (reset), colors, reverse colors.
+    // mZEALOTRY codes: underline, bold, Original (reset), colors, reverse colors.
     msg = msg.replace(/(^|[^%])%U/g, "$1\x1f");
     msg = msg.replace(/(^|[^%])%B/g, "$1\x02");
     msg = msg.replace(/(^|[^%])%O/g, "$1\x0f");
@@ -3244,7 +3245,7 @@ client.addNetwork =
 function cli_addnet(name, serverList, temporary)
 {
     client.networks[name] =
-        new CIRCNetwork (name, serverList, client.eventPump, temporary);
+        new CZEALOTRYNetwork (name, serverList, client.eventPump, temporary);
 }
 
 client.connectToNetwork =
@@ -3254,7 +3255,7 @@ function cli_connect(networkOrName, requireSecurity)
     var name;
 
 
-    if (networkOrName instanceof CIRCNetwork)
+    if (networkOrName instanceof CZEALOTRYNetwork)
     {
         network = networkOrName;
     }
@@ -3339,7 +3340,7 @@ function cli_say(msg)
 
     switch (client.currentObject.TYPE)
     {
-        case "IRCClient":
+        case "ZEALOTRYClient":
             dispatch("eval", {expression: msg});
             break;
 
@@ -3353,7 +3354,7 @@ function cli_say(msg)
     }
 }
 
-CIRCNetwork.prototype.__defineGetter__("prefs", net_getprefs);
+CZEALOTRYNetwork.prototype.__defineGetter__("prefs", net_getprefs);
 function net_getprefs()
 {
     if (!("_prefs" in this))
@@ -3365,7 +3366,7 @@ function net_getprefs()
     return this._prefs;
 }
 
-CIRCNetwork.prototype.__defineGetter__("prefManager", net_getprefmgr);
+CZEALOTRYNetwork.prototype.__defineGetter__("prefManager", net_getprefmgr);
 function net_getprefmgr()
 {
     if (!("_prefManager" in this))
@@ -3377,19 +3378,19 @@ function net_getprefmgr()
     return this._prefManager;
 }
 
-CIRCServer.prototype.__defineGetter__("prefs", srv_getprefs);
+CZEALOTRYServer.prototype.__defineGetter__("prefs", srv_getprefs);
 function srv_getprefs()
 {
     return this.parent.prefs;
 }
 
-CIRCServer.prototype.__defineGetter__("prefManager", srv_getprefmgr);
+CZEALOTRYServer.prototype.__defineGetter__("prefManager", srv_getprefmgr);
 function srv_getprefmgr()
 {
     return this.parent.prefManager;
 }
 
-CIRCChannel.prototype.__defineGetter__("prefs", chan_getprefs);
+CZEALOTRYChannel.prototype.__defineGetter__("prefs", chan_getprefs);
 function chan_getprefs()
 {
     if (!("_prefs" in this))
@@ -3401,7 +3402,7 @@ function chan_getprefs()
     return this._prefs;
 }
 
-CIRCChannel.prototype.__defineGetter__("prefManager", chan_getprefmgr);
+CZEALOTRYChannel.prototype.__defineGetter__("prefManager", chan_getprefmgr);
 function chan_getprefmgr()
 {
     if (!("_prefManager" in this))
@@ -3413,7 +3414,7 @@ function chan_getprefmgr()
     return this._prefManager;
 }
 
-CIRCUser.prototype.__defineGetter__("prefs", usr_getprefs);
+CZEALOTRYUser.prototype.__defineGetter__("prefs", usr_getprefs);
 function usr_getprefs()
 {
     if (!("_prefs" in this))
@@ -3425,7 +3426,7 @@ function usr_getprefs()
     return this._prefs;
 }
 
-CIRCUser.prototype.__defineGetter__("prefManager", usr_getprefmgr);
+CZEALOTRYUser.prototype.__defineGetter__("prefManager", usr_getprefmgr);
 function usr_getprefmgr()
 {
     if (!("_prefManager" in this))
@@ -3437,7 +3438,7 @@ function usr_getprefmgr()
     return this._prefManager;
 }
 
-CIRCDCCUser.prototype.__defineGetter__("prefs", dccusr_getprefs);
+CZEALOTRYDCCUser.prototype.__defineGetter__("prefs", dccusr_getprefs);
 function dccusr_getprefs()
 {
     if (!("_prefs" in this))
@@ -3449,7 +3450,7 @@ function dccusr_getprefs()
     return this._prefs;
 }
 
-CIRCDCCUser.prototype.__defineGetter__("prefManager", dccusr_getprefmgr);
+CZEALOTRYDCCUser.prototype.__defineGetter__("prefManager", dccusr_getprefmgr);
 function dccusr_getprefmgr()
 {
     if (!("_prefManager" in this))
@@ -3461,31 +3462,31 @@ function dccusr_getprefmgr()
     return this._prefManager;
 }
 
-CIRCDCCChat.prototype.__defineGetter__("prefs", dccchat_getprefs);
+CZEALOTRYDCCChat.prototype.__defineGetter__("prefs", dccchat_getprefs);
 function dccchat_getprefs()
 {
     return this.user.prefs;
 }
 
-CIRCDCCChat.prototype.__defineGetter__("prefManager", dccchat_getprefmgr);
+CZEALOTRYDCCChat.prototype.__defineGetter__("prefManager", dccchat_getprefmgr);
 function dccchat_getprefmgr()
 {
     return this.user.prefManager;
 }
 
-CIRCDCCFileTransfer.prototype.__defineGetter__("prefs", dccfile_getprefs);
+CZEALOTRYDCCFileTransfer.prototype.__defineGetter__("prefs", dccfile_getprefs);
 function dccfile_getprefs()
 {
     return this.user.prefs;
 }
 
-CIRCDCCFileTransfer.prototype.__defineGetter__("prefManager", dccfile_getprefmgr);
+CZEALOTRYDCCFileTransfer.prototype.__defineGetter__("prefManager", dccfile_getprefmgr);
 function dccfile_getprefmgr()
 {
     return this.user.prefManager;
 }
 
-CIRCNetwork.prototype.display =
+CZEALOTRYNetwork.prototype.display =
 function net_display (message, msgtype, sourceObj, destObj)
 {
     var o = getObjectDetails(client.currentObject);
@@ -3501,7 +3502,7 @@ function net_display (message, msgtype, sourceObj, destObj)
     }
 }
 
-CIRCUser.prototype.display =
+CZEALOTRYUser.prototype.display =
 function usr_display(message, msgtype, sourceObj, destObj)
 {
     if ("messages" in this)
@@ -3513,7 +3514,7 @@ function usr_display(message, msgtype, sourceObj, destObj)
         var o = getObjectDetails(client.currentObject);
         if (o.server && o.server.isConnected &&
             o.network == this.parent.parent &&
-            client.currentObject.TYPE != "IRCUser")
+            client.currentObject.TYPE != "ZEALOTRYUser")
             client.currentObject.display (message, msgtype, sourceObj, destObj);
         else
             this.parent.parent.displayHere (message, msgtype, sourceObj,
@@ -3521,8 +3522,8 @@ function usr_display(message, msgtype, sourceObj, destObj)
     }
 }
 
-CIRCDCCChat.prototype.display =
-CIRCDCCFileTransfer.prototype.display =
+CZEALOTRYDCCChat.prototype.display =
+CZEALOTRYDCCFileTransfer.prototype.display =
 function dcc_display(message, msgtype, sourceObj, destObj)
 {
     var o = getObjectDetails(client.currentObject);
@@ -3539,11 +3540,11 @@ function feedback(e, message, msgtype, sourceObj, destObj)
         display(message, msgtype, sourceObj, destObj);
 }
 
-CIRCChannel.prototype.feedback =
-CIRCNetwork.prototype.feedback =
-CIRCUser.prototype.feedback =
-CIRCDCCChat.prototype.feedback =
-CIRCDCCFileTransfer.prototype.feedback =
+CZEALOTRYChannel.prototype.feedback =
+CZEALOTRYNetwork.prototype.feedback =
+CZEALOTRYUser.prototype.feedback =
+CZEALOTRYDCCChat.prototype.feedback =
+CZEALOTRYDCCFileTransfer.prototype.feedback =
 client.feedback =
 function this_feedback(e, message, msgtype, sourceObj, destObj)
 {
@@ -3557,11 +3558,11 @@ function display (message, msgtype, sourceObj, destObj)
 }
 
 client.getTimestampCSS =
-CIRCNetwork.prototype.getTimestampCSS =
-CIRCChannel.prototype.getTimestampCSS =
-CIRCUser.prototype.getTimestampCSS =
-CIRCDCCChat.prototype.getTimestampCSS =
-CIRCDCCFileTransfer.prototype.getTimestampCSS =
+CZEALOTRYNetwork.prototype.getTimestampCSS =
+CZEALOTRYChannel.prototype.getTimestampCSS =
+CZEALOTRYUser.prototype.getTimestampCSS =
+CZEALOTRYDCCChat.prototype.getTimestampCSS =
+CZEALOTRYDCCFileTransfer.prototype.getTimestampCSS =
 function this_getTimestampCSS(format)
 {
     /* Wow, this is cool. We just put together a CSS-rule string based on the
@@ -3598,11 +3599,11 @@ function this_getTimestampCSS(format)
 }
 
 client.getFontCSS =
-CIRCNetwork.prototype.getFontCSS =
-CIRCChannel.prototype.getFontCSS =
-CIRCUser.prototype.getFontCSS =
-CIRCDCCChat.prototype.getFontCSS =
-CIRCDCCFileTransfer.prototype.getFontCSS =
+CZEALOTRYNetwork.prototype.getFontCSS =
+CZEALOTRYChannel.prototype.getFontCSS =
+CZEALOTRYUser.prototype.getFontCSS =
+CZEALOTRYDCCChat.prototype.getFontCSS =
+CZEALOTRYDCCFileTransfer.prototype.getFontCSS =
 function this_getFontCSS(format)
 {
     /* See this_getTimestampCSS. */
@@ -3628,12 +3629,12 @@ function this_getFontCSS(format)
 
 client.display =
 client.displayHere =
-CIRCNetwork.prototype.displayHere =
-CIRCChannel.prototype.display =
-CIRCChannel.prototype.displayHere =
-CIRCUser.prototype.displayHere =
-CIRCDCCChat.prototype.displayHere =
-CIRCDCCFileTransfer.prototype.displayHere =
+CZEALOTRYNetwork.prototype.displayHere =
+CZEALOTRYChannel.prototype.display =
+CZEALOTRYChannel.prototype.displayHere =
+CZEALOTRYUser.prototype.displayHere =
+CZEALOTRYDCCChat.prototype.displayHere =
+CZEALOTRYDCCFileTransfer.prototype.displayHere =
 function __display(message, msgtype, sourceObj, destObj)
 {
     // We like some control on the number of digits.
@@ -3670,7 +3671,7 @@ function __display(message, msgtype, sourceObj, destObj)
     // Get the TYPE of the source object.
     var fromType = (sourceObj && sourceObj.TYPE) ? sourceObj.TYPE : "unk";
     // Is the source a user?
-    var fromUser = (fromType.search(/IRC.*User/) != -1);
+    var fromUser = (fromType.search(/ZEALOTRY.*User/) != -1);
     // Get some sort of "name" for the source.
     var fromAttr = "";
     if (sourceObj)
@@ -3689,7 +3690,7 @@ function __display(message, msgtype, sourceObj, destObj)
     // Get the dest TYPE too...
     var toType = (destObj) ? destObj.TYPE : "unk";
     // Is the dest a user?
-    var toUser = (toType.search(/IRC.*User/) != -1);
+    var toUser = (toType.search(/ZEALOTRY.*User/) != -1);
     // Get a dest name too...
     var toAttr = "";
     if (destObj)
@@ -3806,7 +3807,7 @@ function __display(message, msgtype, sourceObj, destObj)
                 {
                     // If this private message is not in a query view, use
                     // *nick* instead of <nick>.
-                    if (this.TYPE == "IRCUser")
+                    if (this.TYPE == "ZEALOTRYUser")
                         logString += "<" + nick + "> ";
                     else
                         logString += "*" + nick + "* ";
@@ -3839,7 +3840,7 @@ function __display(message, msgtype, sourceObj, destObj)
             {
                 // From us to a user.
 
-                if (this.TYPE == "IRCUser")
+                if (this.TYPE == "ZEALOTRYUser")
                 {
                     if (msgtype == "ACTION")
                         logString += "* " + nick + " ";
@@ -4314,11 +4315,11 @@ function cli_stoplog (view)
     }
 }
 
-CIRCChannel.prototype.getLCFunction =
-CIRCNetwork.prototype.getLCFunction =
-CIRCUser.prototype.getLCFunction    =
-CIRCDCCChat.prototype.getLCFunction =
-CIRCDCCFileTransfer.prototype.getLCFunction =
+CZEALOTRYChannel.prototype.getLCFunction =
+CZEALOTRYNetwork.prototype.getLCFunction =
+CZEALOTRYUser.prototype.getLCFunction    =
+CZEALOTRYDCCChat.prototype.getLCFunction =
+CZEALOTRYDCCFileTransfer.prototype.getLCFunction =
 function getlcfn()
 {
     var details = getObjectDetails(this);
@@ -4335,11 +4336,11 @@ function getlcfn()
     return lcFn;
 }
 
-CIRCChannel.prototype.performTabMatch =
-CIRCNetwork.prototype.performTabMatch =
-CIRCUser.prototype.performTabMatch    =
-CIRCDCCChat.prototype.performTabMatch =
-CIRCDCCFileTransfer.prototype.performTabMatch =
+CZEALOTRYChannel.prototype.performTabMatch =
+CZEALOTRYNetwork.prototype.performTabMatch =
+CZEALOTRYUser.prototype.performTabMatch    =
+CZEALOTRYDCCChat.prototype.performTabMatch =
+CZEALOTRYDCCFileTransfer.prototype.performTabMatch =
 function gettabmatch_other (line, wordStart, wordEnd, word, cursorpos, lcFn)
 {
     if (wordStart == 0 && line[0] == client.COMMAND_CHAR)
@@ -4409,7 +4410,7 @@ function gettabmatch_other (line, wordStart, wordEnd, word, cursorpos, lcFn)
     return list;
 }
 
-CIRCChannel.prototype.getGraphResource =
+CZEALOTRYChannel.prototype.getGraphResource =
 function my_graphres ()
 {
     if (!("rdfRes" in this))
@@ -4422,10 +4423,10 @@ function my_graphres ()
     return this.rdfRes;
 }
 
-CIRCUser.prototype.getGraphResource =
+CZEALOTRYUser.prototype.getGraphResource =
 function usr_graphres()
 {
-    if (!ASSERT(this.TYPE == "IRCChanUser",
+    if (!ASSERT(this.TYPE == "ZEALOTRYChanUser",
                 "cuser.getGraphResource called on wrong object"))
     {
         return null;
@@ -4435,13 +4436,13 @@ function usr_graphres()
 
     if (!("rdfRes" in this))
     {
-        if (!("nextResID" in CIRCUser))
-            CIRCUser.nextResID = 0;
+        if (!("nextResID" in CZEALOTRYUser))
+            CZEALOTRYUser.nextResID = 0;
 
         this.rdfRes = rdf.GetResource(RES_PFX + "CUSER:" +
                                       this.parent.parent.parent.unicodeName + ":" +
                                       this.parent.unicodeName + ":" +
-                                      CIRCUser.nextResID++);
+                                      CZEALOTRYUser.nextResID++);
 
             //dd ("created cuser resource " + this.rdfRes.Value);
 
@@ -4460,10 +4461,10 @@ function usr_graphres()
     return this.rdfRes;
 }
 
-CIRCUser.prototype.updateGraphResource =
+CZEALOTRYUser.prototype.updateGraphResource =
 function usr_updres()
 {
-    if (!ASSERT(this.TYPE == "IRCChanUser",
+    if (!ASSERT(this.TYPE == "ZEALOTRYChanUser",
                 "cuser.updateGraphResource called on wrong object"))
     {
         return;

@@ -61,22 +61,23 @@
 	    ]]></script>
 	<script src="chrome://zealotry/content/lib/utils.js"/>
 	<script src="chrome://zealotry/content/lib/connection-xpcom.js"/>
-	<script src="chrome://zealotry/content/lib/events.js"/>
-	<script src="chrome://zealotry/content/lib/command-manager.js"/>
-	<script src="chrome://zealotry/content/lib/pref-manager.js"/>
-	<script src="chrome://zealotry/content/lib/message-manager.js"/>
-	<script src="chrome://zealotry/content/lib/menu-manager.js"/>
+	<!-- script src="chrome://zealotry/content/lib/events.js"/ -->
+	<!-- script src="chrome://zealotry/content/lib/command-manager.js"/ -->
+	<!-- script src="chrome://zealotry/content/lib/pref-manager.js"/ -->
+	<!-- script src="chrome://zealotry/content/lib/message-manager.js"/ -->
+	<!-- script src="chrome://zealotry/content/lib/menu-manager.js"/ -->
 	<script src="chrome://zealotry/content/lib/zealotry.js"/>
 	<script src="chrome://zealotry/content/lib/irc-debug.js"/>
 	<script src="chrome://zealotry/content/lib/file-utils.js"/>
-	<script src="chrome://zealotry/content/lib/dcc.js"/>
-	<script src="chrome://zealotry/content/lib/text-serializer.js"/>
-	<script src="chrome://zealotry/content/lib/munger.js"/>
+	<!-- script src="chrome://zealotry/content/lib/dcc.js"/ -->
+	<!-- script src="chrome://zealotry/content/lib/text-serializer.js"/ -->
+	<!-- script src="chrome://zealotry/content/lib/munger.js"/ -->
+	<!-- the munger could prolly be used later in place of the weird mungeForDisplay fun -->
 	
 	<script src="chrome://zealotry/content/static.js"/>
-	<script src="chrome://zealotry/content/commands.js"/>
-	<script src="chrome://zealotry/content/menus.js"/>
-	<script src="chrome://zealotry/content/prefs.js"/>
+	<!-- script src="chrome://zealotry/content/commands.js"/ -->
+	<!-- script src="chrome://zealotry/content/menus.js"/ -->
+	<!-- script src="chrome://zealotry/content/prefs.js"/ -->
 	<script src="chrome://zealotry/content/messages.js"/>
 	<script src="chrome://zealotry/content/handlers.js"/>
 	
