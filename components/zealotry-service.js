@@ -84,64 +84,10 @@ Protocol.prototype =
 
         newChannel: function(aURI)
         {
-            // aURI is a nsIUri, so get a string from it using .spec
-            var myURL = aURI.spec;
-
-            var chrome_service = Components.classesByID[kCHROMEHANDLER_CID_STR].getService()
-            .QueryInterface(nsIProtocolHandler);
-            
-            // strip away the kSCHEME: part
-            myURL = myURL.substring(myURL.indexOf(":") + 1, myURL.length);
-
-            // we should now have [user]@[game]
-            var ugArr = myURL.split("@");
-            if (ugArr.length != 2) {
-                // failed to parse that url. maybe it's just the server. let's change user to *.
-                ugArr = ["*", myURL];
-            }
-            // myURL = encodeURI(myURL);
-            // do we recognize this server?
-            var servList =
-            {cm  : "marrach.skotos.net/Marrach/Zealous",
-             mv  : "mv.skotos.net", // prolly need special stuff on that one, I think, but we'll see.
-             lc  : "lovecraft.skotos.net",
-             s7  : "skotos-seven.skotos.net",
-             laz : "lazarus.skotos.net",
-             ic  : "ironclaw.skotos.net",
-             stages : "stages.skotos.net"};
-            
-            var servMap =
-            {cm : "cm",
-             marrach : "cm",
-             mv : "mv",
-             mortalis : "mv",
-             lc : "lc",
-             abn : "lc",
-             lovecraft : "lc",
-             s7 : "s7",
-             laz : "laz",
-             lazarus : "laz",
-             ic : "ic",
-             ironclaw : "ic",
-             stages : "stages",
-             oasis : "stages",
-             st : "stages"};
-            if (servMap[ugArr[1]]) {
-                ugArr[1] = servList[servMap[ugArr[1]]];
-            }
-
-            dump("[user, server = " + ugArr + "]\n");
-            
             /* create dummy nsIURI and nsIChannel instances */
             var ios = Components.classes[kIOSERVICE_CONTRACTID].getService(nsIIOService);
-
-            var yuri = ios.newURI("chrome://zealotry/content/zealotry.xul", null, null);
             
-            return ios.newChannel("chrome://zealotry/content/zealotry.xul?char=" + ugArr[0] + "&baseurl=" + ugArr[1], null, yuri);
-            
-            // return chrome_service.newChannel(furry);
-            // return ios.newChannel("chrome://zealotry/content/zealotry.xul?char=" + ugArr[0] + "&baseurl=" + ugArr[1]);
-            // return ios.newChannel("javascript:document.location.href='zealotry.xul?char=" + ugArr[0] + "&baseurl=" + ugArr[1] + "';", null, null);
+            return ios.newChannel("chrome://zealotry/content/zealotry.xul", null, null);
         },
     }
 

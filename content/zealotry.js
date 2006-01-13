@@ -60,7 +60,6 @@ function makeCharName()
 
 function onMainLoad()
 {
-    alert(document.location.href);
     // Init some values.
     scroll_splitter = document.getElementById('scroll_splitter');
     scrollback = document.getElementById('scrollback');
@@ -90,54 +89,69 @@ function onMainLoad()
     var h = document.location.href;
     
     if (h) {
-        var ix = h.indexOf("?");
-        if (ix >= 0) {
-            h = h.substring(ix + 1);
-            var args = new Array();
+        // h should be along the lines of "zealotry:username@server"
+        // strip away the "zealotry:" part
+        h = h.substr(9);
 
-            while (h.length > 0) {
-                var chunk;
+        // we should now have [user]@[game]
+        var ugArr = myURL.split("@");
+        if (ugArr.length != 2) {
+            // failed to parse that url. maybe it's just the server. let's change user to *.
+            ugArr = ["*", myURL];
+        }
+        // myURL = encodeURI(myURL);
+        // do we recognize this server?
+        var servList =
+            {cm  : "marrach.skotos.net/Marrach/Zealous",
+             mv  : "mv.skotos.net", // prolly need special stuff on that one, I think, but we'll see.
+             lc  : "lovecraft.skotos.net",
+             s7  : "skotos-seven.skotos.net",
+             laz : "lazarus.skotos.net",
+             ic  : "ironclaw.skotos.net",
+             stages : "stages.skotos.net"};
+        
+        var servMap =
+            {cm : "cm",
+             marrach : "cm",
+             mv : "mv",
+             mortalis : "mv",
+             lc : "lc",
+             abn : "lc",
+             lovecraft : "lc",
+             s7 : "s7",
+             laz : "laz",
+             lazarus : "laz",
+             ic : "ic",
+             ironclaw : "ic",
+             stages : "stages",
+             oasis : "stages",
+             st : "stages"};
+        
+        if (servMap[ugArr[1]]) {
+            ugArr[1] = servList[servMap[ugArr[1]]];
+        }
 
-                ix = h.indexOf("&");
-                if (ix >= 0) {
-                    chunk = h.substring(0, ix);
-                    h = h.substring(ix + 1);
-                } else {
-                    chunk = h;
-                    h = "";
-                }
-                ix = chunk.indexOf("=");
-                if (ix >= 0) {
-                    args[chunk.substring(0, ix).toLowerCase()] = chunk.substring(ix + 1);
-                } else {
-                    args[chunk.toLowerCase()] = "1";
-                }
-            }
+        window.charName = ugArr[0];
+        window.baseURL = "http://" + ugArr[1] + "/";
             
-            window.charName = args["char"];
-            window.baseURL = "http://" + args["baseurl"] + "/";
-            
-            if (args["baseurl"]) {
-                h = args["baseurl"];
-                ix = h.indexOf(".");
-                if (ix >= 0) {
-                    window.gameName = h.substring(0, ix);
-                } else {
-                    window.gameName = h;
-                }
-                window.gameName = window.gameName.substring(0, 1).toUpperCase() + window.gameName.substring(1);
+        if (args["baseurl"]) {
+            h = args["baseurl"];
+            ix = h.indexOf(".");
+            if (ix >= 0) {
+                window.gameName = h.substring(0, ix);
+            } else {
+                window.gameName = h;
             }
+            window.gameName = window.gameName.substring(0, 1).toUpperCase() + window.gameName.substring(1);
         }
     }
     
     if (!window.charName) {
-        alert("HREF = " + document.location.href);
-        alert("you fucking suck you cock sucking mother fucker");
+        alert("this client will not run without a base url");
         return;
     }
 
     if (!window.baseURL) {
-        alert("HREF = " + document.location.href);
         alert("this client will not run without a base url");
         return;
     }
