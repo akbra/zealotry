@@ -1,12 +1,10 @@
+var pm = netscape.security.PrivilegeManager;
+var privs = "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect";
 try {
-    netscape.security.PrivilegeManager.enablePrivilege
-        ("UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect"
-         );
+    pm.enablePrivilege(privs);
 } catch (err) {
     throw("Zealotry failed to acquire privileges. This shouldn't happen.");
 }
-var pm = netscape.security.PrivilegeManager;
-var privs = "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect";
 
 function submitSkotosSelectCommand(elementName)
 {

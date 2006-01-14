@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<window id="main-window"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+    style="width:760px; height:480px"
+    onload="initializeWoeInterface()"
+    title="XWoe"
+    orient="vertical" persist="width height" windowtype="skotos:woe">
+    
+    <script type="application/x-javascript" src="woe-init.js"/>
+    
+    <script type="application/x-javascript" src="jslib.js"/>
+
+    <script type="application/x-javascript" src="filesystem.js"/>
+    <script type="application/x-javascript" src="file.js"/>
+    <script type="application/x-javascript" src="md5.js"/>
+    <script type="application/x-javascript" src="utils.js"/>
+    <script type="application/x-javascript" src="connection-xpcom.js"/>
+    <script type="application/x-javascript" src="network.js"/>
+    <script type="application/x-javascript" src="client.js"/>
+
+    <script type="application/x-javascript" src="xw.js"/>
+
+    <hbox style="-moz-box-flex: 1">
+        <popupset>
+            <popup id="woeContext">
+                <menuitem label="View" onclick="woeView();"/>
+                <menuitem label="Edit" onclick="woeEdit();"/>
+                <menuitem label="XML-Edit" onclick="woeXML();"/>
+                <menuitem label="Karmode" onclick="woeKarmode();"/>
+            </popup>
+        </popupset>
+
+        <tree 
+	    style="font-family: FreeMono, Monospace, Monospaced, Courier new, Courier; font-size: 10pt;" 
+	    id="xtree" 
+	    flex="1" 
+	    hidecolumnpicker="true" 
+	    seltype="single" 
+	    alternatingbackground="true"
+	    onselect="onselect">
+            <treecols>
+                <treecol
+		    id="woe"
+		    label="Woe"
+		    primary="true"
+		    flex="3"/>
+            </treecols>
+	    
+            <treechildren context="woeContext" id="tow">
+            </treechildren>
+        </tree>
+    </hbox>
+</window>
