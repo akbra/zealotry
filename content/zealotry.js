@@ -304,7 +304,7 @@ function onWindowKeyPress(e)
 {
     switch (e.keyCode) {
     case 9: // tab
-        return false;  // Don't allow for tab switching.
+         return false;  // Don't allow for tab switching.
 
     case 34: // page down
         if (e.ctrlKey != true && e.shiftKey != true && e.altKey != true) {
@@ -447,6 +447,11 @@ function onInputKeyUp(e)
     }
 
     switch (e.keyCode) {
+
+    case 9: // tab
+        window.client.tabCompleteInputBuffer();
+        break;
+
     case 13: // CR
         if (!enter_down) {
             /*

@@ -283,3 +283,27 @@ function client_d()
     this.connection = false;
 }
 
+CClient.prototype.tabCompleteInputBuffer =
+function client_tab()
+{
+    if (!this.localEcho)
+        return;
+
+    var textBox = this.document.getElementById("input");
+    var historyRef = this.lastHistoryReferenced;
+    do {
+        historyRef++;
+        if (historyRef > this.inputHistory.length -1) {
+            historyRef = -1;
+            candidate = this.incompleteLine;
+        } else {
+            candidate = this.inputHistory[historyRef];
+        }
+        if (candidate.indexOf(this.incompleteLine) == 0) {
+            textBox.value = candidate;
+            this.lastHistoryReferenced = historyRef;
+            return;
+        }
+    } while (historyRef != this.lastHistoryReferenced)
+}
+
