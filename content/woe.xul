@@ -38,8 +38,8 @@
 	    flex="1" 
 	    hidecolumnpicker="true" 
 	    seltype="single" 
-	    alternatingbackground="true"
-	    onselect="onselect">
+	    onselect="ontreeselectwrapper()"
+	    alternatingbackground="true">
             <treecols>
                 <treecol
 		    id="woe"
@@ -52,6 +52,6 @@
 	<splitter id="treesplitter" state="open" resizeafter="grow" collapse="before">
 	    <grippy/>
 	</splitter>
-	<iframe flex="1" src="about:blank" id="content" style="min-width: 70%; width: 70%;"/>
+	<iframe name="content" flex="1" src="about:blank" id="content" style="min-width: 70%; width: 70%;"/>
     </hbox>
 </window>

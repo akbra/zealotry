@@ -39,22 +39,8 @@ WoeClass = function(handler)
 
 WoeClass.prototype = {
     munge_buffer: "",
-    debug_buffer: [],
     enter_down: false,
 
-    squeak: function()
-    {
-        var ifr = document.getElementById('content').contentDocument;
-        ifr.open();
-        var db = CurrWoe.debug_buffer;
-        var ix = db.length;
-        for (var i = 0; i < ix; i++) {
-            ifr.write(db[i]);
-            ifr.write("<hr/>");
-        }
-        ifr.close();
-    },
-    
     onMainLoad: function()
     {
         if (this.alreadyLoaded) {
@@ -71,8 +57,6 @@ WoeClass.prototype = {
         this.h.init_xw();
 
         this.mainStep();
-
-        setTimeout('CurrWoe.squeak()', 5000);
     },
 
     onUnLoad: function()
@@ -88,17 +72,11 @@ WoeClass.prototype = {
     {
         pm.enablePrivilege(privs);
 
-        // Not sure if bubbleSettings is gonna do much good here.
-        // bubbleSettings();
-
         window.client = new CClient();
 
-        // No config file for now. No clue what it'd contain, except perhaps font settings.
-        // readConfigurationFile();
-
         window.client.connect
-        ("mv.skotos.net", //window.content_frame.getHost(),
-         5090, // window.content_frame.getPort(),
+        (this.h.getHost(), // "mv.skotos.net", //window.content_frame.getHost(),
+         this.h.getPort(), // 5090, // window.content_frame.getPort(),
          this.onRead);
 
         client.connection.write("TreeOfWoe " + TOW_VERSION + "\n");
@@ -120,26 +98,6 @@ WoeClass.prototype = {
         this.connectionTerminated();
     },
 
-/* function loadCookie(name) {
-   var allcookies = content_frame.dacookie();
-
-   if (!allcookies) {
-      alert("no cookies");
-      return null;
-   }
-   var start = allcookies.indexOf(name + "="); 
-   if (start == -1) {
-      alert("no cookie: '" + name + "'");
-      return null;
-   }
-   start += name.length + 1; 
-   var end = allcookies.indexOf(';',start); 
-   if (end == -1) {
-      end = allcookies.length;
-   }
-   return allcookies.substring(start,end); 
-} */
-
     onRead: function(bigstr) 
     {
         var self = CurrWoe;
@@ -151,7 +109,6 @@ WoeClass.prototype = {
         } else {
             self.munge_buffer = "";
         }
-        self.debug_buffer.push(bigstr);
         var lines = bigstr.split('\r\n');
         var sz    = lines.length;
     

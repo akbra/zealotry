@@ -17,6 +17,7 @@ var WoeHandlerClass = function(host, port)
 WoeHandlerClass.prototype = {
     tow: null,
     xtree: null,
+    cframe: null,
     host: null,
     port: 5090,
         
@@ -30,12 +31,18 @@ WoeHandlerClass.prototype = {
         return this.port; // 5090;
     },
 
-    xw_newTree: function(s, pre)
+    xw_listenTree_Open: function(event)
+    {
+        alert("listenTree_Open: " + event);
+    },
+
+    xw_newTree: function(s, pre, id)
     {
         var item = document.createElement('treeitem');
         item.setAttribute('container', 'true');
         item.setAttribute('open',      'false');
-            
+        // item.addEventListener('toggleOpenState', this.xw_listenTree_Open, false);
+        
         var row = document.createElement('treerow');
         item.appendChild(row);
             
@@ -44,16 +51,18 @@ WoeHandlerClass.prototype = {
         row.appendChild(cell);
         
         var kids = document.createElement('treechildren');
-        kids.setAttribute('id', pre + s);
+        kids.setAttribute('id', id + s);
+        kids.setAttribute('path', pre + s);
         item.appendChild(kids);
         
         return item;
     },
-        
-    xw_newObject: function(s, path) 
+
+    xw_newObject: function(s, path, id) 
     {
         var item = document.createElement('treeitem');
-        item.setAttribute('id', path + s);
+        item.setAttribute('path', path + s);
+        item.setAttribute('id', id + s);
         item.setAttribute('container', 'false');
             
         var row = document.createElement('treerow');
@@ -68,18 +77,23 @@ WoeHandlerClass.prototype = {
         
     xw_queryWoeObject: function(s)
     {
+        // XXX: Why is this thing replacing : with _? To have a valid "id" tag? Why not simply
+        // use another attribute?
+        // Because we get them by ID. Le sigh!
         var stct = s.split(':');
         var sz   = stct.length;
         var pre  = '';
+        var tid  = '';
         var s    = '';
         var papa = this.tow;
         
         for (i = 0; i < sz; i++) {
             s = stct[i];
             if (!document.getElementById(pre + s))
-                papa.appendChild((i+1 < sz ? this.xw_newTree(s, pre) : this.xw_newObject(s, pre)));
-            papa = document.getElementById(pre + s);
-            pre += s + "_";
+                papa.appendChild((i+1 < sz ? this.xw_newTree(s, pre, tid) : this.xw_newObject(s, pre, tid)));
+            papa = document.getElementById(tid + s);
+            pre += s + ":";
+            tid += s + "_";
         }
         return papa;
     },
@@ -115,12 +129,33 @@ WoeHandlerClass.prototype = {
             break;
         }
     },
+
+    fark: function(e)
+    {
+        alert(e.attrName + ": " + e.prevValue + " -> " + e.newValue + " in " + e.relatedNode);
+    },
+
+    xw_TreeAttrModified: function(e)
+    {
+        if (e.attrName != "open") return true; // we only care about the "open" attribute
+        if (e.newValue != "true") return true; // we only care about when the state becomes open
+        try {
+            var src = e.relatedNode.ownerElement;
+            var path = src.parentNode;
+            if (path == this.tow) path = null; else path = path.getAttribute('path');
+            var item = src.firstChild.firstChild.getAttribute('label');
+            var resolved = (path ? path + ":" : "") + item;
+            alert("Opening " + resolved);
+        } catch (e) {}
+    },
         
     init_xw: function() 
     {
         pm.enablePrivilege(privs);
         this.tow   = document.getElementById('tow');
         this.xtree = document.getElementById('xtree');
+        this.tow.addEventListener("DOMAttrModified", this.xw_TreeAttrModified, false);
+        this.cframe = document.getElementById('content');
     },
         
     woeView: function()
@@ -153,8 +188,10 @@ WoeHandlerClass.prototype = {
             // selected folder, not object
             return;
         }
+
         
-        window.open("http://" + this.getHost() + "/" + el.src, 'contentFrame'); //.setAttribute('src', el.src);
+        // this.cframe.contentW
+        window.open("http://" + this.getHost() + "/" + el.src, 'content'); //.setAttribute('src', el.src);
     }
 };
 
@@ -179,4 +216,9 @@ function initializeWoeInterface()
     WoeInstance.onMainLoad();
     document.getElementById('content').width = "70%";
     document.getElementById('content').style.width = "70%";
+}
+
+function ontreeselectwrapper(e)
+{
+    WoeHandler.onselect(e);
 }
