@@ -425,9 +425,10 @@ function onInputKeyDown(e)
 {
     switch (e.keyCode) {
     case 9: // tab
-        window.client.tabCompleteInputBuffer();
-        break;
-
+	if (e.ctrlKey != true && e.shiftKey != true && e.altKey != true) {
+	        window.client.tabCompleteInputBuffer();
+        	break;
+	}
     case 13:
         enter_down = true;
         handleInputLine(e.target.value);
