@@ -593,6 +593,8 @@ function loadCookie(name) {
 function onRead(bigstr) {
     var str;
     var lines = bigstr.split('\r\n');
+    var ix = -1;
+    var munge_it = false;
     
     if (window.client == null) {
        /*
@@ -603,64 +605,68 @@ function onRead(bigstr) {
        */
        return;
     }
-
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
+    
+    pm.enablePrivilege(privs);
 
     for (var i = 0; i < lines.length; i++) {
         str = lines[i];
-        
-        var start = str.indexOf("SECRET ");
-        if (start == 0) {
-            var secret, text;
-            var userName, passWord;
-            
-            userName = loadCookie("user");
-            passWord = loadCookie("pass");
 
-            secret = str.substring(start + 7, str.length);
+        ix = str.indexOf(" ");
+        munge_it = ix == -1;
+        if (!munge_it) {
+            switch (str.substr(0, ix)) {
+            case "SECRET":
+                var secret, text;
+                var userName, passWord;
+                
+                userName = loadCookie("user");
+                passWord = loadCookie("pass");
 
-            hash = hexMD5(userName + passWord + secret);
+                secret = str.substring(7, str.length);
 
-            client.connection.write("USER " + userName + "\n" +
-                                    "SECRET " + secret + "\n" +
-                                    "HASH " + hash + "\n" +
-                                    "CHAR " + window.charName + "\n");
-            continue;
-        }
-        start = str.indexOf("SKOOT ");
-        if (start == 0) {
-            var sppos = str.indexOf(" ", start+6);
-            if (sppos == -1) {
-                /* malformed SKOOT */
-                continue;
+                hash = hexMD5(userName + passWord + secret);
+
+                client.connection.write("USER " + userName + "\n" +
+                                        "SECRET " + secret + "\n" +
+                                        "HASH " + hash + "\n" +
+                                        "CHAR " + window.charName + "\n");
+                break;
+
+            case "SKOOT":
+                var sppos = str.indexOf(" ", 6);
+                if (sppos == -1) {
+                    /* malformed SKOOT */
+                    break;
+                }
+                try {
+                    window.center_frame.newSkootMessage
+                        (str.substring(6, sppos),
+                         str.substring(sppos + 1),
+                         window.left_frame,
+                         window.right_frame);
+                } catch (err) {}
+                break;
+
+            case "MAPURL":
+                try {
+                    window.center_frame.newSkootMessage
+                        ("1",
+                         str.substring(7),
+                         window.left_frame,
+                         window.right_frame);
+                } catch (err) {}
+                break;
+
+            default:
+                munge_it = true;
+                break;
             }
-            try {
-                window.center_frame.newSkootMessage(str.substring(start + 6, sppos),
-                                                    str.substring(sppos + 1),
-                                                    window.left_frame,
-                                                    window.right_frame);
-            } catch (err) {}
-            
-            continue;
         }
-        start = str.indexOf("MAPURL ");
-        if (start == 0) {
-            try {
-                window.center_frame.newSkootMessage("1",
-                                                    str.substring(start + 7),
-                                                    window.left_frame,
-                                                    window.right_frame);
-            } catch (err) {}
-            continue;
-        }
-        mungeForDisplay(str);
-        if (i < lines.length-1) {
-            outputNL();
+        if (munge_it) {
+            mungeForDisplay(str);
+            if (i < lines.length-1) {
+                outputNL();
+            }
         }
     }
 }
