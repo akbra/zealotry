@@ -160,6 +160,7 @@ WoeHandlerClass.prototype = {
 
 function initializeWoeInterface()
 {
+    window.onload = null;
     // Figure out the server name.
     var url = document.location.href;
     var port = null;
@@ -176,4 +177,6 @@ function initializeWoeInterface()
     WoeHandler = new WoeHandlerClass(url, port);
     WoeInstance = new WoeClass(WoeHandler);
     WoeInstance.onMainLoad();
+    document.getElementById('content').width = "70%";
+    document.getElementById('content').style.width = "70%";
 }

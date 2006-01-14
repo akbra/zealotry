@@ -1,108 +1,104 @@
 <?xml version="1.0"?>
 
 <window id="main-window"
-	xmlns:html="http://www.w3.org/1999/xhtml"
-        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-	onload="onMainLoad();" onunload="onUnLoad();"
-	style="width:760px; height:480px;"
-	title="Zealotry"
-	orient="vertical" persist="width height" windowtype="skotos:zealotry">
-
-<script type="application/x-javascript" src="init.js"/>
-
-<script type="application/x-javascript" src="jslib.js"/>
-<script type="application/x-javascript" src="filesystem.js"/>
-<script type="application/x-javascript" src="file.js"/>
-
-<script type="application/x-javascript" src="utils.js"/>
-<script type="application/x-javascript" src="md5.js"/>
-<script type="application/x-javascript" src="connection-xpcom.js"/>
-<script type="application/x-javascript" src="network.js"/>
-<script type="application/x-javascript" src="client.js"/>
-
-<script type="application/x-javascript" src="macro.js"/>
-
-<script type="application/x-javascript" src="zealotry.js"/>
-
-<hbox style="-moz-box-flex: 1">
-  <html:iframe name="left-frame" id="left-frame" type="content"
-	  style="-moz-box-flex: 0; width: 145px; height=100%; overflow: hidden"
-	  src="about:blank"/>
-
-  <keyset>
-    <key id="dict-key" keycode="VK_F2" oncommand="helpMenuInit('dictionary');"/>
-  </keyset>
-  <vbox style="-moz-box-flex: 1">
-    <toolbox>
-     <menubar id="sample-menubar">
-       <menu id="file-menu" label="File" accesskey="F">
-         <menupopup id="file-popup" onpopupshowing="fileMenuInit();">
-           <menuitem id="menuitem_logging" type="checkbox" accesskey="L"
-                     label="Logging..." oncommand="onToggleLogging(event);"/>
-           <menuitem id="menuitem_autolog" type="checkbox" accesskey="A"
-                     label="AutoLog..." oncommand="onToggleAutoLog(event);"/>
-           <menuitem id="menuitem_echo" type="checkbox" acesskey="E" 
-                     label="Echo" oncommand="onToggleEcho(event);"/>
-           <menuseparator/>
-           <menuitem label="Exit" oncommand="window.close();" keycode="VK_F4"/>
-         </menupopup>
-       </menu>
-       <menu id="edit-menu" label="Edit" accesskey="E">
-         <menupopup id="edit-popup" onpopupshowing="editMenuInit();">
-           <menuitem id="menuitem_copy" label="Copy"   oncommand="onCopy();" accesskey="C"/>
-           <menuitem id="menuitem_paste" label="Paste" oncommand="onPaste();" accesskey="P"/>
-           <menuseparator/>
-           <menuitem label="Load Macros" accesskey="O" oncommand="window.myMacros.processMacroCommand('LOAD');"/>
-           <menuitem label="Save Macros" accesskey="A" oncommand="window.myMacros.processMacroCommand('STORE');"/>
-           <menuseparator/>
-           <menuitem label="Load Config" accesskey="L" oncommand="readConfigurationFile('menu');"/>
-           <menuitem label="Save Config" accesskey="S" oncommand="writeConfigurationFile();"/>
-         </menupopup>
-       </menu>
-       <menu id="font-and-size" label="Options" accesskey="O">
-         <menupopup id="fonts-and-sizes-menu">
-           <menu id="fonts" label="Style" accesskey="S">
-             <menupopup id="font-list">
-             </menupopup>
-           </menu>
-           <menu id="sizes" label="Size" accesskey="Z">
-             <menupopup id="sizes-menu"/>
-           </menu>
-  	   <menuseparator/>
-	   <menuitem label="Dictionary Lookup" key="dict-key" oncommand="helpMenuInit('dictionary');"/>
-           <menuseparator/>
-           <menuitem label="Change Background" accesskey="C" oncommand="changeBg();"/>
-         </menupopup>
-       </menu>
-       <menu id="help" label="Help" accesskey="H">
-	<menupopup id="help-popup">
-	  <menuitem label="Help Contents" oncommand="helpMenuInit('content');" accesskey="H"/>
-          <menuitem label="Changelog Notes" oncommand="helpMenuInit('changelog');" accesskey="C"/>
-	  <menuseparator/>
-	  <menuitem label="About Zealotry" oncommand="helpMenuInit('about');" accesskey="A"/>
-	</menupopup>
-       </menu>
-     </menubar>
-    </toolbox>
-    <!-- html:div
-        id="scrollback"
-        name="scrollback"
-        style="border: solid #00000 1px; background: #000000; color: #ffffff; font-weight: bold; height: 28pt; font-size: 10pt; position: absolute; top: 5px;"/ -->
-    <iframe 
-	name="scrollback" 
-	id="scrollback" 
-	type="content" 
-	style="min-height: 70%; max-height: 70%;" src="about:blank"/>
-    <splitter id="scroll_splitter" state="collapsed" collapse="before"/>
-    <iframe name="center-frame" id="center-frame" type="content" flex="1" src="about:blank"/>
-    <splitter state="open" collapse="before"/>
-    <textbox autostretch="true" style="margin: 0; padding: 0" onkeypress="onInput();" rows="2" multiline="true" id="input"/>
-  </vbox>
-
-  pref("bugger", true);
-
-  <html:iframe name="right-frame" id="right-frame" type="content"
-	  style="-moz-box-flex: 0; width: 145px; height=100%; overflow: hidden"
-          src="about:blank"/>
-</hbox>
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+    onload="onMainLoad();" onunload="onUnLoad();"
+    style="width:760px; height:480px;"
+    title="Zealotry"
+    orient="vertical" persist="width height" windowtype="skotos:zealotry">
+    
+    <script type="application/x-javascript" src="init.js"/>
+    
+    <script type="application/x-javascript" src="jslib.js"/>
+    <script type="application/x-javascript" src="filesystem.js"/>
+    <script type="application/x-javascript" src="file.js"/>
+    
+    <script type="application/x-javascript" src="utils.js"/>
+    <script type="application/x-javascript" src="md5.js"/>
+    <script type="application/x-javascript" src="connection-xpcom.js"/>
+    <script type="application/x-javascript" src="network.js"/>
+    <script type="application/x-javascript" src="client.js"/>
+    
+    <script type="application/x-javascript" src="macro.js"/>
+    
+    <script type="application/x-javascript" src="zealotry.js"/>
+    
+    <hbox style="-moz-box-flex: 1">
+	<html:iframe name="left-frame" id="left-frame" type="content"
+	    style="-moz-box-flex: 0; width: 145px; height=100%; overflow: hidden"
+	    src="about:blank"/>
+	
+	<keyset>
+	    <key id="dict-key" keycode="VK_F2" oncommand="helpMenuInit('dictionary');"/>
+	</keyset>
+	<vbox style="-moz-box-flex: 1">
+	    <toolbox>
+		<menubar id="sample-menubar">
+		    <menu id="file-menu" label="File" accesskey="F">
+			<menupopup id="file-popup" onpopupshowing="fileMenuInit();">
+			    <menuitem id="menuitem_logging" type="checkbox" accesskey="L"
+				label="Logging..." oncommand="onToggleLogging(event);"/>
+			    <menuitem id="menuitem_autolog" type="checkbox" accesskey="A"
+				label="AutoLog..." oncommand="onToggleAutoLog(event);"/>
+			    <menuitem id="menuitem_echo" type="checkbox" acesskey="E" 
+				label="Echo" oncommand="onToggleEcho(event);"/>
+			    <menuseparator/>
+			    <menuitem label="Exit" oncommand="window.close();" keycode="VK_F4"/>
+			</menupopup>
+		    </menu>
+		    <menu id="edit-menu" label="Edit" accesskey="E">
+			<menupopup id="edit-popup" onpopupshowing="editMenuInit();">
+			    <menuitem id="menuitem_copy" label="Copy"   oncommand="onCopy();" accesskey="C"/>
+			    <menuitem id="menuitem_paste" label="Paste" oncommand="onPaste();" accesskey="P"/>
+			    <menuseparator/>
+			    <menuitem label="Load Macros" accesskey="O" oncommand="window.myMacros.processMacroCommand('LOAD');"/>
+			    <menuitem label="Save Macros" accesskey="A" oncommand="window.myMacros.processMacroCommand('STORE');"/>
+			    <menuseparator/>
+			    <menuitem label="Load Config" accesskey="L" oncommand="readConfigurationFile('menu');"/>
+			    <menuitem label="Save Config" accesskey="S" oncommand="writeConfigurationFile();"/>
+			</menupopup>
+		    </menu>
+		    <menu id="font-and-size" label="Options" accesskey="O">
+			<menupopup id="fonts-and-sizes-menu">
+			    <menu id="fonts" label="Style" accesskey="S">
+				<menupopup id="font-list">
+				</menupopup>
+			    </menu>
+			    <menu id="sizes" label="Size" accesskey="Z">
+				<menupopup id="sizes-menu"/>
+			    </menu>
+			    <menuseparator/>
+			    <menuitem label="Dictionary Lookup" key="dict-key" oncommand="helpMenuInit('dictionary');"/>
+			    <menuseparator/>
+			    <menuitem label="Change Background" accesskey="C" oncommand="changeBg();"/>
+			</menupopup>
+		    </menu>
+		    <menu id="help" label="Help" accesskey="H">
+			<menupopup id="help-popup">
+			    <menuitem label="Help Contents" oncommand="helpMenuInit('content');" accesskey="H"/>
+			    <menuitem label="Changelog Notes" oncommand="helpMenuInit('changelog');" accesskey="C"/>
+			    <menuseparator/>
+			    <menuitem label="About Zealotry" oncommand="helpMenuInit('about');" accesskey="A"/>
+			</menupopup>
+		    </menu>
+		</menubar>
+	    </toolbox>
+	    <iframe 
+		name="scrollback" 
+		id="scrollback" 
+		type="content" 
+		style="min-height: 70%; max-height: 70%;" src="about:blank"/>
+	    <splitter id="scroll_splitter" state="collapsed" collapse="before"/>
+	    <iframe name="center-frame" id="center-frame" type="content" flex="1" src="about:blank"/>
+	    <splitter state="open" collapse="before"/>
+	    <textbox autostretch="true" style="margin: 0; padding: 0" onkeypress="onInput();" rows="2" multiline="true" id="input"/>
+	</vbox>
+	
+	pref("bugger", true);
+	
+	<html:iframe name="right-frame" id="right-frame" type="content"
+	    style="-moz-box-flex: 0; width: 145px; height=100%; overflow: hidden"
+	    src="about:blank"/>
+    </hbox>
 </window>

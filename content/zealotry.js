@@ -64,13 +64,18 @@ function onMainLoad()
     scroll_splitter = document.getElementById('scroll_splitter');
     scrollback = document.getElementById('scrollback');
 
-    if (this.alreadyLoaded) {
-        /* I don't know why this happens :( */
+    // Remove the onload trigger on the XUL
+    window.onload = null;
+    
+    /*
+    This should no longer happen.
+      if (this.alreadyLoaded) {
+        // I don't know why this happens :( 
         return false;
     }
     
     this.alreadyLoaded = true;
-    
+    */
     
     try {
         pm.enablePrivilege(privs);

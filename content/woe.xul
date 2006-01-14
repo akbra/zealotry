@@ -33,7 +33,7 @@
         </popupset>
 
         <tree 
-	    style="font-family: FreeMono, Monospace, Monospaced, Courier new, Courier; font-size: 10pt;" 
+	    style="font-family: FreeMono, Monospace, Monospaced, Courier new, Courier; font-size: 10pt;"
 	    id="xtree" 
 	    flex="1" 
 	    hidecolumnpicker="true" 
@@ -47,9 +47,11 @@
 		    primary="true"
 		    flex="3"/>
             </treecols>
-	    
-            <treechildren context="woeContext" id="tow">
-            </treechildren>
+            <treechildren context="woeContext" id="tow"/>
         </tree>
+	<splitter id="treesplitter" state="open" resizeafter="grow" collapse="before">
+	    <grippy/>
+	</splitter>
+	<iframe flex="1" src="about:blank" id="content" style="min-width: 70%; width: 70%;"/>
     </hbox>
 </window>

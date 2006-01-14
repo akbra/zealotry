@@ -39,8 +39,22 @@ WoeClass = function(handler)
 
 WoeClass.prototype = {
     munge_buffer: "",
+    debug_buffer: [],
     enter_down: false,
 
+    squeak: function()
+    {
+        var ifr = document.getElementById('content').contentDocument;
+        ifr.open();
+        var db = CurrWoe.debug_buffer;
+        var ix = db.length;
+        for (var i = 0; i < ix; i++) {
+            ifr.write(db[i]);
+            ifr.write("<hr/>");
+        }
+        ifr.close();
+    },
+    
     onMainLoad: function()
     {
         if (this.alreadyLoaded) {
@@ -57,6 +71,8 @@ WoeClass.prototype = {
         this.h.init_xw();
 
         this.mainStep();
+
+        setTimeout('CurrWoe.squeak()', 5000);
     },
 
     onUnLoad: function()
@@ -135,6 +151,7 @@ WoeClass.prototype = {
         } else {
             self.munge_buffer = "";
         }
+        self.debug_buffer.push(bigstr);
         var lines = bigstr.split('\r\n');
         var sz    = lines.length;
     
