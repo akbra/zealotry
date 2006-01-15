@@ -69,13 +69,13 @@ var MyWorldSpecification = function() {
      * This is a list of WOE server configs.
      */
     this.xwoe_servList =
-       {cm  : "marrach.skotos.net:5090",
+       {cm  : "marrach.skotos.net:8090",
         mv  : "mv.skotos.net:5090",
-        lc  : "lovecraft.skotos.net:5090",
-        s7  : "skotos-seven.skotos.net:5090",
-        laz : "lazarus.skotos.net:5090",
-        ic  : "ironclaw.skotos.net:5090",
-        stages : "stages.skotos.net:5090"};
+        lc  : "lovecraft.skotos.net:3090",
+        s7  : "skotos-seven.skotos.net:6090",
+        laz : "lazarus.skotos.net:2090",
+        ic  : "ironclaw.skotos.net:4090",
+        stages : "stages.skotos.net:6090"};
 
     /*
      * This is a list of shortcuts for WOE servers.
