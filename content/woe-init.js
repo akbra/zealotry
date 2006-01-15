@@ -35,10 +35,10 @@ WoeHandlerClass.prototype = {
     xw_newTree: function(s, pre, id)
     {
         var item = document.createElement('treeitem');
-        item.setAttribute('container', 'true');
-        item.setAttribute('open',      'false');
-        item.setAttribute('rname',     s);
-        item.setAttribute('folder',    true);
+        item.setAttribute('container',  'true');
+        item.setAttribute('open',       'false');
+        item.setAttribute('rname',      s);
+        item.setAttribute('woe_folder', true);
         
         var row = document.createElement('treerow');
         item.appendChild(row);
@@ -78,7 +78,7 @@ WoeHandlerClass.prototype = {
         item.setAttribute('id',        id + s);
         item.setAttribute('rname',     s);
         item.setAttribute('container', 'false');
-        item.setAttribute('folder',    false);
+        item.setAttribute('woe_folder', false);
 
         var row = document.createElement('treerow');
         item.appendChild(row);
@@ -107,7 +107,7 @@ WoeHandlerClass.prototype = {
     xw_queryWoeObject: function(s, nullIfMissing)
     {
         this.counter++;
-        var dbg = this.counter == 4;
+        var dbg = this.counter == 1;
         var stct = s.split(':');
         var sz   = stct.length;
         var pre  = '';
@@ -133,20 +133,20 @@ WoeHandlerClass.prototype = {
                 childCount = children.length;
                 for (j = 0; j < childCount; j++) {
                     child = children.item(j);
-                    if (dbg) alert((f ? "folder: " : "object: ") + "child #" + j + " (" + (child.getAttribute('folder') ? "f" : "o") + "), " + tid + s + " vs " + child.getAttribute('rname'));
-                    if ((f && child.getAttribute('folder') && s < child.getAttribute('rname')) || // for folders
-                        (!f && (child.getAttribute('folder') || s < child.getAttribute('rname')))) { // for objects
+                    if (dbg) alert((f ? "woe_folder: " : "object: ") + "child #" + j + " (" + (child.getAttribute('woe_folder') ? "f" : "o") + "), " + tid + s + " vs " + child.getAttribute('rname'));
+                    if ((f && child.getAttribute('woe_folder') && s < child.getAttribute('rname')) || // for folders
+                        (!f && (child.getAttribute('woe_folder') || s < child.getAttribute('rname')))) { // for objects
                         break;
                     }
                 }
-                if (dbg) alert("Found " + j);
+                if (dbg) alert("Found " + j + " (" + (f ? "f" : "o") + "?" + (newChild.getAttribute('woe_folder') ? "f" : "o") + ")");
                 // j++; // move i to the node which we will place the new node before.
                 if (j < childCount) {
                     if (dbg) alert("inside range; insertBefore " + children.item(j).getAttribute('rname'));
                     // new node is above the last node (somewhere)
                     papa.insertBefore(newChild, children.item(j));
                 } else {
-                    if (dbg) alert("outside range; append after " + children.item(childCount-1).getAttribute('rname'));
+                    if (dbg) alert("outside range; append after " + (childCount > 0 ? children.item(childCount-1).getAttribute('rname') : "[n/a]"));
                     // new node is after the last node
                     papa.appendChild(newChild);
                 }
