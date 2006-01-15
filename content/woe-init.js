@@ -78,7 +78,7 @@ WoeHandlerClass.prototype = {
         item.setAttribute('id',        id + s);
         item.setAttribute('rname',     s);
         item.setAttribute('container', 'false');
-        item.setAttribute('woe_folder', null);
+        // item.setAttribute('woe_folder', null);
 
         var row = document.createElement('treerow');
         item.appendChild(row);
@@ -102,12 +102,12 @@ WoeHandlerClass.prototype = {
         }
     },
 
-    counter: 0,
+    //    counter: 0,
     
     xw_queryWoeObject: function(s, nullIfMissing)
     {
-        this.counter++;
-        var dbg = this.counter == 1;
+        /* this.counter++;
+           var dbg = this.counter == 2; */
         var stct = s.split(':');
         var sz   = stct.length;
         var pre  = '';
@@ -133,27 +133,27 @@ WoeHandlerClass.prototype = {
                 childCount = children.length;
                 for (j = 0; j < childCount; j++) {
                     child = children.item(j);
-                    if (dbg) alert((f ? "woe_folder: " : "object: ") + "child #" + j + " (" + (child.getAttribute('woe_folder') ? "f" : "o") + "), " + tid + s + " vs " + child.getAttribute('rname'));
+                    // if (dbg) alert((f ? "woe_folder: " : "object: ") + "child #" + j + " (" + (child.getAttribute('woe_folder') ? "f" : "o") + "), " + tid + s + " vs " + child.getAttribute('rname'));
                     if ((f && child.getAttribute('woe_folder') && s < child.getAttribute('rname')) || // for folders
                         (!f && (child.getAttribute('woe_folder') || s < child.getAttribute('rname')))) { // for objects
                         break;
                     }
                 }
-                if (dbg) alert("Found " + j + " (" + (f ? "f" : "o") + "?" + (newChild.getAttribute('woe_folder') ? "f" : "o") + ")");
+                // if (dbg) alert("Found " + j + " (" + (f ? "f" : "o") + "?" + (newChild.getAttribute('woe_folder') ? "f" : "o") + ")");
                 // j++; // move i to the node which we will place the new node before.
                 if (j < childCount) {
-                    if (dbg) alert("inside range; insertBefore " + children.item(j).getAttribute('rname'));
+                    // if (dbg) alert("inside range; insertBefore " + children.item(j).getAttribute('rname'));
                     // new node is above the last node (somewhere)
                     papa.insertBefore(newChild, children.item(j));
                 } else {
-                    if (dbg) alert("outside range; append after " + (childCount > 0 ? children.item(childCount-1).getAttribute('rname') : "[n/a]"));
+                    // if (dbg) alert("outside range; append after " + (childCount > 0 ? children.item(childCount-1).getAttribute('rname') : "[n/a]"));
                     // new node is after the last node
                     papa.appendChild(newChild);
                 }
                 // (obj, byLabel, intoContainer)
                 // papa.appendChild();
             }
-            papa = newChild;
+            papa = (f ? newChild.firstChild.nextSibling : newChild);
             pre += s + ":";
             tid += s + "_";
         }

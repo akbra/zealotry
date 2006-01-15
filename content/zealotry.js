@@ -26,7 +26,7 @@
  *
  */
 
-const ZEALOUS_VERSION = "0.7.3";
+const ZEALOUS_VERSION = "0.7.4";
 const POLL_DELAY = 50;
 
 var munge_buffer = "";
