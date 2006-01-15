@@ -266,8 +266,13 @@ WoeHandlerClass.prototype = {
 function initializeWoeInterface()
 {
     window.onload = null;
-    // Figure out the server name.
+    // Was a valid value supplied?
     var url = document.location.href;
+    if (url.substr(0, 6) != "woe://") {
+        alert("Invalid URL. Use 'woe://HOSTNAME' or 'woe://HOSTNAME:PORTNUMBER'");
+        document.location.href = "about:blank";
+    }
+    // Figure out the server name.
     var port = null;
     
     // Strip off "woe://"

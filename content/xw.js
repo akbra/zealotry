@@ -44,12 +44,16 @@ WoeClass.prototype = {
 
     onMainLoad: function()
     {
-        if (this.alreadyLoaded) {
-            /* I don't know why this happens :( */
+        
+        // Remove the onload trigger on the XUL
+        window.onload = null;
+
+        /* if (this.alreadyLoaded) {
+            // I don't know why this happens :( 
             return false;
         }
 
-        this.alreadyLoaded = true;
+        this.alreadyLoaded = true; */
 
         pm.enablePrivilege(privs);
 
