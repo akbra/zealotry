@@ -27,7 +27,7 @@
  *
  */
 
-var MyWorld = function() {
+var MyWorldSpecification = function() {
     /*
      * This is a list of server pointers, referred to using the
      * zealotry_servMap property, in order to allow users to write
@@ -98,3 +98,5 @@ var MyWorld = function() {
         oasis     : "stages",
         st        : "stages"};
 }
+
+var MyWorld = new MyWorldSpecification();
