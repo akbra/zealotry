@@ -88,9 +88,6 @@ function onMainLoad()
         alert("cannot find input box element");
     }
     
-    // Set scrollback style.
-    // scrollback.contentDocument.body.setAttribute('style', 'font-size: 10pt;');
-    
     var h = document.location.href;
     
     if (h) {
@@ -105,17 +102,17 @@ function onMainLoad()
             ugArr = ["*", h];
         }
         // do we recognize this server?
-        var servList =
-            {cm  : "marrach.skotos.net/Marrach/Zealous",
+        var servList = MyWorld.zealotry_servList;
+           /* {cm  : "marrach.skotos.net/Marrach/Zealous",
              mv  : "mv.skotos.net/SAM/Prop/Mortalis:Theatre:Web:Zealous",
              lc  : "lovecraft.skotos.net/Theatre/Zealous",
              s7  : "skotos-seven.skotos.net/Theatre/Zealous",
              laz : "lazarus.skotos.net/Theatre/Zealous",
              ic  : "ironclaw.skotos.net/Theatre/Zealous",
-             stages : "stages.skotos.net/Theatre/Zealous"};
+             stages : "stages.skotos.net/Theatre/Zealous"}; */
         
-        var servMap =
-            {cm : "cm",
+        var servMap = MyWorld.zealotry_servMap;
+           /* {cm : "cm",
              marrach : "cm",
              mv : "mv",
              mortalis : "mv",
@@ -129,7 +126,7 @@ function onMainLoad()
              ironclaw : "ic",
              stages : "stages",
              oasis : "stages",
-             st : "stages"};
+             st : "stages"}; */
         
         if (servMap[ugArr[1]]) {
             ugArr[1] = servList[servMap[ugArr[1]]];

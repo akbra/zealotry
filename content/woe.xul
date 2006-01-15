@@ -8,6 +8,8 @@
     title="XWoe"
     orient="vertical" persist="width height" windowtype="skotos:woe">
     
+    <script type="application/x-javascript" src="my-world.js"/>
+
     <script type="application/x-javascript" src="woe-init.js"/>
     
     <script type="application/x-javascript" src="jslib.js"/>

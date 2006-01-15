@@ -267,7 +267,10 @@ function initializeWoeInterface()
     window.onload = null;
     // Was a valid value supplied?
     var url = document.location.href;
-    if (url.substr(0, 6) != "woe://") {
+    // First try to extract it, if it's a shortcut.
+    if (MyWorld.xwoe_servMap[url.substr(4)]) {
+        url = "woe://" + MyWorld.xwoe_servList[MyWorld.xwoe_servMap[url.substr(4)]];
+    } else if (url.substr(0, 6) != "woe://") {
         alert("Invalid URL. Use 'woe://HOSTNAME' or 'woe://HOSTNAME:PORTNUMBER'");
         document.location.href = "about:blank";
     }
