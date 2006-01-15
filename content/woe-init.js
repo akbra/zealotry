@@ -20,6 +20,7 @@ WoeHandlerClass.prototype = {
     cframe: null,
     host: null,
     port: 5090,
+    xwi: null,
         
     getHost: function()
     {
@@ -31,17 +32,11 @@ WoeHandlerClass.prototype = {
         return this.port; // 5090;
     },
 
-    xw_listenTree_Open: function(event)
-    {
-        alert("listenTree_Open: " + event);
-    },
-
     xw_newTree: function(s, pre, id)
     {
         var item = document.createElement('treeitem');
         item.setAttribute('container', 'true');
         item.setAttribute('open',      'false');
-        // item.addEventListener('toggleOpenState', this.xw_listenTree_Open, false);
         
         var row = document.createElement('treerow');
         item.appendChild(row);
@@ -51,11 +46,27 @@ WoeHandlerClass.prototype = {
         row.appendChild(cell);
         
         var kids = document.createElement('treechildren');
-        kids.setAttribute('id', id + s);
-        kids.setAttribute('path', pre + s);
+        kids.setAttribute('id',      id + s);
+        kids.setAttribute('path',    pre + s);
+        kids.setAttribute('fetched', false);
         item.appendChild(kids);
         
         return item;
+    },
+
+    // check if a folder is empty and, if so, remove it
+    xw_checkFolder: function(o)
+    {
+        // XXX: Folder is treeitem -> treechildren + treerow
+        // Acquired (o) is treechildren object. If treechildren is childless,
+        // folder is empty, and treeitem should be removed.
+        if (!o.hasChildNodes()) {
+            // Folder is empty.
+            var obj = o.parentNode; // hop to treeitem
+            var p = obj.parentNode; // hop to treeitem's dad
+            p.removeChild(obj);     // remove treeitem
+            if (p.getAttribute('path') != null) this.xw_checkFolder(p); // check parent, presuming it has an id
+        }
     },
 
     xw_newObject: function(s, path, id) 
@@ -64,7 +75,8 @@ WoeHandlerClass.prototype = {
         item.setAttribute('path', path + s);
         item.setAttribute('id', id + s);
         item.setAttribute('container', 'false');
-            
+
+        // XXX: Do we really need to add one treerow for every treecell? Yes we do.
         var row = document.createElement('treerow');
         item.appendChild(row);
             
@@ -74,12 +86,21 @@ WoeHandlerClass.prototype = {
         
         return item;
     },
-        
-    xw_queryWoeObject: function(s)
+
+    // clear an object
+    xw_clearObject: function(s)
     {
-        // XXX: Why is this thing replacing : with _? To have a valid "id" tag? Why not simply
-        // use another attribute?
-        // Because we get them by ID. Le sigh!
+        var obj = this.xw_queryWoeObject(s, true);
+        if (obj) {
+            // XXX: This is the treeitem.
+            var p = obj.parentNode;
+            p.removeChild(obj); // remove treeitem, in which treerow + treecell reside
+            this.xw_checkFolder(p); // check treeitem's parent.
+        }
+    },
+        
+    xw_queryWoeObject: function(s, nullIfMissing)
+    {
         var stct = s.split(':');
         var sz   = stct.length;
         var pre  = '';
@@ -89,13 +110,37 @@ WoeHandlerClass.prototype = {
         
         for (i = 0; i < sz; i++) {
             s = stct[i];
-            if (!document.getElementById(pre + s))
+            if (!document.getElementById(tid + s)) {
+                if (nullIfMissing) return null;
                 papa.appendChild((i+1 < sz ? this.xw_newTree(s, pre, tid) : this.xw_newObject(s, pre, tid)));
+            }
             papa = document.getElementById(tid + s);
             pre += s + ":";
             tid += s + "_";
         }
         return papa;
+    },
+        
+    xw_TreeAttrModified: function(e)
+    {
+        var self = WoeHandler; // *mutter*
+        if (e.attrName != "open") return true; // we only care about the "open" attribute
+        if (e.newValue != "true") return true; // we only care about when the state becomes open
+        try {
+            var src = e.relatedNode.ownerElement;
+            var folder = src.parentNode;
+            var path = (folder == self.tow ? null : folder.getAttribute('path'));
+            var item = src.firstChild.firstChild; //
+            var itemLabel = item.getAttribute('label');
+            var resolved = (path ? path + ":" : "") + itemLabel;
+            // alert("Opening " + resolved);
+            if (!item.getAttribute('fetched')) {
+                // alert("Not fetched -> " + resolved + ": " + self.xwi.client.write);
+                self.xwi.client.connection.write("SEND " + resolved + "\n");
+                // woeConn.writeLine("SEND " + node.getFullPath());
+                item.setAttribute('fetched', true);
+            }
+        } catch (e) {}
     },
         
     xw_processWoeServerCommand: function(cmd) 
@@ -113,49 +158,33 @@ WoeHandlerClass.prototype = {
             } else {
                 alert("queryWoeObject(" + process[0] + " - " + process[1] + " - " + process[2] + ") isn't valid");
             }
-            /*
-              label = ob.getAttribute('label');
-               ob.setAttribute('label', 
-               '<a target="_blank" href="' + 
-               process[1] + '">' + 
-               label +
-               '</a>'); */
-            // alert("setting " + process[2] + " to point at " + process[1]);
-        case "CLEAR" :
-            // clear object
             break;
+            
+        case "CLEAR" :
+            // alert(cmd);
+            // clear object
+            this.xw_clearObject(process[1]);
+            break;
+            
         default :
             alert("Unknown command: " + process[0]);
             break;
         }
     },
 
-    fark: function(e)
-    {
-        alert(e.attrName + ": " + e.prevValue + " -> " + e.newValue + " in " + e.relatedNode);
-    },
-
-    xw_TreeAttrModified: function(e)
-    {
-        if (e.attrName != "open") return true; // we only care about the "open" attribute
-        if (e.newValue != "true") return true; // we only care about when the state becomes open
-        try {
-            var src = e.relatedNode.ownerElement;
-            var path = src.parentNode;
-            if (path == this.tow) path = null; else path = path.getAttribute('path');
-            var item = src.firstChild.firstChild.getAttribute('label');
-            var resolved = (path ? path + ":" : "") + item;
-            alert("Opening " + resolved);
-        } catch (e) {}
-    },
-        
     init_xw: function() 
     {
         pm.enablePrivilege(privs);
         this.tow   = document.getElementById('tow');
         this.xtree = document.getElementById('xtree');
-        this.tow.addEventListener("DOMAttrModified", this.xw_TreeAttrModified, false);
         this.cframe = document.getElementById('content');
+        this.tow.addEventListener("DOMAttrModified", this.xw_TreeAttrModified, false);
+    },
+
+    set_xwi: function(xwi)
+    {
+        this.xwi = xwi;
+        // alert("WoeHandler.xwi = " + WoeHandler.xwi);
     },
         
     woeView: function()
@@ -213,6 +242,7 @@ function initializeWoeInterface()
     } else url = url[0];
     WoeHandler = new WoeHandlerClass(url, port);
     WoeInstance = new WoeClass(WoeHandler);
+    WoeHandler.set_xwi(WoeInstance);
     WoeInstance.onMainLoad();
     document.getElementById('content').width = "70%";
     document.getElementById('content').style.width = "70%";

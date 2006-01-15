@@ -40,6 +40,7 @@ WoeClass = function(handler)
 WoeClass.prototype = {
     munge_buffer: "",
     enter_down: false,
+    client: null,
 
     onMainLoad: function()
     {
@@ -63,8 +64,8 @@ WoeClass.prototype = {
     {
         pm.enablePrivilege(privs);
 
-        if (window.client && window.client.connection) {
-            window.client.connection.disconnect();
+        if (this.client && this.client.connection) {
+            this.client.connection.disconnect();
         }
     },
 
@@ -72,25 +73,25 @@ WoeClass.prototype = {
     {
         pm.enablePrivilege(privs);
 
-        window.client = new CClient();
+        this.client = new CClient();
 
-        window.client.connect
+        this.client.connect
         (this.h.getHost(), // "mv.skotos.net", //window.content_frame.getHost(),
          this.h.getPort(), // 5090, // window.content_frame.getPort(),
          this.onRead);
 
-        client.connection.write("TreeOfWoe " + TOW_VERSION + "\n");
-        client.connection.write("SEND \n");
+        this.client.connection.write("TreeOfWoe " + TOW_VERSION + "\n");
+        this.client.connection.write("SEND \n");
     },
 
     onNextCmd: function()
     {
-        window.client.nextInputBuffer();
+        this.client.nextInputBuffer();
     },
 
     onPrevCmd: function()
     {
-        window.client.prevInputBuffer();
+        this.client.prevInputBuffer();
     },
 
     onClose: function(status, errStr)
@@ -126,9 +127,9 @@ WoeClass.prototype = {
     {
         alert("connection terminated");
     
-        delete window.client.connection;
+        delete this.client.connection;
 
-        window.client.connection = false;
+        this.client.connection = false;
         window.title = "XWoe (Disconnected.)";
 
         delete window.connectHost;

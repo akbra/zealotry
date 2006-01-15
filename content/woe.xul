@@ -33,9 +33,9 @@
         </popupset>
 
         <tree 
-	    style="font-family: FreeMono, Monospace, Monospaced, Courier new, Courier; font-size: 10pt;"
+	    style="font-family: FreeMono, Monospace, Monospaced, Courier new, Courier; font-size: 10pt; width: 30%; min-width: 10%; max-width: 40%;"
+	    width="300"
 	    id="xtree" 
-	    flex="1" 
 	    hidecolumnpicker="true" 
 	    seltype="single" 
 	    onselect="ontreeselectwrapper()"
@@ -45,7 +45,8 @@
 		    id="woe"
 		    label="Woe"
 		    primary="true"
-		    flex="3"/>
+		    flex="1"
+		    />
             </treecols>
             <treechildren context="woeContext" id="tow"/>
         </tree>
