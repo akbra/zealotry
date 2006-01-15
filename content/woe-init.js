@@ -37,6 +37,8 @@ WoeHandlerClass.prototype = {
         var item = document.createElement('treeitem');
         item.setAttribute('container', 'true');
         item.setAttribute('open',      'false');
+        item.setAttribute('rname',     s);
+        item.setAttribute('folder',    true);
         
         var row = document.createElement('treerow');
         item.appendChild(row);
@@ -72,11 +74,12 @@ WoeHandlerClass.prototype = {
     xw_newObject: function(s, path, id) 
     {
         var item = document.createElement('treeitem');
-        item.setAttribute('path', path + s);
-        item.setAttribute('id', id + s);
+        item.setAttribute('path',      path + s);
+        item.setAttribute('id',        id + s);
+        item.setAttribute('rname',     s);
         item.setAttribute('container', 'false');
+        item.setAttribute('folder',    false);
 
-        // XXX: Do we really need to add one treerow for every treecell? Yes we do.
         var row = document.createElement('treerow');
         item.appendChild(row);
             
@@ -98,23 +101,59 @@ WoeHandlerClass.prototype = {
             this.xw_checkFolder(p); // check treeitem's parent.
         }
     },
-        
+
+    counter: 0,
+    
     xw_queryWoeObject: function(s, nullIfMissing)
     {
+        this.counter++;
+        var dbg = this.counter == 4;
         var stct = s.split(':');
         var sz   = stct.length;
         var pre  = '';
         var tid  = '';
         var s    = '';
+        var f    = false;
         var papa = this.tow;
+        var childCount = 0;
+        var children = null;
+        var child = null;
+        var newChild = null;
+        var i = 0;
+        var j = 0;
         
-        for (i = 0; i < sz; i++) {
+        for (i = 0; i < sz; i++) { // step through each level (e.g. Mortalis:players:K:kalle is 4 levels)
             s = stct[i];
-            if (!document.getElementById(tid + s)) {
+            newChild = document.getElementById(tid + s);
+            if (!newChild) { // the folder/object is not existing yet, so we need to add it
                 if (nullIfMissing) return null;
-                papa.appendChild((i+1 < sz ? this.xw_newTree(s, pre, tid) : this.xw_newObject(s, pre, tid)));
+                f = i+1 < sz; // f == folder (true) or object (false)
+                newChild = (f ? this.xw_newTree(s, pre, tid) : this.xw_newObject(s, pre, tid));
+                children = papa.childNodes;
+                childCount = children.length;
+                for (j = 0; j < childCount; j++) {
+                    child = children.item(j);
+                    if (dbg) alert((f ? "folder: " : "object: ") + "child #" + j + " (" + (child.getAttribute('folder') ? "f" : "o") + "), " + tid + s + " vs " + child.getAttribute('rname'));
+                    if ((f && child.getAttribute('folder') && s < child.getAttribute('rname')) || // for folders
+                        (!f && (child.getAttribute('folder') || s < child.getAttribute('rname')))) { // for objects
+                        break;
+                    }
+                }
+                if (dbg) alert("Found " + j);
+                // j++; // move i to the node which we will place the new node before.
+                if (j < childCount) {
+                    if (dbg) alert("inside range; insertBefore " + children.item(j).getAttribute('rname'));
+                    // new node is above the last node (somewhere)
+                    papa.insertBefore(newChild, children.item(j));
+                } else {
+                    if (dbg) alert("outside range; append after " + children.item(childCount-1).getAttribute('rname'));
+                    // new node is after the last node
+                    papa.appendChild(newChild);
+                }
+                // (obj, byLabel, intoContainer)
+                // papa.appendChild();
             }
-            papa = document.getElementById(tid + s);
+            papa = newChild;
             pre += s + ":";
             tid += s + "_";
         }
