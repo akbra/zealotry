@@ -256,7 +256,6 @@ WoeHandlerClass.prototype = {
             // selected folder, not object
             return;
         }
-
         
         // this.cframe.contentW
         window.open("http://" + this.getHost() + "/" + el.src, 'content'); //.setAttribute('src', el.src);

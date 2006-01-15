@@ -39,7 +39,6 @@ WoeClass = function(handler)
 
 WoeClass.prototype = {
     munge_buffer: "",
-    enter_down: false,
     client: null,
 
     onMainLoad: function()
@@ -88,16 +87,6 @@ WoeClass.prototype = {
         this.client.connection.write("SEND \n");
     },
 
-    onNextCmd: function()
-    {
-        this.client.nextInputBuffer();
-    },
-
-    onPrevCmd: function()
-    {
-        this.client.prevInputBuffer();
-    },
-
     onClose: function(status, errStr)
     {
         this.connectionTerminated();
@@ -121,11 +110,6 @@ WoeClass.prototype = {
             self.h.xw_processWoeServerCommand(lines[i]);
         }
     },
-
-/* function zealousPreference(setting)
-{
-    return "zealous." + safe(gameName) + "." + safe(charName) + "." + setting;
-} */
 
     connectionTerminated: function()
     {
