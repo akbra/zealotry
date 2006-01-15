@@ -78,7 +78,7 @@ WoeHandlerClass.prototype = {
         item.setAttribute('id',        id + s);
         item.setAttribute('rname',     s);
         item.setAttribute('container', 'false');
-        item.setAttribute('woe_folder', false);
+        item.setAttribute('woe_folder', null);
 
         var row = document.createElement('treerow');
         item.appendChild(row);
