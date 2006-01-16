@@ -63,17 +63,23 @@
 		    </menu>
 		    <menu id="font-and-size" label="Options" accesskey="O">
 			<menupopup id="fonts-and-sizes-menu">
-			    <menu id="fonts" label="Style" accesskey="S">
+			    <menu id="fonts" label="Font Style" accesskey="S">
 				<menupopup id="font-list">
 				</menupopup>
 			    </menu>
-			    <menu id="sizes" label="Size" accesskey="Z">
+			    <menu id="sizes" label="Font Size" accesskey="Z">
 				<menupopup id="sizes-menu"/>
 			    </menu>
 			    <menuseparator/>
 			    <menuitem label="Dictionary Lookup" key="dict-key" oncommand="helpMenuInit('dictionary');"/>
 			    <menuseparator/>
-			    <menuitem label="Change Background" accesskey="C" oncommand="changeBg();"/>
+			    <menu id="background" label="Background Options" accesskey="O">
+				<menupopup id="background-popup">
+				    <menuitem label="Add New Background" accesskey="A" oncommand="changeBg();"/>
+				    <menuitem label="Remove Current Background" accesskey="R" oncommand="changeBg('remove');"/>
+					<menuseparator/>
+				</menupopup>
+			    </menu>
 			</menupopup>
 		    </menu>
 		    <menu id="help" label="Help" accesskey="H">

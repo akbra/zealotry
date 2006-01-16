@@ -104,30 +104,7 @@ function onMainLoad()
         }
         // do we recognize this server?
         var servList = MyWorld.zealotry_servList;
-           /* {cm  : "marrach.skotos.net/Marrach/Zealous",
-             mv  : "mv.skotos.net/SAM/Prop/Mortalis:Theatre:Web:Zealous",
-             lc  : "lovecraft.skotos.net/Theatre/Zealous",
-             s7  : "skotos-seven.skotos.net/Theatre/Zealous",
-             laz : "lazarus.skotos.net/Theatre/Zealous",
-             ic  : "ironclaw.skotos.net/Theatre/Zealous",
-             stages : "stages.skotos.net/Theatre/Zealous"}; */
-        
         var servMap = MyWorld.zealotry_servMap;
-           /* {cm : "cm",
-             marrach : "cm",
-             mv : "mv",
-             mortalis : "mv",
-             lc : "lc",
-             abn : "lc",
-             lovecraft : "lc",
-             s7 : "s7",
-             laz : "laz",
-             lazarus : "laz",
-             ic : "ic",
-             ironclaw : "ic",
-             stages : "stages",
-             oasis : "stages",
-             st : "stages"}; */
         
         if (servMap[ugArr[1]]) {
             ugArr[1] = servList[servMap[ugArr[1]]];
@@ -1376,21 +1353,12 @@ function doBgSetup(arr)
 	document.getElementById('center-frame').style.background = bgCrap[1];
 	document.getElementById('scrollback').style.background = bgCrap[1];
 	return;
-
-/*
-	if (arr) {
-	        document.getElementById('center-frame').style.background = arr[1];
-		document.getElementById('scrollback').style.background = arr[1];
-		return;
-	}
-	return;
-*/
     }
     document.getElementById('center-frame').style.background = 'white url(' + this.bgImage + ') no-repeat';
     document.getElementById('scrollback').style.background = 'white url(' + this.bgImage + ') no-repeat';
 }
 
-function changeBg()
+function changeBg(url)
 {
     try {
         pm.enablePrivilege(privs);
@@ -1399,7 +1367,23 @@ function changeBg()
         return;
     }
 
-    var url = prompt("What is the URL to the background image you'd like to use?");
+    if (url == "remove") {
+	try {
+		var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+        	pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+        	var bg = pref.getCharPref(zealousPreference("background"));
+	} catch (err) {
+		alert("You don't have a background set.");
+		return;
+	}
+	pref.clearUserPref(zealousPreference("background"));
+	doBgSetup(bgCrap);
+	return;
+    }	
+
+    if (!url) {
+	var url = prompt("What is the URL to the background image you'd like to use?");
+    }
     if (url) {
 	document.getElementById('center-frame').style.background = 'white url(' + url + ') no-repeat';
 	if (confirm("Is this ok?")) {
@@ -1408,7 +1392,7 @@ function changeBg()
    	    	} catch (err) {
         		alert("I failed enablePrivilege: " + err);
         		return;
-		    	    	}
+		}
 	        var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
         	pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
         	pref.setCharPref(zealousPreference("background"), url);
@@ -1418,3 +1402,4 @@ function changeBg()
 	}
     }
 }
+

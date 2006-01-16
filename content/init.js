@@ -136,6 +136,7 @@ function bubbleSettings()
 
     cframe.skotosLink = submitSkotosLink;
     generate_fontmenu();
+    generate_bgList();
 }
 
 /*
@@ -223,3 +224,35 @@ function onInput()
     }
     inputRows = inEl.inputField.rows;
 }
+
+function generate_bgList()
+{
+    try {
+        pm.enablePrivilege(privs);
+    } catch (err) {
+        alert("I failed enablePrivilege: " + err);
+        return;
+    }
+
+    try {
+        var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+        pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+        var bgList = pref.getCharPref(zealousPreference("backgroundList"));
+    } catch (err) {
+        return;
+    }
+
+    var bg;
+    var popup = document.getElementById('background-popup');
+    bgList = bgList.split("@");
+    var l = bgList.length;
+
+    for (var z = 0; z < l; z++) {
+        bg = document.createElement( 'menuitem' );
+        bg.setAttribute('id', 'bg_'+z );
+        bg.setAttribute('label', bgList[z] );
+        bg.setAttribute('oncommand', 'changeBg("' + bgList[z] + '");' );
+        popup.appendChild( bg );
+    }
+}
+
