@@ -7,6 +7,7 @@
 	
 	<em:id>{ff1b3636-869f-4ee5-9dae-d2e12b8751d2}</em:id>
 	<em:version>0.7.4</em:version>
+        <em:iconURL>chrome://zealotry/skin/zelly.png</em:iconURL>
 
 	<em:targetApplication>
 	    <Description>
@@ -19,6 +20,7 @@
 	<em:file>
 	    <Description about="urn:mozilla:extension:file:zealotry.jar">
 		<em:package>content/</em:package>
+		<em:skin>skin/classic/</em:skin>
 	    </Description>
 	</em:file>
 	
