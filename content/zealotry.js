@@ -29,6 +29,7 @@
 const ZEALOUS_VERSION = "0.7.4";
 const POLL_DELAY = 50;
 
+var bgCrap = null;
 var munge_buffer = "";
 var enter_down = false;
 var scroll_splitter = null;
@@ -913,6 +914,7 @@ function mungeForDisplay(str) {
         element = document.createElementNS("http://www.w3.org/1999/xhtml",
                                            "html:pre");
     } else if (arr = (/<body bgcolor=\'([^\']*)\' text=\'([^\']*)\'[^>]*>/i).exec(str)) {
+	bgCrap = arr;
 	doBgSetup(arr);
         frames["center-frame"].document.body.style.color = arr[2];
         scrollback.contentDocument.body.style.color = arr[2];
@@ -1369,12 +1371,20 @@ function doBgSetup(arr)
 	pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
         this.bgImage = pref.getCharPref(zealousPreference("background"));
     } catch (err) {
+	if (!bgCrap) return;
+
+	document.getElementById('center-frame').style.background = bgCrap[1];
+	document.getElementById('scrollback').style.background = bgCrap[1];
+	return;
+
+/*
 	if (arr) {
 	        document.getElementById('center-frame').style.background = arr[1];
 		document.getElementById('scrollback').style.background = arr[1];
 		return;
 	}
 	return;
+*/
     }
     document.getElementById('center-frame').style.background = 'white url(' + this.bgImage + ') no-repeat';
     document.getElementById('scrollback').style.background = 'white url(' + this.bgImage + ') no-repeat';
@@ -1398,10 +1408,11 @@ function changeBg()
    	    	} catch (err) {
         		alert("I failed enablePrivilege: " + err);
         		return;
-    	    	}
+		    	    	}
 	        var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
         	pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
         	pref.setCharPref(zealousPreference("background"), url);
+		document.getElementById('scrollback').style.background = 'white url(' + url + ') no-repeat';
 	} else {
 		doBgSetup();
 	}

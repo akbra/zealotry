@@ -8,20 +8,12 @@
     title="XWoe"
     orient="vertical" persist="width height" windowtype="skotos:woe">
     
-    <script type="application/x-javascript" src="my-world.js"/>
-
-    <script type="application/x-javascript" src="woe-init.js"/>
-    
-    <script type="application/x-javascript" src="jslib.js"/>
-
-    <script type="application/x-javascript" src="filesystem.js"/>
-    <script type="application/x-javascript" src="file.js"/>
-    <script type="application/x-javascript" src="md5.js"/>
     <script type="application/x-javascript" src="utils.js"/>
     <script type="application/x-javascript" src="connection-xpcom.js"/>
     <script type="application/x-javascript" src="network.js"/>
     <script type="application/x-javascript" src="client.js"/>
-
+    <script type="application/x-javascript" src="my-world.js"/>
+    <script type="application/x-javascript" src="woe-init.js"/>
     <script type="application/x-javascript" src="xw.js"/>
 
     <hbox style="-moz-box-flex: 1">
