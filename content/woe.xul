@@ -17,36 +17,41 @@
     <script type="application/x-javascript" src="xw.js"/>
 
     <hbox style="-moz-box-flex: 1">
-        <popupset>
-            <popup id="woeContext">
-                <menuitem label="View" onclick="woeView();"/>
-                <menuitem label="Edit" onclick="woeEdit();"/>
-                <menuitem label="XML-Edit" onclick="woeXML();"/>
-                <menuitem label="Karmode" onclick="woeKarmode();"/>
-            </popup>
-        </popupset>
-
-        <tree 
-	    style="font-family: FreeMono, Monospace, Monospaced, Courier new, Courier; font-size: 10pt; width: 30%; min-width: 10%; max-width: 40%;"
-	    width="300"
-	    id="xtree" 
-	    hidecolumnpicker="true" 
-	    seltype="single" 
-	    onselect="ontreeselectwrapper()"
-	    alternatingbackground="true">
-            <treecols>
-                <treecol
-		    id="woe"
-		    label="Woe"
-		    primary="true"
-		    flex="1"
-		    />
-            </treecols>
-            <treechildren context="woeContext" id="tow"/>
-        </tree>
-	<splitter id="treesplitter" state="open" resizeafter="grow" collapse="before">
+	<vbox style="width: 200px;">
+	    <iframe name="gamelink" src="about:blank" id="gamelink" style="width: 181px; height: 79px;"/>
+	    <splitter id="gamesplitter" state="open" resizeafter="grow" collapse="before"/>
+	    <popupset>
+		<popup id="woeContext">
+		    <menuitem label="View" onclick="woeView();"/>
+		    <menuitem label="Edit" onclick="woeEdit();"/>
+		    <menuitem label="XML-Edit" onclick="woeXML();"/>
+		    <menuitem label="Karmode" onclick="woeKarmode();"/>
+		</popup>
+	    </popupset>
+	    
+	    <tree 
+		style="font-family: FreeMono, Monospace, Monospaced, Courier new, Courier; font-size: 10pt; width: 30%; min-width: 10%; max-width: 40%;"
+		width="190"
+		id="xtree" 
+		hidecolumnpicker="true" 
+		seltype="single" 
+		onselect="ontreeselectwrapper()"
+		flex="1"
+		alternatingbackground="true">
+		<treecols>
+		    <treecol
+			id="woe"
+			label="Woe"
+			primary="true"
+			flex="1"
+			/>
+		</treecols>
+		<treechildren context="woeContext" id="tow"/>
+	    </tree>
+	</vbox>
+        <splitter id="treesplitter" state="open" resizeafter="grow" collapse="before">
 	    <grippy/>
 	</splitter>
-	<iframe name="content" flex="1" src="about:blank" id="content" style="min-width: 70%; width: 70%;"/>
+	<iframe name="pageFrame" flex="1" src="about:blank" id="pageFrame" style="min-width: 70%; width: 70%;"/>
     </hbox>
 </window>

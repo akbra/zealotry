@@ -26,6 +26,8 @@
  * 1999-08-15 rginda@ndcico.com           v1.0
  */
 
+// XXX: Go through and see which of these functions are used, if any at all. 
+
 var DEBUG = true;
 
 var dumpln;
@@ -33,14 +35,14 @@ var dd;
 
 if (typeof document == "undefined") /* in xpcshell */
     dumpln = print;
-else
-    if (typeof dump == "function")
-        dumpln = function (str) {dump (str + "\n");}
-    else if (jsenv.HAS_RHINO)
-        dumpln = function (str) {var out = java.lang.System.out;
-                                 out.println(str); out.flush(); }
-    else
-        dumpln = function () {} /* no suitable function */
+else if (typeof dump == "function")
+    dumpln = function (str) {dump (str + "\n");}
+else if (jsenv.HAS_RHINO)
+    dumpln = function (str) {
+        var out = java.lang.System.out;
+        out.println(str); out.flush();
+    }
+else dumpln = function () {} /* no suitable function */
 
 if (DEBUG)
     dd = dumpln;
@@ -66,19 +68,18 @@ function dumpObject (o, pfx, sep)
     sep = (typeof sep == "undefined") ? " = " : sep;
     pfx = (typeof pfx == "undefined") ? "" : pfx;    
 
-    for (p in o)
-    {
+    for (p in o) {
         if (typeof (o[p]) != "function")
             s += pfx + p + sep + o[p] + "\n";
         else
             s += pfx + p + sep + "function\n";
     }
-
-    return s;
-
+    
+    return s;   
 }
 
-/* Dumps an object in tree format, recurse specifiec the the number of objects
+/*
+ * Dumps an object in tree format, recurse specifiec the the number of objects
  * to recurse, compress is a boolean that can uncompress (true) the output
  * format, and level is the number of levels to intitialy indent (only useful
  * internally.)  A sample dumpObjectTree (o, 1) is shown below.
@@ -112,68 +113,58 @@ function dumpObjectTree (o, recurse, compress, level)
 
     var tee = (compress) ? "+ " : "+- ";
 
-    for (i in o)
-    {
+    for (i in o) {
         var t, ex;
         
-        try
-        {
+        try {
             t = typeof o[i];
-        }
-        catch (ex)
-        {
+        } catch (ex) {
             t = "ERROR";
         }
         
-        switch (t)
-        {
-            case "function":
-                var sfunc = String(o[i]).split("\n");
-                if (sfunc[2] == "    [native code]")
-                    sfunc = "[native code]";
+        switch (t) {
+        case "function":
+            var sfunc = String(o[i]).split("\n");
+            if (sfunc[2] == "    [native code]")
+                sfunc = "[native code]";
+            else
+                if (sfunc.length == 1)
+                    sfunc = String(sfunc);
                 else
-                    if (sfunc.length == 1)
-                        sfunc = String(sfunc);
-                    else
-                        sfunc = sfunc.length + " lines";
-                s += pfx + tee + i + " (function) " + sfunc + "\n";
-                break;
-
-            case "object":
-                s += pfx + tee + i + " (object)\n";
-                if (!compress)
-                    s += pfx + "|\n";
-                if ((i != "parent") && (recurse))
-                    s += dumpObjectTree (o[i], recurse - 1,
-                                         compress, level + 1);
-                break;
-
-            case "string":
-                if (o[i].length > 200)
-                    s += pfx + tee + i + " (" + t + ") " + 
-                        o[i].length + " chars\n";
-                else
-                    s += pfx + tee + i + " (" + t + ") '" + o[i] + "'\n";
-                break;
-
-            case "ERROR":
-                s += pfx + tee + i + " (" + t + ") ?\n";
-                break;
-                
-            default:
-                s += pfx + tee + i + " (" + t + ") " + o[i] + "\n";
-                
+                    sfunc = sfunc.length + " lines";
+            s += pfx + tee + i + " (function) " + sfunc + "\n";
+            break;
+            
+        case "object":
+            s += pfx + tee + i + " (object)\n";
+            if (!compress)
+                s += pfx + "|\n";
+            if ((i != "parent") && (recurse))
+                s += dumpObjectTree (o[i], recurse - 1,
+                                     compress, level + 1);
+            break;
+            
+        case "string":
+            if (o[i].length > 200)
+                s += pfx + tee + i + " (" + t + ") " + 
+                    o[i].length + " chars\n";
+            else
+                s += pfx + tee + i + " (" + t + ") '" + o[i] + "'\n";
+            break;
+            
+        case "ERROR":
+            s += pfx + tee + i + " (" + t + ") ?\n";
+            break;
+            
+        default:
+            s += pfx + tee + i + " (" + t + ") " + o[i] + "\n";
         }
-
         if (!compress)
             s += pfx + "|\n";
-
     }
-
     s += pfx + "*\n";
     
     return s;
-    
 }
 
 /*
@@ -191,7 +182,6 @@ function Clone (obj)
         robj[p] = obj[p];
 
     return robj;
-    
 }
 
 /*
@@ -203,31 +193,26 @@ function matchObject (o, pattern, negate)
 {
     negate = Boolean(negate);
     
-    function _match (o, pattern)
-    {
+    function _match (o, pattern) {
         if (pattern instanceof Function)
             return pattern(o);
         
-        for (p in pattern)
-        {
+        for (p in pattern) {
             var val;
-                /* nice to have, but slow as molases, allows you to match
-                 * properties of objects with obj$prop: "foo" syntax      */
-                /*
-                  if (p[0] == "$")
-                  val = eval ("o." + 
-                  p.substr(1,p.length).replace (/\$/g, "."));
-                  else
-                */
+            /* nice to have, but slow as molases, allows you to match
+             * properties of objects with obj$prop: "foo" syntax      */
+            /*
+              if (p[0] == "$")
+              val = eval ("o." + 
+              p.substr(1,p.length).replace (/\$/g, "."));
+              else
+            */
             val = o[p];
             
-            if (pattern[p] instanceof Function)
-            {
+            if (pattern[p] instanceof Function) {
                 if (!pattern[p](val))
                     return false;
-            }
-            else
-            {
+            } else {
                 var ary = (new String(val)).match(pattern[p]);
                 if (ary == null)
                     return false;
@@ -235,9 +220,7 @@ function matchObject (o, pattern, negate)
                     o.matchresult = ary;
             }
         }
-
         return true;
-
     }
 
     if (!(pattern instanceof Array))
@@ -246,28 +229,24 @@ function matchObject (o, pattern, negate)
     for (var i in pattern)
         if (_match (o, pattern[i]))
             return !negate;
-
-    return negate;
     
+    return negate;
 }
 
 function matchEntry (partialName, list)
 {
-    
     if ((typeof partialName == "undefined") ||
         (String(partialName) == ""))
         return list;
 
     var ary = new Array();
 
-    for (var i in list)
-    {
+    for (var i in list) {
         if (list[i].indexOf(partialName) == 0)
             ary.push (list[i]);
     }
 
     return ary;
-    
 }
 
 function getCommonPfx (list)
@@ -275,36 +254,27 @@ function getCommonPfx (list)
     var pfx = list[0];
     var l = list.length;
     
-    for (var i = 0; i < l; i++)
-    {
-        for (var c = 0; c < pfx.length; ++c)
-        {
-            if (c >= list[i].length)
-            {
+    for (var i = 0; i < l; i++) {
+        for (var c = 0; c < pfx.length; ++c) {
+            if (c >= list[i].length) {
                 pfx = pfx.substr (0, c);
                 break;
-            }
-            else
-            {
+            } else {
                 if (pfx[c] != list[i][c])
                     pfx = pfx.substr (0, c);
             }
         }
     }
-
     return pfx;
-
 }
 
 function renameProperty (obj, oldname, newname)
 {
-
     if (oldname == newname)
         return;
-    
+
     obj[newname] = obj[oldname];
     delete obj[oldname];
-    
 }
 
 function newObject(contractID, iface)
@@ -315,23 +285,21 @@ function newObject(contractID, iface)
     var obj = Components.classes[contractID].createInstance();
     var rv;
 
-    switch (typeof iface)
-    {
-        case "string":
-            rv = obj.QueryInterface(Components.interfaces[iface]);
-            break;
+    switch (typeof iface) {
+    case "string":
+        rv = obj.QueryInterface(Components.interfaces[iface]);
+        break;
 
-        case "object":
-            rv = obj.QueryInterface[iface];
-            break;
+    case "object":
+        rv = obj.QueryInterface[iface];
+        break;
 
-        default:
-            rv = null;
-            break;
+    default:
+        rv = null;
+        break;
     }
 
     return rv;
-    
 }
 
 function getPriv (priv)
@@ -341,18 +309,14 @@ function getPriv (priv)
 
     var rv = true;
 
-    try
-    {
+    try {
         netscape.security.PrivilegeManager.enablePrivilege(priv);
-    }
-    catch (e)
-    {
+    } catch (e) {
         dd ("getPriv: unable to get privlege '" + priv + "': " + e);
         rv = false;
     }
     
     return rv;
-    
 }
 
 function keys (o)
@@ -363,7 +327,6 @@ function keys (o)
         rv.push(p);
 
     return rv;
-    
 }
 
 function stringTrim (s)
@@ -372,7 +335,6 @@ function stringTrim (s)
         return "";
     s = s.replace (/^\s+/, "");
     return s.replace (/\s+$/, "");
-    
 }
 
 /* the offset should be in seconds, it will be rounded to 2 decimal places */
@@ -385,8 +347,7 @@ function formatDateOffset (offset, format)
     var days = parseInt(hours / 24);
     hours = hours % 24;
 
-    if (!format)
-    {
+    if (!format) {
         var ary = new Array();
         if (days > 0)
             ary.push (days + " days");
@@ -398,9 +359,7 @@ function formatDateOffset (offset, format)
             ary.push (seconds + " seconds");
 
         format = ary.join(", ");
-    }
-    else
-    {
+    } else {
         format = format.replace ("%d", days);
         format = format.replace ("%h", hours);
         format = format.replace ("%m", minutes);
@@ -426,7 +385,6 @@ function arrayIndexOf (ary, elem)
     
 function arrayInsertAt (ary, i, o)
 {
-
     ary.splice (i, 0, o);
 
     /* doh, forgot about that 'splice' thing

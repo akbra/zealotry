@@ -240,7 +240,7 @@ WoeHandlerClass.prototype = {
     {
         this.tow   = document.getElementById('tow');
         this.xtree = document.getElementById('xtree');
-        this.cframe = document.getElementById('content');
+        this.cframe = document.getElementById('pageFrame');
         this.tow.addEventListener("DOMAttrModified", this.xw_TreeAttrModified, false);
     },
 
@@ -279,8 +279,7 @@ WoeHandlerClass.prototype = {
             return;
         }
         
-        // this.cframe.contentW
-        window.open("http://" + this.getHost() + "/" + el.src, 'content'); //.setAttribute('src', el.src);
+        window.open("http://" + this.getHost() + "/" + el.src, 'pageFrame');
     }
 };
 
@@ -308,12 +307,18 @@ function initializeWoeInterface()
         port = url[1];
         url = url[0];
     } else url = url[0];
+
     WoeHandler = new WoeHandlerClass(url, port);
     WoeInstance = new WoeClass(WoeHandler);
     WoeHandler.set_xwi(WoeInstance);
     WoeInstance.onMainLoad();
-    document.getElementById('content').width = "70%";
-    document.getElementById('content').style.width = "70%";
+    document.getElementById('pageFrame').width = "70%";
+    document.getElementById('pageFrame').style.width = "70%";
+
+    // Set the gamelink frame source.
+    // alert(url + "/Dev/Logo.sam");
+    window.open("http://" + url + "/Dev/Logo.sam", "gamelink");
+    // document.getElementById('gamelink').src = "http://" + url + "/Dev/Logo.sam";
 }
 
 function ontreeselectwrapper(e)
