@@ -87,18 +87,20 @@ function generate_fontmenu()
         }
     }
     
-    /*
-     * Font sizes:
-     */
+    /* Font sizes. */
     popup = d.getElementById('sizes-menu');
-    var size_el;
+    var pre_popup = d.getElementById('pre-sizes-menu');
+    var size_el, size_pre_el;
     
     for (var z = 6; z < 30; z++) {
-        size_el = d.createElement( 'menuitem' );
-        size_el.setAttribute('id', 's_'+z );
-        size_el.setAttribute('label', z );
-        size_el.setAttribute('oncommand', 'setSize(' + z + ' + "pt")' );
-        popup.appendChild( size_el );
+        size_el = d.createElement('menuitem');
+        size_el.setAttribute('id', 's_'+z);
+        size_el.setAttribute('label', z);
+        size_pre_el = size_el.cloneNode(true);
+        size_el.setAttribute('oncommand', 'setSize(' + z + ' + "pt")');
+        size_pre_el.setAttribute('oncommand', 'setFixedSize(' + z + ' + "pt")');
+        popup.appendChild(size_el);
+        pre_popup.appendChild(size_pre_el);
     }
 }
 
