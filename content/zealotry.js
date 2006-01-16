@@ -189,8 +189,7 @@ function onMainLoad()
 function onUnLoad()
 {
     try {
-        netscape.security.PrivilegeManager.enablePrivilege
-            ("UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect");
+        pm.enablePrivilege(privs);
     } catch (err) {
         alert("I failed enablePrivilege: " + err);
         return;
@@ -202,8 +201,7 @@ function onUnLoad()
 
 function pollFrames() {
     try {
-        netscape.security.PrivilegeManager.enablePrivilege
-            ("UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect");
+        pm.enablePrivilege(privs);
     } catch (err) {
         alert("I failed enablePrivilege: " + err);
         return;
@@ -224,8 +222,7 @@ function pollFrames() {
 function mainStep()
 {
     try {
-        netscape.security.PrivilegeManager.enablePrivilege
-            ("UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect");
+        pm.enablePrivilege(privs);
     } catch (err) {
         alert("I failed enablePrivilege: " + err);
         return;
