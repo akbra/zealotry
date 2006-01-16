@@ -1,3 +1,8 @@
+var preNode = null;
+var sbPreNode = null;
+var centerStyleTag = null;
+var scrollbackStyleTag = null;
+
 var pm = netscape.security.PrivilegeManager;
 var privs = "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect";
 
@@ -117,6 +122,14 @@ function submitSkotosLink(link)
 
 function bubbleSettings()
 {
+    var sb = document.getElementById('scrollback').contentDocument;
+    sb.open();
+    sb.write
+        ('<html><head><style></style></head><body></body>');
+    sb.close();
+    centerStyleTag = document.getElementById('center-frame').contentDocument.getElementsByTagName("style")[0];
+    scrollbackStyleTag = sb.getElementsByTagName("style")[0];
+    
     var rframe = document.getElementById('right-frame').contentDocument;
     var cframe = document.getElementById('center-frame').contentDocument;
 
@@ -136,7 +149,7 @@ var pletter = "m_";
 var psize   = "s_";
 var pfont   = "fm_";
 
-function switchSelection( what, val )
+function switchSelection(what, val)
 {
     var font_element;
     var old = window["c"+what];
@@ -197,13 +210,19 @@ function setSize(pts)
 
 function setFixedSize(pts) 
 {
-    var styles = document.getElementById('center-frame').contentDocument.getElementsByTagName("style")[0];
-    var preNode = document.createTextNode("pre { font-size: " + pts + "; }");
+    var styles = centerStyleTag; // document.getElementById('center-frame').contentDocument.getElementsByTagName("style")[0];
+    if (preNode) {
+        preNode.parentNode.removeChild(preNode);
+    }
+    preNode = document.createTextNode("pre { font-size: " + pts + "; }");
     styles.appendChild(preNode);
 
-    var styles = document.getElementById('scrollback').contentDocument.getElementsByTagName("style")[0];
-    var preNode = document.createTextNode("pre { font-size: " + pts + "; }");
-    styles.appendChild(preNode);
+    var styles = scrollbackStyleTag; // document.getElementById('scrollback').contentDocument.getElementsByTagName("style")[0];
+    if (sbPreNode) {
+        sbPreNode.parentNode.removeChild(sbPreNode);
+    }
+    sbPreNode = document.createTextNode("pre { font-size: " + pts + "; }");
+    styles.appendChild(sbPreNode);
 
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
