@@ -20,6 +20,7 @@
 	<em:file>
 	    <Description about="urn:mozilla:extension:file:zealotry.jar">
 		<em:package>content/</em:package>
+		<em:skin>skin/classic/</em:skin>
 	    </Description>
 	</em:file>
 	
