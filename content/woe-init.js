@@ -30,11 +30,6 @@
 
 var pm = netscape.security.PrivilegeManager;
 var privs = "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect";
-try {
-    pm.enablePrivilege(privs);
-} catch (err) {
-    throw("Zealotry Woe failed to acquire privileges. This shouldn't happen.");
-}
 
 var WoeHandler = null;
 
@@ -243,7 +238,6 @@ WoeHandlerClass.prototype = {
 
     init_xw: function() 
     {
-        pm.enablePrivilege(privs);
         this.tow   = document.getElementById('tow');
         this.xtree = document.getElementById('xtree');
         this.cframe = document.getElementById('content');
@@ -274,8 +268,6 @@ WoeHandlerClass.prototype = {
         
     onselect: function()
     {
-        pm.enablePrivilege(privs);
-        
         var index = this.xtree.currentIndex;
         if (index == -1) {
             // deselect

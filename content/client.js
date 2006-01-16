@@ -122,15 +122,6 @@ function client_oicl(str) {
     this.lastHistoryReferenced = -1;
     this.incompleteLine = "";
 
-    try {
-        netscape.security.PrivilegeManager.enablePrivilege(
-            "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect"
-            );
-    } catch (err) {
-        alert("I failed enablePrivilege!");
-        return;
-    }
-
     doScroll();
     this.connection.write(str + "\n");
 }
@@ -177,14 +168,6 @@ function testScrollbarPosition() {
 // output_node returns the scrollback node.
 CClient.prototype.outputNode =
 function output_node(node, no_cloning) {
-    try {
-        netscape.security.PrivilegeManager.enablePrivilege(
-            "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect"
-            );
-    } catch (err) {
-        alert("I failed enablePrivilege!");
-        return;
-    }
     var scrollFlag = testScrollbarPosition();
     var cloned = no_cloning ? null : node.cloneNode(true);
     
@@ -256,15 +239,6 @@ function client_c(host, port, onReadHandler)
     if (this.isConnected())
         throw "Already connected!";
 
-    try {
-        netscape.security.PrivilegeManager.enablePrivilege(
-            "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect"
-            );
-    } catch (err) {
-        alert("I failed enablePrivilege!");
-        return;
-    }
-
     this.connection = new CConnection(host, port);
     this.connection.onRead = onReadHandler;
     this.connection.connect();
@@ -273,10 +247,6 @@ function client_c(host, port, onReadHandler)
 CClient.prototype.disconnect =
 function client_d()
 {
-    netscape.security.PrivilegeManager.enablePrivilege(
-        "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect"
-        );
-
     this.connection.disconnect();
 
     delete this.connection;

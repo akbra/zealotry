@@ -1,15 +1,8 @@
 var pm = netscape.security.PrivilegeManager;
 var privs = "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect";
-try {
-    pm.enablePrivilege(privs);
-} catch (err) {
-    throw("Zealotry failed to acquire privileges. This shouldn't happen.");
-}
 
 function submitSkotosSelectCommand(elementName)
 {
-    pm.enablePrivilege(privs);
-
     var rdoc      = document.getElementById('right-frame').contentDocument;
     var elementDo = rdoc.getElementById(elementName);
     var chatCode  = rdoc.chatMode ? "/" : "";
@@ -23,8 +16,6 @@ function submitSkotosSelectCommand(elementName)
 
 function submitSkotosClickCommand(elementName)
 {
-    pm.enablePrivilege(privs);
-
     var rdoc      = document.getElementById('right-frame').contentDocument;
     var elementDo = rdoc.getElementById(elementName);
     var chatCode  = rdoc.chatMode ? "/" : "";
@@ -37,8 +28,6 @@ function submitSkotosClickCommand(elementName)
 
 function generate_fontmenu()
 {
-    pm.enablePrivilege(privs);
-
     var langgroup = new Array("x-western");
     var fonttype  = new Array("serif", "sans-serif", "cursive", "fantasy", "monospace");
     var fontList  = Components.classes["@mozilla.org/gfx/fontlist;1"].createInstance(Components.interfaces.nsIFontList);
@@ -115,8 +104,6 @@ function generate_fontmenu()
 
 function submitSkotosLink(link)
 {
-    pm.enablePrivilege(privs);
-
     var rdoc = document.getElementById('right-frame').contentDocument;
     var chatCode = rdoc.chatMode ? "/" : "";
     handleInputLine(chatCode+link);
@@ -149,8 +136,6 @@ var pfont   = "fm_";
 
 function switchSelection( what, val )
 {
-    pm.enablePrivilege(privs);
-
     var font_element;
     var old = window["c"+what];
     
@@ -177,8 +162,6 @@ function switchSelection( what, val )
 
 function setFont(family)
 {
-    pm.enablePrivilege(privs);
-
     document.getElementById('center-frame').contentDocument.body.style.fontFamily = family.replace(/'/g, "\\'");
 	document.getElementById('scrollback').contentDocument.body.style.fontFamily = family.replace(/'/g, "\\'");
  	document.getElementById('input').style.fontFamily = family.replace(/'/g, "\\'");
@@ -195,8 +178,6 @@ function setFont(family)
 
 function setSize(pts)
 {
-    pm.enablePrivilege(privs);
-
 	// This shit don't work for me apparently. I can change font size all day long
 	// and nothing changes. -- Strike that, this apparently only affects fixed font size.
     document.getElementById('center-frame').contentDocument.body.style.fontSize = pts;
@@ -227,13 +208,6 @@ function onInput()
 
 function generate_bgList()
 {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-
     try {
         var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
         pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);

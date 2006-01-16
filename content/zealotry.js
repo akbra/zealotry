@@ -26,7 +26,7 @@
  *
  */
 
-const ZEALOUS_VERSION = "0.7.4";
+const ZEALOUS_VERSION = "0.7.4.2";
 const POLL_DELAY = 50;
 
 var bgCrap = null;
@@ -78,13 +78,6 @@ function onMainLoad()
     this.alreadyLoaded = true;
     */
     
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-
     if (!document.getElementById("input")) {
         alert("cannot find input box element");
     }
@@ -188,25 +181,11 @@ function onMainLoad()
 
 function onUnLoad()
 {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-    
     if (window.client && window.client.connection)
         window.client.connection.disconnect();
 }
 
 function pollFrames() {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-
     var ldoc = frames["left-frame"].document;
     var cdoc = frames["center-frame"].document;
     var rdoc = frames["right-frame"].document;
@@ -221,13 +200,6 @@ function pollFrames() {
 
 function mainStep()
 {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-
     bubbleSettings();
 
     var output = window.center_frame.document.getElementById("output_body");
@@ -288,8 +260,7 @@ function onWindowKeyPress(e)
             if (!onPageDown()) { // onPageDown() is true or false depending on if we're at document bottom or not
                 scroll_splitter.setAttribute('state', 'collapsed');
                 scrolling = false;
-                /* pm.enablePrivilege(privs);
-                var body = scrollback.contentDocument.body;
+                /* var body = scrollback.contentDocument.body;
                 var ix = body.childNodes.length;
                 for (var i = 0; i < ix; i++) {
                     body.removeChild(body.firstChild);
@@ -303,7 +274,6 @@ function onWindowKeyPress(e)
             if (!scrolling) {
                 // We don't have to try this every single time. If we successfully get it in other places
                 // we successfully get it here. Or the user is a ...
-                pm.enablePrivilege(privs);
                 /* var nodes = window.client.topmost_output.childNodes;
                 var ix = nodes.length;
                 var bfn;
@@ -345,7 +315,6 @@ function onWindowKeyPress(e)
 
 function onPageDown()
 {
-    pm.enablePrivilege(privs);
     var w = scrollback.contentWindow; // window.center_frame;
 
     newOfs = w.pageYOffset + (w.innerHeight / 2);
@@ -360,15 +329,14 @@ function onPageDown()
 
 function onPageUp()
 {
-    pm.enablePrivilege(privs);
     var w = scrollback.contentWindow; // window.center_frame;
 
     if (w.scrollMaxY == w.pageYOffset) {
-	newOfs = w.pageYOffset - 1;
+        newOfs = w.pageYOffset - 1;
     } else {
-	newOfs = w.pageYOffset - (w.innerHeight / 2);
+        newOfs = w.pageYOffset - (w.innerHeight / 2);
     }
-
+    
     if (newOfs > 0)
         w.scrollTo(w.pageXOffset, newOfs);
     else
@@ -402,7 +370,7 @@ function onInputKeyDown(e)
 {
     switch (e.keyCode) {
     case 9: // tab
-	if (e.ctrlKey != true && e.shiftKey != true && e.altKey != true) {
+        if (e.ctrlKey != true && e.shiftKey != true && e.altKey != true) {
 	        window.client.tabCompleteInputBuffer();
         	break;
 	}
@@ -416,13 +384,6 @@ function onInputKeyDown(e)
 
 function onInputKeyUp(e)
 {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-
     if (!window.client.isConnected()) {
         e.target.value = "";
         return;
@@ -476,13 +437,6 @@ function onInputKeyUp(e)
 }
 
 function editMenuInit() {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-
     el = document.getElementById("menuitem_copy");
     if (el) {
         el.setAttribute("disabled",
@@ -497,46 +451,19 @@ function editMenuInit() {
 
 
 function onPaste() {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-
     document.commandDispatcher.getControllerForCommand('cmd_paste').doCommand('cmd_paste');
 }
 
 function onCut() {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-
     document.commandDispatcher.getControllerForCommand('cmd_cut').doCommand('cmd_cut');
 }
 
 function onCopy() {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-
     document.commandDispatcher.getControllerForCommand('cmd_copy').doCommand('cmd_copy');
 }
 
 function onClose(status, errStr)
 {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
     if (status == 0)
         displayLine("Connection closed - session ended", "sys");
     else if (status == NS_BINDING_ABORTED)
@@ -583,8 +510,6 @@ function onRead(bigstr) {
        return;
     }
     
-    pm.enablePrivilege(privs);
-
     for (var i = 0; i < lines.length; i++) {
         str = lines[i];
 
@@ -669,13 +594,6 @@ function fileMenuInit() {
     }
     el = document.getElementById("menuitem_logging");
     if (el) {
-        try {
-            pm.enablePrivilege(privs);
-        } catch (err) {
-            alert("I failed enablePrivilege: " + err);
-            return;
-        }
-        
         var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
         pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
@@ -699,13 +617,6 @@ function fileMenuInit() {
     }
     el = document.getElementById("menuitem_autolog");
     if (el) {
-        try {
-            pm.enablePrivilege(privs);
-        } catch (err) {
-            alert("I failed enablePrivilege: " + err);
-            return;
-        }
-
         var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
         pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
         
@@ -733,13 +644,6 @@ function fileMenuInit() {
 function onToggleEcho(event) {
     window.client.optionEchoSent = event.target.getAttribute("checked");
 
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
@@ -758,13 +662,6 @@ function onToggleEcho(event) {
 }
 
 function onToggleLogging(event) {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
     
@@ -1036,13 +933,6 @@ function safe(s) {
 }
 
 function readConfigurationFile(str) {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
@@ -1103,13 +993,6 @@ function readConfigurationFile(str) {
 }
 
 function writeConfigurationFile() {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
@@ -1147,13 +1030,6 @@ function writeConfigurationFile() {
 
 function onToggleAutoLog(event)
 {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
@@ -1173,13 +1049,6 @@ function onToggleAutoLog(event)
 
 function setAutoLogDir()
 {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
@@ -1203,13 +1072,6 @@ function setAutoLogDir()
 }
 
 function startAutoLogging() {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-    
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
     
@@ -1223,13 +1085,6 @@ function startAutoLogging() {
 }
 
 function onAutoLog() {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-    
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
     
@@ -1277,13 +1132,6 @@ function onAutoLog() {
 
 function doFontStyleAndSize()
 {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-    	alert("I failed enablePrivilege: " + err);
-    	return;
-    }
-
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
@@ -1334,22 +1182,15 @@ function helpMenuInit(str)
 function doBgSetup(arr)
 {
     try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-
-    try {
-	var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
-	pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+        var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+        pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
         this.bgImage = pref.getCharPref(zealousPreference("background"));
     } catch (err) {
-	if (!bgCrap) return;
-
-	document.getElementById('center-frame').style.background = bgCrap[1];
-	document.getElementById('scrollback').style.background = bgCrap[1];
-	return;
+        if (!bgCrap) return;
+        
+        document.getElementById('center-frame').style.background = bgCrap[1];
+        document.getElementById('scrollback').style.background = bgCrap[1];
+        return;
     }
     document.getElementById('center-frame').style.background = 'white url(' + this.bgImage + ') no-repeat';
     document.getElementById('scrollback').style.background = 'white url(' + this.bgImage + ') no-repeat';
@@ -1357,46 +1198,33 @@ function doBgSetup(arr)
 
 function changeBg(url)
 {
-    try {
-        pm.enablePrivilege(privs);
-    } catch (err) {
-        alert("I failed enablePrivilege: " + err);
-        return;
-    }
-
     if (url == "remove") {
-	try {
-		var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+        try {
+            var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
         	pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
         	var bg = pref.getCharPref(zealousPreference("background"));
-	} catch (err) {
-		alert("You don't have a background set.");
-		return;
-	}
-	pref.clearUserPref(zealousPreference("background"));
-	doBgSetup(bgCrap);
-	return;
+        } catch (err) {
+            alert("You don't have a background set.");
+            return;
+        }
+        pref.clearUserPref(zealousPreference("background"));
+        doBgSetup(bgCrap);
+        return;
     }	
-
+    
     if (!url) {
-	var url = prompt("What is the URL to the background image you'd like to use?");
+        var url = prompt("What is the URL to the background image you'd like to use?");
     }
     if (url) {
-	document.getElementById('center-frame').style.background = 'white url(' + url + ') no-repeat';
-	if (confirm("Is this ok?")) {
-		try {
-        		pm.enablePrivilege(privs);
-   	    	} catch (err) {
-        		alert("I failed enablePrivilege: " + err);
-        		return;
-		}
+        document.getElementById('center-frame').style.background = 'white url(' + url + ') no-repeat';
+        if (confirm("Is this ok?")) {
 	        var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
         	pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
         	pref.setCharPref(zealousPreference("background"), url);
-		document.getElementById('scrollback').style.background = 'white url(' + url + ') no-repeat';
-	} else {
-		doBgSetup();
-	}
+            document.getElementById('scrollback').style.background = 'white url(' + url + ') no-repeat';
+        } else {
+            doBgSetup();
+        }
     }
 }
 

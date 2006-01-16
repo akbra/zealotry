@@ -54,8 +54,6 @@ WoeClass.prototype = {
 
         this.alreadyLoaded = true; */
 
-        pm.enablePrivilege(privs);
-
         document.title = "XWoe (TOW interface 0.3)";
 
         this.h.init_xw();
@@ -65,8 +63,6 @@ WoeClass.prototype = {
 
     onUnLoad: function()
     {
-        pm.enablePrivilege(privs);
-
         if (this.client && this.client.connection) {
             this.client.connection.disconnect();
         }
@@ -74,8 +70,6 @@ WoeClass.prototype = {
 
     mainStep: function()
     {
-        pm.enablePrivilege(privs);
-
         this.client = new CClient();
 
         this.client.connect
