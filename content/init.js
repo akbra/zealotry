@@ -230,3 +230,12 @@ function generate_bgList()
     }
 }
 
+function clearScrollback()
+{
+    if(confirm("Are you sure you want to clear you scrollback buffer?")) {
+        scrollback.contentDocument.body.innerHTML = "";
+        return;
+    }
+    return;
+}
+

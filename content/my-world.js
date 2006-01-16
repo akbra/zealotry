@@ -63,7 +63,8 @@ var MyWorldSpecification = function() {
         ironclaw : "ic",
         stages : "stages",
         oasis : "stages",
-        st : "stages"};
+        st : "stages", 
+	gr : "grendel" };
 
     /*
      * This is a list of WOE server configs.
@@ -75,7 +76,8 @@ var MyWorldSpecification = function() {
         s7  : "skotos-seven.skotos.net:6090",
         laz : "lazarus.skotos.net:2090",
         ic  : "ironclaw.skotos.net:4090",
-        stages : "stages.skotos.net:6090"};
+        stages : "stages.skotos.net:6090", 
+	grendel : "gr:skotos.net:2022" };
 
     /*
      * This is a list of shortcuts for WOE servers.

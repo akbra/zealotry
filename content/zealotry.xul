@@ -72,6 +72,7 @@
 			    </menu>
 			    <menuseparator/>
 			    <menuitem label="Dictionary Lookup" key="dict-key" oncommand="helpMenuInit('dictionary');"/>
+			    <menuitem label="Clear Scrollback Buffer" accesskey="C" oncommand="clearScrollback();"/>
 			    <menuseparator/>
 			    <menu id="background" label="Background Options" accesskey="O">
 				<menupopup id="background-popup">

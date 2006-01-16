@@ -1227,4 +1227,3 @@ function changeBg(url)
         }
     }
 }
-
