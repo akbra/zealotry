@@ -99,9 +99,12 @@ function generate_fontmenu()
     
     for (var z = 6; z < 30; z++) {
         size_el = d.createElement('menuitem');
+        size_pre_el = d.createElement('menuitem');
         size_el.setAttribute('id', 's_'+z);
+        size_pre_el.setAttribute('id', 'sp_'+z);
         size_el.setAttribute('label', z);
-        size_pre_el = size_el.cloneNode(true);
+        size_pre_el.setAttribute('label', z);
+        // size_pre_el = size_el.cloneNode(true);
         size_el.setAttribute('oncommand', 'setSize(' + z + ' + "pt")');
         size_pre_el.setAttribute('oncommand', 'setFixedSize(' + z + ' + "pt")');
         popup.appendChild(size_el);
@@ -144,10 +147,11 @@ function bubbleSettings()
 /*
  * Font/size switch function.
  */
-var cletter, cfont, csize;
+var cletter, cfont, csize, cpsize;
 var pletter = "m_";
 var psize   = "s_";
 var pfont   = "fm_";
+var ppsize  = "sp_";
 
 function switchSelection(what, val)
 {
@@ -227,6 +231,8 @@ function setFixedSize(pts)
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
     pref.setCharPref(zealousPreference("fixedFontSize"), pts);
+
+    switchSelection( 'psize', pts.substring(0, pts.length-2) );
 }
     
 var inputRows = 2;
