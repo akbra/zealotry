@@ -95,14 +95,6 @@ function process(input) {
       this.clear();
       outputLine("[MACRO: Data cleared]");
    } else if (input == "LOAD") {
-      try {
-	 netscape.security.PrivilegeManager.enablePrivilege(
-            "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect"
-            );
-      } catch (err) {
-	 alert("I failed enablePrivilege: " + err);
-	 return;
-      }
       var nsIFilePicker = Components.interfaces.nsIFilePicker;
       var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
       filePicker.init(window, "Read macros from...", nsIFilePicker.modeOpen);
@@ -119,14 +111,6 @@ function process(input) {
       macroFile.close();
       outputLine("[MACRO: Finished reading from: " + filePath + "]");
    } else if (input == "STORE") {
-      try {
-	 netscape.security.PrivilegeManager.enablePrivilege(
-            "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect"
-            );
-      } catch (err) {
-	 alert("I failed enablePrivilege: " + err);
-	 return;
-      }
       var nsIFilePicker = Components.interfaces.nsIFilePicker;
       var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
       filePicker.init(window, "Save macros to...", nsIFilePicker.modeSave);

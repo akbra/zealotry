@@ -31,14 +31,6 @@ if (typeof(JS_LIB_LOADED)=='boolean') {
 * Globals                  *
 ***************************/
 
- try {
-     netscape.security.PrivilegeManager.enablePrivilege(
-         "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect"
-     );
- } catch (err) {
-     throw("I failed enablePrivilege: " + err);
- }
-
 const JS_FILESYSTEM_LOADED = true;
 const JS_FILESYSTEM_FILE   = "filesystem.js";
 const JS_FS_LOCAL_CID      = "@mozilla.org/file/local;1";

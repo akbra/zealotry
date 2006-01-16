@@ -114,14 +114,6 @@ xpcom nsIFile file IO library from js
 
 ************/
 
- try {
-     netscape.security.PrivilegeManager.enablePrivilege(
-         "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect"
-     );
- } catch (err) {
-     throw("I failed enablePrivilege: " + err);
- }
-
 // insure jslib base is loaded
 if (typeof(JS_LIB_LOADED)=='boolean') {
 

@@ -47,10 +47,6 @@ if (DEBUG)
 else
     dd = function (){};
 
-    netscape.security.PrivilegeManager.enablePrivilege(
-            "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect"
-        );
-
 var jsenv = new Object();
 jsenv.HAS_SECURITYMANAGER = ((typeof netscape == "object") &&
                              (typeof netscape.security == "object"));
