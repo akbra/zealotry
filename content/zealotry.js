@@ -1155,6 +1155,16 @@ function doFontStyleAndSize()
 
     setSize(this.fontSize);
     // frames["center-frame"].document.body.style.fontSize = this.fontSize;
+
+    try {
+        this.preFontSize = pref.getCharPref(zealousPreference("fixedFontSize"));
+    } catch (err) {
+        pref.setCharPref(zealousPreferences("fixedFontSize"), "10pt");
+        doFontStyleAndSize();
+    }
+
+    setFixedSize(this.preFontSize);
+
 }
 
 function helpMenuInit(str) 
