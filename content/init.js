@@ -187,6 +187,8 @@ function setSize(pts)
 	// TODO: Convert pts to an int, and decrement by 2 and put in scrollback fontsize.
 	// document.getElementById('scrollback').contentDocument.body.style.fontSize = "10pt";
 
+    document.GetElementById('center-frame').contentDocument.body.style.pre = "font-size:5pt;";
+
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
     pref.setCharPref(zealousPreference("fontSize"), document.getElementById('center-frame').contentDocument.body.style.fontSize);

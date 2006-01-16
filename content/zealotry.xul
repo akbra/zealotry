@@ -70,6 +70,9 @@
 			    <menu id="sizes" label="Font Size" accesskey="Z">
 				<menupopup id="sizes-menu"/>
 			    </menu>
+			    <menu id="pre-sizes" label="Fixed Font Size" accesskey="F">
+				<menupopup id="pre-sizes-menu"/>
+			    </menu>
 			    <menuseparator/>
 			    <menuitem label="Dictionary Lookup" key="dict-key" oncommand="helpMenuInit('dictionary');"/>
 			    <menuitem label="Clear Scrollback Buffer" accesskey="C" oncommand="clearScrollback();"/>

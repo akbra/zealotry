@@ -1132,6 +1132,7 @@ function onAutoLog() {
 
 function doFontStyleAndSize()
 {
+
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
