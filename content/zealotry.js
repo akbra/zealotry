@@ -36,7 +36,7 @@ var scroll_splitter = null;
 var scrollback = null;
 var scrolling = false;
 var scrolltarg = null;
-
+var enableBuffer = "false";
 
 function makeCharName()
 {
@@ -257,33 +257,16 @@ function onWindowKeyPress(e)
 
     case 34: // page down
         if (e.ctrlKey != true && e.shiftKey != true && e.altKey != true) {
-            if (!onPageDown()) { // onPageDown() is true or false depending on if we're at document bottom or not
+            if (!onPageDown() && enableBuffer == "true") { // onPageDown() is true or false depending on if we're at document bottom or not
                 scroll_splitter.setAttribute('state', 'collapsed');
                 scrolling = false;
-                /* var body = scrollback.contentDocument.body;
-                var ix = body.childNodes.length;
-                for (var i = 0; i < ix; i++) {
-                    body.removeChild(body.firstChild);
-                } */
             }
         }
         break;
 
     case 33: // page up
         if (e.ctrlKey != true && e.shiftKey != true && e.altKey != true) {
-            if (!scrolling) {
-                // We don't have to try this every single time. If we successfully get it in other places
-                // we successfully get it here. Or the user is a ...
-                /* var nodes = window.client.topmost_output.childNodes;
-                var ix = nodes.length;
-                var bfn;
-                var sb = scrollback.contentDocument.body;
-                for (var i = 0; i < ix; i++) {
-                    bfn = nodes.item(i).cloneNode(true);
-                    sb.appendChild(bfn);
-                } */
-                // scrollback.contentDocument.body.
-                //     setAttribute('style', window.client.topmost_output.getAttribute('style'));
+            if (!scrolling && enableBuffer == "true") {
                 scroll_splitter.setAttribute('state', 'open');
                 doScroll();
 	        scrollback.contentDocument.body.scrollTop = scrollback.contentDocument.body.scrollHeight;
@@ -315,10 +298,13 @@ function onWindowKeyPress(e)
 
 function onPageDown()
 {
-    var w = scrollback.contentWindow; // window.center_frame;
+    if (enableBuffer == "true") {
+	var w = scrollback.contentWindow; // window.center_frame;
+    } else {
+	var w = window.center_frame;
+    }
 
     newOfs = w.pageYOffset + (w.innerHeight / 2);
-    // alert(newOfs + " = " + w.pageYOffset + " + (" + w.innerHeight + "/2) which " + (newOfs < (w.innerHeight + w.pageYOffset) ? "is" : "isn't") + " < " + w.innerHeight + " + " + w.pageYOffset + "; " + w.scrollMaxY);
     if (newOfs < (w.innerHeight + w.pageYOffset))
         w.scrollTo(w.pageXOffset, newOfs);
     else
@@ -329,9 +315,13 @@ function onPageDown()
 
 function onPageUp()
 {
-    var w = scrollback.contentWindow; // window.center_frame;
+    if (enableBuffer == "true") {
+	var w = scrollback.contentWindow; // window.scrollback;
+    } else {
+	var w = window.center_frame;
+    }
 
-    if (w.scrollMaxY == w.pageYOffset) {
+    if (w.scrollMaxY == w.pageYOffset && enableBuffer == "true") {
         newOfs = w.pageYOffset - 1;
     } else {
         newOfs = w.pageYOffset - (w.innerHeight / 2);
@@ -641,6 +631,25 @@ function fileMenuInit() {
     }
 }
 
+function onToggleBuffer(event) {
+    window.client.enableBuffer = event.target.getAttribute("checked");
+
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+
+    if (enableBuffer == "true") {
+	pref.setCharPref(zealousPreference("enableBuffer"), "false");
+	document.getElementById("menuitem_buffer").setAttribute("checked", false);
+	enableBuffer = "false";
+	return;
+    }
+    pref.setCharPref(zealousPreference("enableBuffer"), "true");
+    document.getElementById("menuitem_buffer").setAttribute("checked", true);
+    enableBuffer = "true";
+    return;
+}
+
+
 function onToggleEcho(event) {
     window.client.optionEchoSent = event.target.getAttribute("checked");
 
@@ -937,12 +946,6 @@ function readConfigurationFile(str) {
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
     try {
-        this.homeFolder = pref.getCharPref("zealous.homeFolder");
-    } catch (err) {
-        return;
-    }
-
-    try {
 	this.localEcho = pref.getCharPref(zealousPreference("echo"));
     } catch (err) {
 	window.client.optionEchoSent = true;
@@ -952,6 +955,23 @@ function readConfigurationFile(str) {
 	window.client.optionEchoSent = false;	
     } else {
 	window.client.optionEchoSent = true;
+    }
+
+    try { 
+	enableBuffer = pref.getCharPref(zealousPreference("enableBuffer"));
+    } catch (err) {
+	window.client.enableBuffer = false;
+	enableBuffer = "false";
+    }
+
+    if (enableBuffer == "true") {
+	window.client.enableBuffer = true;
+    }
+
+    try {
+        this.homeFolder = pref.getCharPref("zealous.homeFolder");
+    } catch (err) {
+        return;
     }
 
     configFile = new File(this.homeFolder);
@@ -1238,3 +1258,12 @@ function changeBg(url)
         }
     }
 }
+
+function optionMenuInit()
+{
+    el = document.getElementById("menuitem_buffer");
+    if (el) {
+        el.setAttribute("checked", window.client.enableBuffer);
+    }
+}
+

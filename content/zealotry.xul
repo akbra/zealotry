@@ -43,7 +43,7 @@
 				label="Logging..." oncommand="onToggleLogging(event);"/>
 			    <menuitem id="menuitem_autolog" type="checkbox" accesskey="A"
 				label="AutoLog..." oncommand="onToggleAutoLog(event);"/>
-			    <menuitem id="menuitem_echo" type="checkbox" acesskey="E" 
+			    <menuitem id="menuitem_echo" type="checkbox" accesskey="E" 
 				label="Echo" oncommand="onToggleEcho(event);"/>
 			    <menuseparator/>
 			    <menuitem label="Exit" oncommand="window.close();" keycode="VK_F4"/>
@@ -62,7 +62,7 @@
 			</menupopup>
 		    </menu>
 		    <menu id="font-and-size" label="Options" accesskey="O">
-			<menupopup id="fonts-and-sizes-menu">
+			<menupopup id="fonts-and-sizes-menu" onpopupshowing="optionMenuInit();">
 			    <menu id="fonts" label="Font Style" accesskey="S">
 				<menupopup id="font-list">
 				</menupopup>
@@ -76,6 +76,8 @@
 			    <menuseparator/>
 			    <menuitem label="Dictionary Lookup" key="dict-key" oncommand="helpMenuInit('dictionary');"/>
 			    <menuitem label="Clear Scrollback Buffer" accesskey="C" oncommand="clearScrollback();"/>
+			    <menuitem label="Enable Scrollback Buffer" type="checkbox" accesskey="E"
+				id="menuitem_buffer" oncommand="onToggleBuffer(event);"/> 
 			    <menuseparator/>
 			    <menu id="background" label="Background Options" accesskey="O">
 				<menupopup id="background-popup">
