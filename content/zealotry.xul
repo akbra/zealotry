@@ -92,6 +92,7 @@
 			<menupopup id="help-popup">
 			    <menuitem label="Help Contents" oncommand="helpMenuInit('content');" accesskey="H"/>
 			    <menuitem label="Changelog Notes" oncommand="helpMenuInit('changelog');" accesskey="C"/>
+			    <menuitem label="Whats New?" oncommand="helpMenuInit('new');" accesskey="N"/>
 			    <menuseparator/>
 			    <menuitem label="About Zealotry" oncommand="helpMenuInit('about');" accesskey="A"/>
 			</menupopup>

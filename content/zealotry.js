@@ -1190,12 +1190,14 @@ function doFontStyleAndSize()
 function helpMenuInit(str) 
 {
     switch(str) {
-	case "about": // Open about dialog
-		window.open("aboutzealous.html", "aboutWindow", 'width=400, height=550, screenX=100, screenY=100');
+        case "new": // Opens whats new window
+		window.open("whatsnew.html", "newWindow", 'resizable, scrollbars, status=no, width=550, height=650, screenX=100, screenY=100');
 		return;
-
+	case "about": // Open about dialog
+		window.open("aboutzealous.html", "aboutWindow", 'width=400, height=600, screenX=100, screenY=100, resizeable, scrollbars, status=no');
+		return;
 	case "changelog": // Open changelog dialog
-		window.open("changelog.html", "changeWindow", 'width=450, height=500, screenX=100, screenY=100, scrollbars=yes');
+		window.open("changelog.html", "changeWindow", 'width=450, height=600, screenX=100, screenY=100, scrollbars, resizable, status=no');
 		return;
 	case "dictionary": // Open dictionary prompt
 		var word = prompt("What word do you wish to define?");
@@ -1205,7 +1207,7 @@ function helpMenuInit(str)
 		}
 		return;	
 	case "content": // Open help contents dialog
-		window.open("aboutzealous.html", "aboutContent", 'width=400, height=550, screenX=100, screenY=100');
+		window.open("aboutzealous.html", "aboutContent", 'width=400, height=600, screenX=100, screenY=100, resizable, scrollbars, status=no');
 		return;
     }
 }
