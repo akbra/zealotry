@@ -168,11 +168,9 @@ function onMainLoad()
     var cf = document.getElementById('center-frame');
     var rf = document.getElementById('right-frame');
     
-    lf.setAttribute("src", baseURL + "Left.sam?zealous="   + ZEALOUS_VERSION);
-    cf.setAttribute("src", baseURL + "Center.sam?zealous=" + ZEALOUS_VERSION);
-    rf.setAttribute("src", baseURL + "Right.sam?zealous="  + ZEALOUS_VERSION);
-
-    doBgSetup();
+    frames['left-frame'].location.href = baseURL + "Left.sam"; // ?zealous=" + ZEALOUS_VERSION;
+    frames['center-frame'].location.href = baseURL + "Center.sam"; // ?zealous=" + ZEALOUS_VERSION;
+    frames['right-frame'].location.href = baseURL + "Right.sam"; // ?zealous=" + ZEALOUS_VERSION;
 
     // we have to use a polling system to support mozilla 1.0
     
@@ -235,6 +233,7 @@ function mainStep()
 
     client.connection.write("SKOTOS Zealous " + ZEALOUS_VERSION + "\n");
 
+    setTheme();
     startAutoLogging();
     doFontStyleAndSize();
 }
@@ -794,8 +793,7 @@ function mungeForDisplay(str) {
         element = document.createElementNS("http://www.w3.org/1999/xhtml",
                                            "html:pre");
     } else if (arr = (/<body bgcolor=\'([^\']*)\' text=\'([^\']*)\'[^>]*>/i).exec(str)) {
-	bgCrap = arr;
-	doBgSetup(arr);
+	setTheme(arr);
         frames["center-frame"].document.body.style.color = arr[2];
         scrollback.contentDocument.body.style.color = arr[2];
     } else if (arr = (/<a xch_cmd='([^>]*)'>/i).exec(str)) {
@@ -1231,6 +1229,7 @@ function doBgSetup(arr)
 
 function changeBg(url)
 {
+
     if (url == "remove") {
         try {
             var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
@@ -1269,3 +1268,219 @@ function optionMenuInit()
     }
 }
 
+function doPrefs()
+{
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+
+    try {
+        var echo = pref.getCharPref(zealousPreference("echo"));
+        if (echo == "true") {
+		pref.setCharPref("zealous.temp.echo", true);
+	} else {
+		pref.setCharPref("zealous.temp.echo", false);
+	}
+    } catch (err) {
+	pref.setCharPref("zealous.temp.echo", true);
+    }
+  
+    try {
+	var buffer = pref.getCharPref(zealousPreference("enableBuffer"));
+	if (buffer == "true") {
+		pref.setCharPref("zealous.temp.buffer", true);
+	} else {
+		pref.setCharPref("zealous.temp.buffer", false);
+	}
+    } catch (err) {
+	pref.setCharPref("zealous.temp.buffer", false);
+    }
+
+    try {
+        var font = pref.getCharPref(zealousPreference("fontStyle"));
+        if (font) pref.setCharPref("zealous.temp.fontStyle", font);
+    } catch (err) {
+        pref.setCharPref("zealous.temp.fontStyle", null);
+    }
+
+    try {
+        var size = pref.getCharPref(zealousPreference("fontSize"));
+        if (font) pref.setCharPref("zealous.temp.fontSize", size);
+    } catch (err) {
+        pref.setCharPref("zealous.temp.fontSize", null);
+    }
+
+    try {
+        var fixedSize = pref.getCharPref(zealousPreference("fixedFontSize"));
+        if (font) pref.setCharPref("zealous.temp.fixedFontSize", fixedSize);
+    } catch (err) {
+        pref.setCharPref("zealous.temp.fixedFontSize", null);
+    }
+
+    var themeArr = new Array("bg_image", "left_side", "right_side", "left_logo", "right_logo", "get_button", "master_button");
+
+    for (var i = 0; i < 7; i++) {
+	try {
+	    var list = pref.getCharPref(zealousPreference(themeArr[i] + ".list"));
+	} catch (err) {
+	    continue; // No list, move on
+	}
+	pref.setCharPref("zealous.temp." + themeArr[i] + ".list", list);
+    }
+
+    window.open("chrome://zealotry/content/prefs.xul", "_blank", "chrome,modal,dialog,titlebar");
+
+    doFinishPrefs();
+}
+
+function doFinishPrefs() 
+{
+
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+
+
+    var cb = pref.getCharPref("zealous.temp.echo");
+
+    if (cb == "true") {
+	pref.setCharPref(zealousPreference("echo"), "true");
+    } else {
+	pref.setCharPref(zealousPreference("echo"), "false");
+    }
+
+    // pref.clearUserPref("zealous.temp.echo");
+
+   try {
+        this.localEcho = pref.getCharPref(zealousPreference("echo"));
+    } catch (err) {
+        window.client.optionEchoSent = true;
+    }
+
+    if (this.localEcho == "false") {
+        window.client.optionEchoSent = false;
+    } else {
+        window.client.optionEchoSent = true;
+    }
+
+    var bb = pref.getCharPref("zealous.temp.buffer");
+
+    if (bb == "true") {
+	pref.setCharPref(zealousPreference("enableBuffer"), "true");
+    } else {
+	pref.setCharPref(zealousPreference("enableBuffer"), "false");
+    }
+
+    // pref.clearUserPref("zealous.temp.buffer");
+
+    try {
+        enableBuffer = pref.getCharPref(zealousPreference("enableBuffer"));
+    } catch (err) {
+        window.client.enableBuffer = false;
+        enableBuffer = "false";
+    }
+
+    if (enableBuffer == "true") {
+        window.client.enableBuffer = true;
+    }
+
+    setFont();
+    setSize();
+    setFixedSize();
+    setTheme();
+}
+
+function setTheme(junk)
+{
+    if (junk) {
+	document.getElementById('center-frame').style.background = junk[1];
+	document.getElementById('scrollback').style.background = junk[1];
+    }
+
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+
+    var themeArr = new Array("bg_image", "left_side", "right_side", "left_logo", "right_logo", "get_button", "master_button");
+
+    for (var i = 0; i < 7; i++) {
+	try {
+	    var url = pref.getCharPref("zealous.temp." + themeArr[i]);
+	} catch (err) {
+	    continue;
+	}
+	pref.setCharPref(zealousPreference(themeArr[i]), url);
+	pref.clearUserPref("zealous.temp." + themeArr[i]);
+    }
+
+    for (var i = 0; i < 7; i++) {
+	try {
+	    var list = pref.getCharPref("zealous.temp." + themeArr[i] + ".list");
+	} catch (err) {
+	    continue;
+	}
+	pref.setCharPref(zealousPreference(themeArr[i] + ".list"), list);
+	pref.clearUserPref("zealous.temp." + themeArr[i] + ".list");
+    }
+
+    for (var i = 0; i < 7; i++) {
+	switch(themeArr[i]) {
+	    case "bg_image":
+		try {
+		    var url = pref.getCharPref(zealousPreference("bg_image"));
+		} catch (err) {
+		    break; // No background image to set
+		}
+		document.getElementById('center-frame').style.background = 'white url(' + url + ') no-repeat';
+		document.getElementById('scrollback').style.background = 'white url(' + url + ') no-repeat';
+		break;
+	    case "left_side":
+		try {
+		    var url = pref.getCharPref(zealousPreference("left_side"));
+		} catch (err) {
+		    break; // No left sidebar to set
+		}
+		document.getElementById('left-frame').contentDocument.getElementsByTagName('img')[0].src = url;
+		break;
+	    case "left_logo":
+		try {
+		    var url = pref.getCharPref(zealousPreference("left_logo"));
+		} catch (err) {
+		    break; // No left logo to set
+		}
+		document.getElementById('left-frame').contentDocument.getElementsByTagName('img')[1].src = url;
+		break;
+            case "right_side":
+                try {
+                    var url = pref.getCharPref(zealousPreference("right_side"));
+                } catch (err) {
+                    break; // No right sidebar to set
+                }
+                document.getElementById('right-frame').contentDocument.getElementsByTagName('img')[0].src = url;
+                break;
+            case "right_logo":
+                try {
+                    var url = pref.getCharPref(zealousPreference("right_logo"));
+                } catch (err) {
+                    break; // No right logo to set
+                }
+                document.getElementById('right-frame').contentDocument.getElementsByTagName('img')[1].src = url;
+                break;
+            case "get_button":
+                try {
+                    var url = pref.getCharPref(zealousPreference("get_button"));
+                } catch (err) {
+                    break; // No getting started button to set
+                }
+                document.getElementById('right-frame').contentDocument.getElementsByTagName('img')[2].src = url;
+                break;
+            case "master_button":
+                try {
+                    var url = pref.getCharPref(zealousPreference("master_button"));
+                } catch (err) {
+                    break; // No mastering chat button to set
+                }
+                document.getElementById('right-frame').contentDocument.getElementsByTagName('img')[3].src = url;
+                break;
+	    default:
+		break;
+	}
+    }
+}

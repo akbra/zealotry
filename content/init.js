@@ -31,87 +31,6 @@ function submitSkotosClickCommand(elementName)
     obj.focus();
 }
 
-function generate_fontmenu()
-{
-    var langgroup = new Array("x-western");
-    var fonttype  = new Array("serif", "sans-serif", "cursive", "fantasy", "monospace");
-    var fontList  = Components.classes["@mozilla.org/gfx/fontlist;1"].createInstance(Components.interfaces.nsIFontList);
-    var results   = new Array();
-    var lsz       = langgroup.length;
-    var fsz       = fonttype.length;
-    var fontNameStr;
-    var fontName;
-    var found     = new Array();
-    var i, j;
-    
-    for (i = 0; i < lsz; i++) {
-        for (j = 0; j < fsz; j++) {
-            var fontEnumerator = fontList.availableFonts(langgroup[i], fonttype[j]);
-            while (fontEnumerator.hasMoreElements()) {
-                fontName = fontEnumerator.getNext();
-                fontName = fontName.QueryInterface(Components.interfaces.nsISupportsString);
-                fontNameStr = fontName.toString();
-                if (!found[fontNameStr]) {
-                    results[results.length] = fontNameStr;
-                    found[fontNameStr] = 1;
-                }
-            }
-        }
-    }
-    
-    var d           = document;
-    var popup       = d.getElementById('font-list');
-    var menuitems   = results;
-    var l           = menuitems.length;
-    var elements    = new Array();
-    var newElement;
-    var letter;
-    
-    for (var z = 0; z < l; z++) {
-        letter = menuitems[z].substring(0, 1).toUpperCase();
-        if (!elements[letter]) {
-            elements[letter] = d.createElement('menupopup');
-            elements[letter].setAttribute('id', 'p_' + letter);
-        }
-        var item = d.createElement('menuitem');
-        item.setAttribute('id', 'fm_' + menuitems[z]);
-        item.setAttribute('label', menuitems[z]);
-        item.setAttribute('oncommand', 'setFont("' + menuitems[z] + '");');
-        item.style.fontFamily = menuitems[z];
-        elements[letter].appendChild(item);
-    }
-    // Loop over 'A' to 'Z":
-    for (var z = 65; z <= 90; z++) {
-        var chr = String.fromCharCode(z);
-        if (elements[chr]) {
-            var menu = d.createElement('menu');
-            menu.setAttribute('id', 'm_'+chr);
-            menu.setAttribute('label', chr);
-            popup.appendChild(menu);
-            menu.appendChild(elements[chr]);
-        }
-    }
-    
-    /* Font sizes. */
-    popup = d.getElementById('sizes-menu');
-    var pre_popup = d.getElementById('pre-sizes-menu');
-    var size_el, size_pre_el;
-    
-    for (var z = 6; z < 30; z++) {
-        size_el = d.createElement('menuitem');
-        size_pre_el = d.createElement('menuitem');
-        size_el.setAttribute('id', 's_'+z);
-        size_pre_el.setAttribute('id', 'sp_'+z);
-        size_el.setAttribute('label', z);
-        size_pre_el.setAttribute('label', z);
-        // size_pre_el = size_el.cloneNode(true);
-        size_el.setAttribute('oncommand', 'setSize(' + z + ' + "pt")');
-        size_pre_el.setAttribute('oncommand', 'setFixedSize(' + z + ' + "pt")');
-        popup.appendChild(size_el);
-        pre_popup.appendChild(size_pre_el);
-    }
-}
-
 function submitSkotosLink(link)
 {
     var rdoc = document.getElementById('right-frame').contentDocument;
@@ -140,7 +59,7 @@ function bubbleSettings()
     rframe.rc = submitSkotosClickCommand;
 
     cframe.skotosLink = submitSkotosLink;
-    generate_fontmenu();
+    // generate_fontmenu();
     generate_bgList();
 }
 
@@ -179,60 +98,68 @@ function switchSelection(what, val)
     }
 }
 
-function setFont(family)
+function setFont()
 {
-    document.getElementById('center-frame').contentDocument.body.style.fontFamily = family.replace(/'/g, "\\'");
-	document.getElementById('scrollback').contentDocument.body.style.fontFamily = family.replace(/'/g, "\\'");
- 	document.getElementById('input').style.fontFamily = family.replace(/'/g, "\\'");
+    try {
+        var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+        pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+        var font = pref.getCharPref("zealous.temp.fontStyle");
+    } catch (err) {
+        return;
+    }
 
-    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
-    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
-    pref.setCharPref
-        (zealousPreference("fontStyle"),
-         document.getElementById('center-frame').contentDocument.body.style.fontFamily);
-
-    switchSelection('font', family);
-    switchSelection('letter', family.substring(0,1).toUpperCase());
+    pref.setCharPref(zealousPreference("fontStyle"), font);
+    // pref.clearUserPref("zealous.temp.fontStyle");
+    
+    document.getElementById('center-frame').contentDocument.body.style.fontFamily = font.replace(/'/g, "\\'");
+    document.getElementById('scrollback').contentDocument.body.style.fontFamily = font.replace(/'/g, "\\'");
+    document.getElementById('input').style.fontFamily = font.replace(/'/g, "\\'");
 }
 
-function setSize(pts)
+function setSize()
 {
-	// This shit don't work for me apparently. I can change font size all day long
-	// and nothing changes. -- Strike that, this apparently only affects fixed font size.
-    document.getElementById('center-frame').contentDocument.body.style.fontSize = pts;
-    document.getElementById('input').style.fontSize = pts;
-	// TODO: Convert pts to an int, and decrement by 2 and put in scrollback fontsize.
-	// document.getElementById('scrollback').contentDocument.body.style.fontSize = "10pt";
+    try {
+        var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+        pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+        var size = pref.getCharPref("zealous.temp.fontSize");
+    } catch (err) {
+        return;
+    }
 
-    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
-    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
-    pref.setCharPref(zealousPreference("fontSize"), document.getElementById('center-frame').contentDocument.body.style.fontSize);
+    pref.setCharPref(zealousPreference("fontSize"), size);
+    // pref.clearUserPref("zealous.temp.fontSize");
 
-    switchSelection( 'size', pts.substring(0, pts.length-2) );
+    document.getElementById('center-frame').contentDocument.body.style.fontSize = size;
+    document.getElementById('input').style.fontSize = size;
 }
 
 
-function setFixedSize(pts) 
+function setFixedSize() 
 {
-    var styles = centerStyleTag; // document.getElementById('center-frame').contentDocument.getElementsByTagName("style")[0];
+    try {
+	var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    	pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+    	var size = pref.getCharPref("zealous.temp.fixedFontSize");
+    } catch (err) {
+	return;
+    }
+
+    pref.setCharPref(zealousPreference("fixedFontSize"), size);
+    // pref.clearUserPref("zealous.temp.fixedFontSize");
+
+    var styles = centerStyleTag;
     if (preNode) {
         preNode.parentNode.removeChild(preNode);
     }
-    preNode = document.createTextNode("pre { font-size: " + pts + "; }");
+    preNode = document.createTextNode("pre { font-size: " + size + "; }");
     styles.appendChild(preNode);
 
-    var styles = scrollbackStyleTag; // document.getElementById('scrollback').contentDocument.getElementsByTagName("style")[0];
+    var styles = scrollbackStyleTag;
     if (sbPreNode) {
         sbPreNode.parentNode.removeChild(sbPreNode);
     }
-    sbPreNode = document.createTextNode("pre { font-size: " + pts + "; }");
+    sbPreNode = document.createTextNode("pre { font-size: " + size + "; }");
     styles.appendChild(sbPreNode);
-
-    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
-    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
-    pref.setCharPref(zealousPreference("fixedFontSize"), pts);
-
-    switchSelection( 'psize', pts.substring(0, pts.length-2) );
 }
     
 var inputRows = 2;
