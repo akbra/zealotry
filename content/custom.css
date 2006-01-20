@@ -1,0 +1,5 @@
+zealotry {
+  -moz-binding     : url("custom.xml#zealotry");
+  background-color : lightyellow;
+  float            : right;
+}
