@@ -68,16 +68,6 @@ function onMainLoad()
     // Remove the onload trigger on the XUL
     window.onload = null;
     
-    /*
-    This should no longer happen.
-      if (this.alreadyLoaded) {
-        // I don't know why this happens :( 
-        return false;
-    }
-    
-    this.alreadyLoaded = true;
-    */
-    
     if (!document.getElementById("input")) {
         alert("cannot find input box element");
     }
@@ -167,13 +157,14 @@ function onMainLoad()
     var lf = document.getElementById('left-frame');
     var cf = document.getElementById('center-frame');
     var rf = document.getElementById('right-frame');
-    
+
+    // XXX: Why were the "?zealous=<version>" parts removed?
     frames['left-frame'].location.href = baseURL + "Left.sam"; // ?zealous=" + ZEALOUS_VERSION;
     frames['center-frame'].location.href = baseURL + "Center.sam"; // ?zealous=" + ZEALOUS_VERSION;
     frames['right-frame'].location.href = baseURL + "Right.sam"; // ?zealous=" + ZEALOUS_VERSION;
 
     // we have to use a polling system to support mozilla 1.0
-    
+    // XXX: Do we care at this point? I don't. If a user uses Moz 1.0, they need to upgrade anyway for more reasons than I can count.
     setTimeout("pollFrames()", POLL_DELAY);
 }
 
@@ -215,11 +206,10 @@ function mainStep()
 
     readConfigurationFile();
 
-    window.client.connect(
-                          window.center_frame.getHost(),
-                          window.center_frame.getPort(),
-                          onRead
-                          );
+    window.client.connect
+        (window.center_frame.getHost(),
+         window.center_frame.getPort(),
+         onRead);
 
     /* window.client.connection.onClose = onClose; */
     displayLine("SVN Zealotry version " + ZEALOUS_VERSION + " loading...");
@@ -793,7 +783,7 @@ function mungeForDisplay(str) {
         element = document.createElementNS("http://www.w3.org/1999/xhtml",
                                            "html:pre");
     } else if (arr = (/<body bgcolor=\'([^\']*)\' text=\'([^\']*)\'[^>]*>/i).exec(str)) {
-	setTheme(arr);
+        setTheme(arr);
         frames["center-frame"].document.body.style.color = arr[2];
         scrollback.contentDocument.body.style.color = arr[2];
     } else if (arr = (/<a xch_cmd='([^>]*)'>/i).exec(str)) {
@@ -1276,23 +1266,23 @@ function doPrefs()
     try {
         var echo = pref.getCharPref(zealousPreference("echo"));
         if (echo == "true") {
-		pref.setCharPref("zealous.temp.echo", true);
-	} else {
-		pref.setCharPref("zealous.temp.echo", false);
-	}
+            pref.setCharPref("zealous.temp.echo", true);
+        } else {
+            pref.setCharPref("zealous.temp.echo", false);
+        }
     } catch (err) {
-	pref.setCharPref("zealous.temp.echo", true);
+        pref.setCharPref("zealous.temp.echo", true);
     }
   
     try {
-	var buffer = pref.getCharPref(zealousPreference("enableBuffer"));
-	if (buffer == "true") {
-		pref.setCharPref("zealous.temp.buffer", true);
-	} else {
-		pref.setCharPref("zealous.temp.buffer", false);
-	}
+        var buffer = pref.getCharPref(zealousPreference("enableBuffer"));
+        if (buffer == "true") {
+            pref.setCharPref("zealous.temp.buffer", true);
+        } else {
+            pref.setCharPref("zealous.temp.buffer", false);
+        }
     } catch (err) {
-	pref.setCharPref("zealous.temp.buffer", false);
+        pref.setCharPref("zealous.temp.buffer", false);
     }
 
     try {
@@ -1319,12 +1309,12 @@ function doPrefs()
     var themeArr = new Array("bg_image", "left_side", "right_side", "left_logo", "right_logo", "get_button", "master_button");
 
     for (var i = 0; i < 7; i++) {
-	try {
-	    var list = pref.getCharPref(zealousPreference(themeArr[i] + ".list"));
-	} catch (err) {
-	    continue; // No list, move on
-	}
-	pref.setCharPref("zealous.temp." + themeArr[i] + ".list", list);
+        try {
+            var list = pref.getCharPref(zealousPreference(themeArr[i] + ".list"));
+        } catch (err) {
+            continue; // No list, move on
+        }
+        pref.setCharPref("zealous.temp." + themeArr[i] + ".list", list);
     }
 
     window.open("chrome://zealotry/content/prefs.xul", "_blank", "chrome,modal,dialog,titlebar");
@@ -1338,18 +1328,17 @@ function doFinishPrefs()
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
-
     var cb = pref.getCharPref("zealous.temp.echo");
 
     if (cb == "true") {
-	pref.setCharPref(zealousPreference("echo"), "true");
+        pref.setCharPref(zealousPreference("echo"), "true");
     } else {
-	pref.setCharPref(zealousPreference("echo"), "false");
+        pref.setCharPref(zealousPreference("echo"), "false");
     }
 
     // pref.clearUserPref("zealous.temp.echo");
 
-   try {
+    try {
         this.localEcho = pref.getCharPref(zealousPreference("echo"));
     } catch (err) {
         window.client.optionEchoSent = true;
@@ -1364,9 +1353,9 @@ function doFinishPrefs()
     var bb = pref.getCharPref("zealous.temp.buffer");
 
     if (bb == "true") {
-	pref.setCharPref(zealousPreference("enableBuffer"), "true");
+        pref.setCharPref(zealousPreference("enableBuffer"), "true");
     } else {
-	pref.setCharPref(zealousPreference("enableBuffer"), "false");
+        pref.setCharPref(zealousPreference("enableBuffer"), "false");
     }
 
     // pref.clearUserPref("zealous.temp.buffer");
@@ -1388,11 +1377,11 @@ function doFinishPrefs()
     setTheme();
 }
 
-function setTheme(junk)
+function setTheme(styles)
 {
-    if (junk) {
-	document.getElementById('center-frame').style.background = junk[1];
-	document.getElementById('scrollback').style.background = junk[1];
+    if (styles) {
+        document.getElementById('center-frame').style.background = styles[1];
+        document.getElementById('scrollback').style.background = styles[1];
     }
 
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
@@ -1401,86 +1390,86 @@ function setTheme(junk)
     var themeArr = new Array("bg_image", "left_side", "right_side", "left_logo", "right_logo", "get_button", "master_button");
 
     for (var i = 0; i < 7; i++) {
-	try {
-	    var url = pref.getCharPref("zealous.temp." + themeArr[i]);
-	} catch (err) {
-	    continue;
-	}
-	pref.setCharPref(zealousPreference(themeArr[i]), url);
-	pref.clearUserPref("zealous.temp." + themeArr[i]);
+        try {
+            var url = pref.getCharPref("zealous.temp." + themeArr[i]);
+        } catch (err) {
+            continue;
+        }
+        pref.setCharPref(zealousPreference(themeArr[i]), url);
+        pref.clearUserPref("zealous.temp." + themeArr[i]);
     }
 
     for (var i = 0; i < 7; i++) {
-	try {
-	    var list = pref.getCharPref("zealous.temp." + themeArr[i] + ".list");
-	} catch (err) {
-	    continue;
-	}
-	pref.setCharPref(zealousPreference(themeArr[i] + ".list"), list);
-	pref.clearUserPref("zealous.temp." + themeArr[i] + ".list");
+        try {
+            var list = pref.getCharPref("zealous.temp." + themeArr[i] + ".list");
+        } catch (err) {
+            continue;
+        }
+        pref.setCharPref(zealousPreference(themeArr[i] + ".list"), list);
+        pref.clearUserPref("zealous.temp." + themeArr[i] + ".list");
     }
 
     for (var i = 0; i < 7; i++) {
-	switch(themeArr[i]) {
+        switch(themeArr[i]) {
 	    case "bg_image":
-		try {
-		    var url = pref.getCharPref(zealousPreference("bg_image"));
-		} catch (err) {
-		    break; // No background image to set
-		}
-		document.getElementById('center-frame').style.background = 'white url(' + url + ') no-repeat';
-		document.getElementById('scrollback').style.background = 'white url(' + url + ') no-repeat';
-		break;
+            try {
+                var url = pref.getCharPref(zealousPreference("bg_image"));
+            } catch (err) {
+                break; // No background image to set
+            }
+            document.getElementById('center-frame').style.background = 'white url(' + url + ') no-repeat';
+            document.getElementById('scrollback').style.background = 'white url(' + url + ') no-repeat';
+            break;
 	    case "left_side":
-		try {
-		    var url = pref.getCharPref(zealousPreference("left_side"));
-		} catch (err) {
-		    break; // No left sidebar to set
-		}
-		document.getElementById('left-frame').contentDocument.getElementsByTagName('img')[0].src = url;
-		break;
+            try {
+                var url = pref.getCharPref(zealousPreference("left_side"));
+            } catch (err) {
+                break; // No left sidebar to set
+            }
+            document.getElementById('left-frame').contentDocument.getElementById('Left_Graphic').src = url;
+            break;
 	    case "left_logo":
-		try {
-		    var url = pref.getCharPref(zealousPreference("left_logo"));
-		} catch (err) {
-		    break; // No left logo to set
-		}
-		document.getElementById('left-frame').contentDocument.getElementsByTagName('img')[1].src = url;
-		break;
-            case "right_side":
-                try {
-                    var url = pref.getCharPref(zealousPreference("right_side"));
-                } catch (err) {
-                    break; // No right sidebar to set
-                }
-                document.getElementById('right-frame').contentDocument.getElementsByTagName('img')[0].src = url;
-                break;
-            case "right_logo":
-                try {
-                    var url = pref.getCharPref(zealousPreference("right_logo"));
-                } catch (err) {
-                    break; // No right logo to set
-                }
-                document.getElementById('right-frame').contentDocument.getElementsByTagName('img')[1].src = url;
-                break;
-            case "get_button":
-                try {
-                    var url = pref.getCharPref(zealousPreference("get_button"));
-                } catch (err) {
-                    break; // No getting started button to set
-                }
-                document.getElementById('right-frame').contentDocument.getElementsByTagName('img')[2].src = url;
-                break;
-            case "master_button":
-                try {
-                    var url = pref.getCharPref(zealousPreference("master_button"));
-                } catch (err) {
-                    break; // No mastering chat button to set
-                }
-                document.getElementById('right-frame').contentDocument.getElementsByTagName('img')[3].src = url;
-                break;
+            try {
+                var url = pref.getCharPref(zealousPreference("left_logo"));
+            } catch (err) {
+                break; // No left logo to set
+            }
+            document.getElementById('left-frame').contentDocument.getElementById('Chat_Theatre').src = url;
+            break;
+        case "right_side":
+            try {
+                var url = pref.getCharPref(zealousPreference("right_side"));
+            } catch (err) {
+                break; // No right sidebar to set
+            }
+            document.getElementById('right-frame').contentDocument.getElementById('Right_Strip').src = url;
+            break;
+        case "right_logo":
+            try {
+                var url = pref.getCharPref(zealousPreference("right_logo"));
+            } catch (err) {
+                break; // No right logo to set
+            }
+            document.getElementById('right-frame').contentDocument.getElementById('Skotos_Logo').src = url;
+            break;
+        case "get_button":
+            try {
+                var url = pref.getCharPref(zealousPreference("get_button"));
+            } catch (err) {
+                break; // No getting started button to set
+            }
+            document.getElementById('right-frame').contentDocument.getElementById('elementStarting').src = url;
+            break;
+        case "master_button":
+            try {
+                var url = pref.getCharPref(zealousPreference("master_button"));
+            } catch (err) {
+                break; // No mastering chat button to set
+            }
+            document.getElementById('right-frame').contentDocument.getElementById('elementMastering').src = url;
+            break;
 	    default:
-		break;
-	}
+            break;
+        }
     }
 }

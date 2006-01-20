@@ -26,198 +26,121 @@ function doMainUnload()
     var bb = document.getElementById('scrollbackcheck').checked;
 
     if (cb == true) {
-	pref.setCharPref("zealous.temp.echo", "true");
+        pref.setCharPref("zealous.temp.echo", "true");
     } else {
-	pref.setCharPref("zealous.temp.echo", "false");
+        pref.setCharPref("zealous.temp.echo", "false");
     }
 
     if (bb == true) {
-	pref.setCharPref("zealous.temp.buffer", "true");
+        pref.setCharPref("zealous.temp.buffer", "true");
     } else {
-	pref.setCharPref("zealous.temp.buffer", "false");
+        pref.setCharPref("zealous.temp.buffer", "false");
     }
+}
+
+function browseThemePreference(prefDesc, prefName)
+{
+    var url = prompt("What is the URL to the left side image you'd like to use?");
+
+    if (false) {
+        var nsIFilePicker = Components.interfaces.nsIFilePicker;
+        var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+        filePicker.init(window, "Pick image for " + prefDesc, nsIFilePicker.modeOpen);
+        var res = filePicker.show();
+        if (res == nsIFilePicker.returnCancel) {
+            return;
+        }
+        var url = filePicker.file.path;
+        if (url.indexOf("://") == -1) {
+            // XXX: See if it's possible to provide an URL directly in browser dialog and how that affects things.
+            // XXX: See what happens if a file contains "://". Unlikely but who knows.
+            // No protocol specified. It is thus a file.
+            url = "file:///" + url;
+        }
+    }
+
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+
+    if (url) {
+        pref.setCharPref("zealous.temp." + prefName, url);
+    }
+
+    try {
+        var list = pref.getCharPref("zealous.temp." + prefName + ".list");
+        pref.setCharPref("zealous.temp." + prefName + ".list", list + "@" + url);
+    } catch (err) {
+        pref.setCharPref("zealous.temp." + prefName + ".list", url);
+    }
+    generate_themeLists(prefName, url);
 }
 
 function doNewLS()
 {
-    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
-    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
-
-    var url = prompt("What is the URL to the left side image you'd like to use?");
-
-    if (url) {
-        pref.setCharPref("zealous.temp.left_side", url);
-    }
-
-    try {
-	var list = pref.getCharPref("zealous.temp.left_side.list");
-    } catch (err) {
- 	pref.setCharPref("zealous.temp.left_side.list", url);
-        generate_themeLists("left_side", url);
-        return;
-    }
-    pref.setCharPref("zealous.temp.left_side.list", pref.getCharPref("zealous.temp.left_side.list") + "@" + url);
-
-    generate_themeLists("left_side", url);
+    browseThemePreference("left side pane", "left_side");
 }
 
 function doNewBG()
 {
-    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
-    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
-
-    var url = prompt("What is the URL to the background image you'd like to use?");
-
-    if (url) {
-        pref.setCharPref("zealous.temp.bg_image", url);
-    }
-
-    try {
-        var list = pref.getCharPref("zealous.temp.bg_image.list");
-    } catch (err) {
-        pref.setCharPref("zealous.temp.bg_image.list", url);
-        generate_themeLists("bg_image", url);
-        return;
-    }
-    pref.setCharPref("zealous.temp.bg_image.list", pref.getCharPref("zealous.temp.bg_image.list") + "@" + url);
-    generate_themeLists("bg_image", url);
+    browseThemePreference("background", "bg_image");
 }
 
 function doNewRS()
 {
-    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
-    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
-
-    var url = prompt("What is the URL to the right side image you'd like to use?");
-
-    if (url) {
-        pref.setCharPref("zealous.temp.right_side", url);
-    }
-
-    try {
-        var list = pref.getCharPref("zealous.temp.right_side.list");
-    } catch (err) {
-        pref.setCharPref("zealous.temp.right_side.list", url);
-        generate_themeLists("right_side", url);
-        return;
-    }
-    pref.setCharPref("zealous.temp.right_side.list", pref.getCharPref("zealous.temp.right_side.list") + "@" + url);
-    generate_themeLists("right_side", url);
+    browseThemePreference("right side pane", "right_side");
 }
 
 function doNewLL()
 {
-    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
-    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
-
-    var url = prompt("What is the URL to the left side logo you'd like to use?");
-
-    if (url) {
-        pref.setCharPref("zealous.temp.left_logo", url);
-    }
-
-    try {
-        var list = pref.getCharPref("zealous.temp.left_logo.list");
-    } catch (err) {
-        pref.setCharPref("zealous.temp.left_logo.list", url);
-        generate_themeLists("left_logo", url);
-        return;
-    }
-    pref.setCharPref("zealous.temp.left_logo.list", pref.getCharPref("zealous.temp.left_logo.list") + "@" + url);
-    generate_themeLists("left_logo", url);
+    browseThemePreference("left logo", "left_logo");
 }
 
 function doNewRL()
 {
-    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
-    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
-
-    var url = prompt("What is the URL to the right side logo you'd like to use?");
-
-    if (url) {
-        pref.setCharPref("zealous.temp.right_logo", url);
-    }
-
-    try {
-        var list = pref.getCharPref("zealous.temp.right_logo.list");
-    } catch (err) {
-        pref.setCharPref("zealous.temp.right_logo.list", url);
-        generate_themeLists("right_logo", url);
-        return;
-    }
-    pref.setCharPref("zealous.temp.right_logo.list", pref.getCharPref("zealous.temp.right_logo.list") + "@" + url);
-    generate_themeLists("right_logo", url);
+    browseThemePreference("right logo", "right_logo");
 }
 
 function doNewGB()
 {
-    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
-    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
-
-    var url = prompt("What is the URL to the Getting Started Button image you'd like to use?");
-
-    if (url) {
-        pref.setCharPref("zealous.temp.get_button", url);
-    }
-
-    try {
-        var list = pref.getCharPref("zealous.temp.get_button.list");
-    } catch (err) {
-        pref.setCharPref("zealous.temp.get_button.list", url);
-        generate_themeLists("get_button", url);
-        return;
-    }
-    pref.setCharPref("zealous.temp.get_button.list", pref.getCharPref("zealous.temp.get_button.list") + "@" + url);
-    generate_themeLists("get_button", url);
+    browseThemePreference("the Getting Started button", "get_button");
 }
 
 function doNewMB()
 {
-    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
-    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
-
-    var url = prompt("What is the URL to the Mastering Chat Button image you'd like to use?");
-
-    if (url) {
-        pref.setCharPref("zealous.temp.master_button", url);
-    }
-
-    try {
-        var list = pref.getCharPref("zealous.temp.master_button.list");
-    } catch (err) {
-        pref.setCharPref("zealous.temp.master_button.list", url);
-        generate_themeLists("master_button", url);
-        return;
-    }
-    pref.setCharPref("zealous.temp.master_button.list", pref.getCharPref("zealous.temp.master_button.list") + "@" + url);
-    generate_themeLists("master_button", url);
+    browseThemePreference("the Mastering Chat button", "master_button");
 }
 
 function newTheme(url, type)
 {
+    // XXX Can't we just do this?
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
+    pref.setCharPref("zealous.temp." + type, url);
+    return;
+    
     switch(type) {
 	case "bg_image":
 	    setBgImage(url);
 	    break;
-        case "left_side":
-            setLeftSide(url);
-            break;
-        case "right_side":
-            setRightSide(url);
-            break;
-        case "left_logo":
-            setLeftLogo(url);
-            break;
-        case "right_logo":
-            setRightLogo(url);
-            break;
-        case "get_button":
-            setGetButton(url);
-            break;
-        case "master_button":
-            setMasterButton(url);
-            break;
+    case "left_side":
+        setLeftSide(url);
+        break;
+    case "right_side":
+        setRightSide(url);
+        break;
+    case "left_logo":
+        setLeftLogo(url);
+        break;
+    case "right_logo":
+        setRightLogo(url);
+        break;
+    case "get_button":
+        setGetButton(url);
+        break;
+    case "master_button":
+        setMasterButton(url);
+        break;
     }
 }
 
@@ -347,7 +270,7 @@ function generate_fontmenu()
         item.setAttribute('oncommand', 'setFont("' + menuitems[z] + '");');
         item.style.fontFamily = menuitems[z];
         // elements[letter].appendChild(item);
-	popup.appendChild(item);
+        popup.appendChild(item);
     }
     
     /* Font sizes. */
@@ -359,23 +282,23 @@ function generate_fontmenu()
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
     try {
-	var sz = pref.getCharPref("zealous.temp.fontSize");
-	sz = sz.substr(0, sz.length-2);
+        var sz = pref.getCharPref("zealous.temp.fontSize");
+        sz = sz.substr(0, sz.length-2);
     } catch (err) {
-	var sz = null;
+        var sz = null;
     }
 
     try {
-	var sf = pref.getCharPref("zealous.temp.fixedFontSize");
-	sf = sf.substr(0, sf.length-2);
+        var sf = pref.getCharPref("zealous.temp.fixedFontSize");
+        sf = sf.substr(0, sf.length-2);
     } catch (err) {
-	var sf = null;
+        var sf = null;
     }
 
     try {
-	var ft = pref.getCharPref("zealous.temp.fontStyle");
+        var ft = pref.getCharPref("zealous.temp.fontStyle");
     } catch (err) {
-	var ft = null;
+        var ft = null;
     }
 
     for (var z = 6; z < 30; z++) {
@@ -391,13 +314,13 @@ function generate_fontmenu()
         size_el.setAttribute('oncommand', 'setSize(' + z + ' + "pt");');
         size_pre_el.setAttribute('oncommand', 'setFixedSize(' + z + ' + "pt");');
 
-	/* I have no idea why the selected code is failing :( -- Jess */
-	if (z == Number(sz)) {
-	    size_el.selected = true;
-	}
+        /* I have no idea why the selected code is failing :( -- Jess */
+        if (z == Number(sz)) {
+            size_el.selected = true;
+        }
         if (z == Number(sf)) {
-	    size_pre_el.selected = true;
-	}
+            size_pre_el.selected = true;
+        }
         popup.appendChild(size_el);
         pre_popup.appendChild(size_pre_el);
     }
@@ -472,7 +395,7 @@ function switchSelection(what, val)
     if (font_element) {
         font_element.style.color      = 'red';
         font_element.style.fontWeight = 'bold';
-	font_element.style.fontSize   = '14pt';
+        font_element.style.fontSize   = '14pt';
     }
 }
 
@@ -550,24 +473,24 @@ function generate_themeLists(type, url)
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
     if (type) {
-	var themeArr = new Array(type);
+        var themeArr = new Array(type);
     } else { 
         var themeArr = new Array("bg_image", "left_side", "right_side", "left_logo", "right_logo", "get_button", "master_button");
     }
 
     for (var i = 0; i < themeArr.length; i++) {
-	try {
-	    var list = pref.getCharPref("zealous.temp." + themeArr[i] + ".list");
-	} catch (err) {
-	    continue; // Nothing to list
-	}
+        try {
+            var list = pref.getCharPref("zealous.temp." + themeArr[i] + ".list");
+        } catch (err) {
+            continue; // Nothing to list
+        }
 
         var popup = document.getElementById(themeArr[i]);
-	if (url) {
-	    var list = url.split("@");
-	} else {
+        if (url) {
+            var list = url.split("@");
+        } else {
     	    var list = list.split("@");
-	}
+        }
     	var l = list.length;
     	var el;
 

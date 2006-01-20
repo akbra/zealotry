@@ -7,160 +7,160 @@
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
     onload="doMainLoad();"
     onunload="doMainUnload();"
-    title="Zealous Preferences"
-    orient="horizontal" windowtype="zealous:preferences">
+    title="Zealotry Preferences"
+    orient="horizontal" windowtype="zealotry:preferences">
 
-    <script type="application/x-javascript" src="chrome://zealotry/content/prefs.js"/>
+    <script type="application/x-javascript" src="prefs.js"/>
 
     <vbox flex="1">
-    <tabbox>
-        <tabs>
-	    <tab label="General" selected="true"/>
-    	    <tab label="Fonts"/>
-    	    <tab label="Themes"/>
-    	    <tab label="Logging"/>
-    	    <tab label="Macros"/>
-        </tabs>
-        <tabpanels>
-	    <tabpanel id="generalpanel">
-		<vbox flex="1">
-		<box orient="horizontal" align="center">
-	   	    <checkbox id="echocheck" label="Echo"/>
-		</box>
-		<box orient="horizontal" align="center">
-	   	    <checkbox id="scrollbackcheck" label="Enable Scrollback Buffer"/>
-		</box>
-		</vbox>
-	    </tabpanel>
-   	    <tabpanel id="fontspanel" orient="vertical">
-		<description>
-		    Your selected choice is in large, bold font.
-		</description>
-               	<grid>
-                    <columns>
-                    	<column flex="1"/>
-			<column flex="2"/>
-                    </columns>
-                    <rows>
-                        <row align="center">
-                       	    <hbox pack="start">
-			        <label value="Your Font List: " control="fonts" crop="end"/>
-                       	    </hbox>
-			    <menulist id="fonts" label="Select Your Font">
-				<menupopup id="font-list"/>
-			    </menulist>
-			</row>
-		  	<row align="center">
-                       	    <hbox pack="start">
-				<label value="Font Sizes: " control="sizes" crop="end"/>
-			    </hbox>
-			    <menulist id="sizes" label="Select Your Font Size">
-				<menupopup id="sizes-menu"/>
-			    </menulist>
-			</row>
-			<row align="center">
-                      	    <hbox pack="start">
-  				<label value="Fixed Font Sizes: " control="pre-sizes" crop="end"/>
-			    </hbox>
-        		    <menulist id="pre-sizes" label="Select Your Fixed Font Size">
-				<menupopup id="pre-sizes-menu"/>
-			    </menulist>
-			</row>
-	            </rows>
-		</grid>
-	    </tabpanel>
-	    <tabpanel id="themepanel">
-		<grid>
-		    <columns>
-			<column flex="1"/>
-			<column flex="2"/>
-			<column flex="3"/>
-			<column flex="4"/>
-		    </columns>
-		    <rows>
-			<row align="center">
-			    <hbox pack="start">
-				<label value="Background Image: " crop="end"/>
-			    </hbox>
-			    <menulist id="background" editable="true">
-				<menupopup id="bg_image"/>
-			    </menulist>
-                            <button label="New" oncommand="doNewBG();"/>
-                            <button label="Delete" oncommand="doDelete();"/>
-			</row>
-                        <row align="center">
-                            <hbox pack="start">
-                                <label value="Left Side Image: " crop="end"/>
-                            </hbox>
-                            <menulist id="leftsidebar" editable="true" sizetopopup="false">
-                                <menupopup id="left_side"/>
-                            </menulist>
-			    <button label="New" oncommand="doNewLS();"/>
-                            <button label="Delete" oncommand="doDelete();"/>
-                        </row>
-                        <row align="center">
-                            <hbox pack="start">
-                                <label value="Right Side Image: " crop="end"/>
-                            </hbox>
-                            <menulist id="rightsidebar" editable="true">
-                                <menupopup id="right_side"/>
-                            </menulist>
-                            <button label="New" oncommand="doNewRS();"/>
-                            <button label="Delete" oncommand="doDelete();"/>
-                        </row>
-                        <row align="center">
-                            <hbox pack="start">
-                                <label value="Left Logo Image: " crop="end"/>
-                            </hbox>
-                            <menulist id="leftlogo" editable="true">
-                                <menupopup id="left_logo"/>
-                            </menulist>
-                            <button label="New" oncommand="doNewLL();"/>
-                            <button label="Delete" oncommand="doDelete();"/>
-                        </row>
-                        <row align="center">
-                            <hbox pack="start">
-                                <label value="Right Logo Image: " crop="end"/>
-                            </hbox>
-                            <menulist id="rightlogo" editable="true">
-                                <menupopup id="right_logo"/>
-                            </menulist>
-                            <button label="New" oncommand="doNewRL();"/>
-                            <button label="Delete" oncommand="doDelete();"/>
-                        </row>
-                        <row align="center">
-                            <hbox pack="start">
-                                <label value="Getting Started Button: " crop="end"/>
-                            </hbox>
-                            <menulist id="getbutton" editable="true">
-                                <menupopup id="get_button"/>
-                            </menulist>
-                            <button label="New" oncommand="doNewGB();"/>
-                            <button label="Delete" oncommand="doDelete();"/>
-                        </row>
-                        <row align="center">
-                            <hbox pack="start">
-                                <label value="Mastering Chat Button: " crop="end"/>
-                            </hbox>
-                            <menulist id="masterbutton" editable="true">
-                                <menupopup id="master_button"/>
-                            </menulist>
-                            <button label="New" oncommand="doNewMB();"/>
-                            <button label="Delete" oncommand="doDelete();"/>
-                        </row>
-		    </rows>
-		</grid>
-	    </tabpanel>
-	    <tabpanel id="loggingpanel" orient="vertical"/>
-	    <tabpanel id="macropanel" orient="vertical"/>
-        </tabpanels>
-    </tabbox>
-    <spacer style="height: 10px"/>
-    <hbox>
-        <spacer flex="1"/>
-        <button id="find-button" label="Ok" default="true" onclick="window.close();"/>
-        <button id="cancel-button" label="Cancel" onclick="window.close();"/>
-    </hbox>
+	<tabbox>
+	    <tabs>
+		<tab label="General" selected="true"/>
+		<tab label="Fonts"/>
+		<tab label="Themes"/>
+		<tab label="Logging"/>
+		<tab label="Macros"/>
+	    </tabs>
+	    <tabpanels>
+		<tabpanel id="generalpanel">
+		    <vbox flex="1">
+			<box orient="horizontal" align="center">
+			    <checkbox id="echocheck" label="Echo"/>
+			</box>
+			<box orient="horizontal" align="center">
+			    <checkbox id="scrollbackcheck" label="Enable Scrollback Buffer"/>
+			</box>
+		    </vbox>
+		</tabpanel>
+		<tabpanel id="fontspanel" orient="vertical">
+		    <description>
+			Your selected choice is in large, bold font.
+		    </description>
+		    <grid>
+			<columns>
+			    <column flex="1"/>
+			    <column flex="2"/>
+			</columns>
+			<rows>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Your Font List: " control="fonts" crop="end"/>
+				</hbox>
+				<menulist id="fonts" label="Select Your Font">
+				    <menupopup id="font-list"/>
+				</menulist>
+			    </row>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Font Sizes: " control="sizes" crop="end"/>
+				</hbox>
+				<menulist id="sizes" label="Select Your Font Size">
+				    <menupopup id="sizes-menu"/>
+				</menulist>
+			    </row>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Fixed Font Sizes: " control="pre-sizes" crop="end"/>
+				</hbox>
+				<menulist id="pre-sizes" label="Select Your Fixed Font Size">
+				    <menupopup id="pre-sizes-menu"/>
+				</menulist>
+			    </row>
+			</rows>
+		    </grid>
+		</tabpanel>
+		<tabpanel id="themepanel">
+		    <grid>
+			<columns>
+			    <column flex="1"/>
+			    <column flex="2"/>
+			    <column flex="3"/>
+			    <column flex="4"/>
+			</columns>
+			<rows>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Background Image: " crop="end"/>
+				</hbox>
+				<menulist id="background" editable="true">
+				    <menupopup id="bg_image"/>
+				</menulist>
+				<button label="New" oncommand="doNewBG();"/>
+				<button label="Delete" oncommand="doDelete();"/>
+			    </row>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Left Side Image: " crop="end"/>
+				</hbox>
+				<menulist id="leftsidebar" editable="true" sizetopopup="false">
+				    <menupopup id="left_side"/>
+				</menulist>
+				<button label="New" oncommand="doNewLS();"/>
+				<button label="Delete" oncommand="doDelete();"/>
+			    </row>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Right Side Image: " crop="end"/>
+				</hbox>
+				<menulist id="rightsidebar" editable="true">
+				    <menupopup id="right_side"/>
+				</menulist>
+				<button label="New" oncommand="doNewRS();"/>
+				<button label="Delete" oncommand="doDelete();"/>
+			    </row>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Left Logo Image: " crop="end"/>
+				</hbox>
+				<menulist id="leftlogo" editable="true">
+				    <menupopup id="left_logo"/>
+				</menulist>
+				<button label="New" oncommand="doNewLL();"/>
+				<button label="Delete" oncommand="doDelete();"/>
+			    </row>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Right Logo Image: " crop="end"/>
+				</hbox>
+				<menulist id="rightlogo" editable="true">
+				    <menupopup id="right_logo"/>
+				</menulist>
+				<button label="New" oncommand="doNewRL();"/>
+				<button label="Delete" oncommand="doDelete();"/>
+			    </row>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Getting Started Button: " crop="end"/>
+				</hbox>
+				<menulist id="getbutton" editable="true">
+				    <menupopup id="get_button"/>
+				</menulist>
+				<button label="New" oncommand="doNewGB();"/>
+				<button label="Delete" oncommand="doDelete();"/>
+			    </row>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Mastering Chat Button: " crop="end"/>
+				</hbox>
+				<menulist id="masterbutton" editable="true">
+				    <menupopup id="master_button"/>
+				</menulist>
+				<button label="New" oncommand="doNewMB();"/>
+				<button label="Delete" oncommand="doDelete();"/>
+			    </row>
+			</rows>
+		    </grid>
+		</tabpanel>
+		<tabpanel id="loggingpanel" orient="vertical"/>
+		<tabpanel id="macropanel" orient="vertical"/>
+	    </tabpanels>
+	</tabbox>
+	<spacer style="height: 10px"/>
+	<hbox>
+	    <spacer flex="1"/>
+	    <button id="find-button" label="Ok" default="true" onclick="window.close();"/>
+	    <button id="cancel-button" label="Cancel" onclick="window.close();"/>
+	</hbox>
     </vbox>
 </window>
 

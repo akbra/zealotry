@@ -112,7 +112,7 @@
 	    <textbox autostretch="true" style="margin: 0; padding: 0" onkeypress="onInput();" rows="2" multiline="true" id="input"/>
 	</vbox>
 	
-	pref("bugger", true);
+	<!-- pref("bugger", true); What is this shit? Why is it in the XUL file? -->
 	
 	<html:iframe name="right-frame" id="right-frame" type="content"
 	    style="-moz-box-flex: 0; width: 145px; height=100%; overflow: hidden"
