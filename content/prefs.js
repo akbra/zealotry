@@ -257,6 +257,7 @@ function generate_fontmenu()
 
     var d           = document;
     var popup       = d.getElementById('font-list');
+    var prepop	    = d.getElementById('sb_font');
     var menuitems   = results;
     var l           = menuitems.length;
     var elements    = new Array();
@@ -265,18 +266,26 @@ function generate_fontmenu()
     
     for (var z = 0; z < l; z++) {
         var item = d.createElement('menuitem');
+	var pitem = d.createElement('menuitem');
         item.setAttribute('id', 'fm_' + menuitems[z]);
+	pitem.setAttribute('id', 'pfm_' + menuitems[z]);
         item.setAttribute('label', menuitems[z]);
+	pitem.setAttribute('label', menuitems[z]);
         item.setAttribute('oncommand', 'setFont("' + menuitems[z] + '");');
+	pitem.setAttribute('oncommand', 'setSBFont("' + menuitems[z] + '");');
         item.style.fontFamily = menuitems[z];
+	pitem.style.fontFamily = menuitems[z];
         // elements[letter].appendChild(item);
         popup.appendChild(item);
+	prepop.appendChild(pitem);
     }
     
     /* Font sizes. */
     popup = d.getElementById('sizes-menu');
     var pre_popup = d.getElementById('pre-sizes-menu');
-    var size_el, size_pre_el;
+    var sbpopup = d.getElementById('sb_size');
+    var sbpre_popup = d.getElementById('sb_presize');
+    var size_el, size_pre_el, size_sb_el, size_sb_pre_el;
     
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
@@ -304,25 +313,28 @@ function generate_fontmenu()
     for (var z = 6; z < 30; z++) {
         size_el = d.createElement('menuitem');
         size_pre_el = d.createElement('menuitem');
+	size_sb_el = d.createElement('menuitem');
+	size_sb_pre_el = d.createElement('menuitem');
 
         size_el.setAttribute('id', 's_'+z);
         size_pre_el.setAttribute('id', 'sp_'+z);
+	size_sb_el.setAttribute('id', 'sb_'+z);
+	size_sb_pre_el.setAttribute('id', 'sbp_'+z);
 
         size_el.setAttribute('label', z);
         size_pre_el.setAttribute('label', z);
+	size_sb_el.setAttribute('label', z);
+	size_sb_pre_el.setAttribute('label', z);
 
         size_el.setAttribute('oncommand', 'setSize(' + z + ' + "pt");');
         size_pre_el.setAttribute('oncommand', 'setFixedSize(' + z + ' + "pt");');
+	size_sb_el.setAttribute('oncommand', 'setSBSize(' + z + ' + "pt");');
+	size_sb_pre_el.setAttribute('oncommand', 'setSBPreSize(' + z + ' + "pt");');
 
-        /* I have no idea why the selected code is failing :( -- Jess */
-        if (z == Number(sz)) {
-            size_el.selected = true;
-        }
-        if (z == Number(sf)) {
-            size_pre_el.selected = true;
-        }
         popup.appendChild(size_el);
         pre_popup.appendChild(size_pre_el);
+	sbpopup.appendChild(size_sb_el);
+	sbpre_popup.appendChild(size_sb_pre_el);
     }
 
     switchSelection('size', sz);
@@ -406,6 +418,14 @@ function setFont(family)
     pref.setCharPref("zealous.temp.fontStyle", family);
 }
 
+function setSBFont(family)
+{
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+    pref.setCharPref("zealous.temp.sbFontStyle", pts);
+}
+
+
 function setSize(pts)
 {
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
@@ -420,6 +440,22 @@ function setFixedSize(pts)
     pref.setCharPref("zealous.temp.fixedFontSize", pts);
 }
     
+function setSBSize(pts)
+{
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+    pref.setCharPref("zealous.temp.sbSize", pts);
+}
+
+function setSBPreSize(pts)
+{
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+    pref.setCharPref("zealous.temp.sbPreSize", pts);
+}
+
+
+
 var inputRows = 2;
 var foop;
     

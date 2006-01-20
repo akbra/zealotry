@@ -66,6 +66,30 @@
 				    <menupopup id="pre-sizes-menu"/>
 				</menulist>
 			    </row>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Scrollback Font Style: " control="sb-font" crop="end"/>
+				</hbox>
+				<menulist id="sb-font" label="Select Your Scrollback Font Style">
+				    <menupopup id="sb_font"/>
+				</menulist>
+			    </row>
+                            <row align="center">
+                                <hbox pack="start">
+                                    <label value="Scrollback Font Size: " control="sb-size" crop="end"/>
+                                </hbox>
+                                <menulist id="sb-size" label="Select Your Scrollback Font Size">
+                                    <menupopup id="sb_size"/>
+                                </menulist>
+                            </row>
+                            <row align="center">
+                                <hbox pack="start">
+                                    <label value="Scrollback Fixed Font Size: " control="sb-presize" crop="end"/>
+                                </hbox>
+                                <menulist id="sb-presize" label="Select Your Scrollback Fixed Font Size">
+                                    <menupopup id="sb_presize"/>
+                                </menulist>
+                            </row>
 			</rows>
 		    </grid>
 		</tabpanel>
