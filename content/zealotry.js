@@ -117,9 +117,7 @@ function onMainLoad()
         alert("this client will not run without a base url");
         return;
     }
-    
-    document.title = makeCharName() + " @ " + window.gameName;
-    
+
     window.left_frame =   frames["left-frame"];
     window.right_frame =  frames["right-frame"];
     window.center_frame = frames["center-frame"];
@@ -162,6 +160,18 @@ function onMainLoad()
     frames['left-frame'].location.href = baseURL + "Left.sam"; // ?zealous=" + ZEALOUS_VERSION;
     frames['center-frame'].location.href = baseURL + "Center.sam"; // ?zealous=" + ZEALOUS_VERSION;
     frames['right-frame'].location.href = baseURL + "Right.sam"; // ?zealous=" + ZEALOUS_VERSION;
+
+    document.title = makeCharName() + " @ " + window.gameName;
+
+    // OOO: This apparently doesn't want to work. Not sure why at this point.
+    var head = document.getElementById('center-frame').contentDocument.getElementsByTagName('head')[0];
+    if (head) {
+        var link = document.createElement('link');
+        link.setAttribute('rel', 'shortcut icon');
+        link.setAttribute('type', 'image/x-icon');
+        link.setAttribute('href', 'chrome://zealotry/content/imagefiles/favicon.ico');
+        head.appendChild(link);
+    }
 
     // we have to use a polling system to support mozilla 1.0
     // XXX: Do we care at this point? I don't. If a user uses Moz 1.0, they need to upgrade anyway for more reasons than I can count.
@@ -1317,7 +1327,7 @@ function doPrefs()
         pref.setCharPref("zealous.temp." + themeArr[i] + ".list", list);
     }
 
-    window.open("chrome://zealotry/content/prefs.xul", "_blank", "chrome,modal,dialog,titlebar");
+    window.open("chrome://zealotry/content/prefs.xul", "_blank", "resizable=yes, scrollbars=no");
 
     doFinishPrefs();
 }
@@ -1336,7 +1346,7 @@ function doFinishPrefs()
         pref.setCharPref(zealousPreference("echo"), "false");
     }
 
-    // pref.clearUserPref("zealous.temp.echo");
+    pref.clearUserPref("zealous.temp.echo");
 
     try {
         this.localEcho = pref.getCharPref(zealousPreference("echo"));
@@ -1358,7 +1368,7 @@ function doFinishPrefs()
         pref.setCharPref(zealousPreference("enableBuffer"), "false");
     }
 
-    // pref.clearUserPref("zealous.temp.buffer");
+    pref.clearUserPref("zealous.temp.buffer");
 
     try {
         enableBuffer = pref.getCharPref(zealousPreference("enableBuffer"));

@@ -105,15 +105,13 @@
 		name="scrollback" 
 		id="scrollback" 
 		type="content" 
+		style="min-height: 100%; max-height: 100%" 
 		src="about:blank"/>
 	    <splitter id="scroll_splitter" state="collapsed" collapse="before"/>
-	    <iframe name="center-frame" id="center-frame" type="content" flex="1" style="min-height: 30%; max-height: 100%;" src="about:blank"/>
+	    <iframe name="center-frame" id="center-frame" type="content" flex="1" src="about:blank"/>
 	    <splitter state="open" collapse="before"/>
 	    <textbox autostretch="true" style="margin: 0; padding: 0" onkeypress="onInput();" rows="2" multiline="true" id="input"/>
 	</vbox>
-	
-	<!-- pref("bugger", true); What is this shit? Why is it in the XUL file? -->
-	
 	<html:iframe name="right-frame" id="right-frame" type="content"
 	    style="-moz-box-flex: 0; width: 145px; height=100%; overflow: hidden"
 	    src="about:blank"/>
