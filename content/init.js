@@ -59,107 +59,124 @@ function bubbleSettings()
     rframe.rc = submitSkotosClickCommand;
 
     cframe.skotosLink = submitSkotosLink;
-    // generate_fontmenu();
     generate_bgList();
 }
 
-/*
- * Font/size switch function.
- */
-var cletter, cfont, csize, cpsize;
-var pletter = "m_";
-var psize   = "s_";
-var pfont   = "fm_";
-var ppsize  = "sp_";
-
-function switchSelection(what, val)
+function setFont(font)
 {
-    var font_element;
-    var old = window["c"+what];
-    
-    font_element = document.getElementById(old);
-    
-    if (font_element) {
-        font_element.style.color      = '';
-        font_element.style.fontWeight = '';
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+
+    try {
+        var font = (font ? font : pref.getCharPref("zealous.temp.fontStyle"));
+    } catch (err) {
+        font = null;
     }
-    
-    var element_id = val;
-    
-    if (typeof(window["p"+what]) != "undefined")
-        element_id = window["p"+what] + element_id;
-    
-    window["c"+what] = element_id;
-    
-    font_element = document.getElementById(element_id);
-    if (font_element) {
-        font_element.style.color      = 'red';
-        font_element.style.fontWeight = 'bold';
+
+    if (font) {
+    	pref.setCharPref(zealousPreference("fontStyle"), font);
+        document.getElementById('center-frame').contentDocument.body.style.fontFamily = font.replace(/'/g, "\\'");
+    	document.getElementById('input').style.fontFamily = font.replace(/'/g, "\\'");
     }
 }
 
-function setFont()
+function setSBFont(font) 
 {
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+
     try {
-        var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
-        pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
-        var font = pref.getCharPref("zealous.temp.fontStyle");
+	var font = (font ? font : pref.getCharPref("zealous.temp.sbFontStyle"));
     } catch (err) {
-        return;
+	font = null;
     }
 
-    pref.setCharPref(zealousPreference("fontStyle"), font);
-    // pref.clearUserPref("zealous.temp.fontStyle");
-    
-    document.getElementById('center-frame').contentDocument.body.style.fontFamily = font.replace(/'/g, "\\'");
-    document.getElementById('scrollback').contentDocument.body.style.fontFamily = font.replace(/'/g, "\\'");
-    document.getElementById('input').style.fontFamily = font.replace(/'/g, "\\'");
+    if (font) {
+    	document.getElementById('scrollback').contentDocument.body.style.fontFamily = font.replace(/'/g, "\\'");
+	pref.setCharPref(zealousPreference("sbFontStyle"), font);
+    }
 }
 
-function setSize()
+function setSize(pts)
 {
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+
     try {
-        var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
-        pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
-        var size = pref.getCharPref("zealous.temp.fontSize");
+        var size = (pts ? pts : pref.getCharPref("zealous.temp.fontSize"));
     } catch (err) {
-        return;
+        size = null;
     }
 
-    pref.setCharPref(zealousPreference("fontSize"), size);
-    // pref.clearUserPref("zealous.temp.fontSize");
+    if (size) { 
+	pref.setCharPref(zealousPreference("fontSize"), size);
+    	document.getElementById('center-frame').contentDocument.body.style.fontSize = size;
+    	document.getElementById('input').style.fontSize = size;
+    }
+}
 
-    document.getElementById('center-frame').contentDocument.body.style.fontSize = size;
-    document.getElementById('input').style.fontSize = size;
+function setSBSize(pts)
+{
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+
+    try {
+	size = (pts ? pts : pref.getCharPref("zealous.temp.sbSize"));
+    } catch (err) {
+	size = null;
+    }
+
+    if (size) {
+    	pref.setCharPref(zealousPreference("sbSize"), size);
+    	document.getElementById('scrollback').contentDocument.body.style.fontSize = size;
+    }
 }
 
 
-function setFixedSize() 
+function setFixedSize(pts) 
 {
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+
     try {
-	var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
-    	pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
-    	var size = pref.getCharPref("zealous.temp.fixedFontSize");
+    	var size = (pts ? pts : pref.getCharPref("zealous.temp.fixedFontSize"));
     } catch (err) {
-	return;
+	size = null;
     }
 
-    pref.setCharPref(zealousPreference("fixedFontSize"), size);
-    // pref.clearUserPref("zealous.temp.fixedFontSize");
+    if (size) {
+    	pref.setCharPref(zealousPreference("fixedFontSize"), size);
 
-    var styles = centerStyleTag;
-    if (preNode) {
-        preNode.parentNode.removeChild(preNode);
+    	var styles = centerStyleTag;
+    	if (preNode) {
+            preNode.parentNode.removeChild(preNode);
+    	}
+        preNode = document.createTextNode("pre { font-size: " + size + "; }");
+        styles.appendChild(preNode);
     }
-    preNode = document.createTextNode("pre { font-size: " + size + "; }");
-    styles.appendChild(preNode);
+}
 
-    var styles = scrollbackStyleTag;
-    if (sbPreNode) {
-        sbPreNode.parentNode.removeChild(sbPreNode);
+function setSBPreSize(pts)
+{
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+
+    try {
+	var size = (pts ? pts : pref.getCharPref("zealous.temp.sbPreSize"));
+    } catch (err) {
+	size = null;
     }
-    sbPreNode = document.createTextNode("pre { font-size: " + size + "; }");
-    styles.appendChild(sbPreNode);
+
+    if (size) {
+	pref.setCharPref(zealousPreference("sbPreSize"), size);
+ 
+  	var styles = scrollbackStyleTag;
+    	if (sbPreNode) {
+            sbPreNode.parentNode.removeChild(sbPreNode);
+    	}
+    	sbPreNode = document.createTextNode("pre { font-size: " + size + "; }");
+    	styles.appendChild(sbPreNode);
+    }	    
 }
     
 var inputRows = 2;

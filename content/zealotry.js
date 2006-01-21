@@ -1155,34 +1155,58 @@ function doFontStyleAndSize()
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
     try {
-    	this.fontStyle = pref.getCharPref(zealousPreference("fontStyle"));
+    	var fontStyle = pref.getCharPref(zealousPreference("fontStyle"));
     } catch (err) {
     	pref.setCharPref(zealousPreference("fontStyle"), frames["center-frame"].document.body.style.fontFamily);
     	doFontStyleAndSize();
     }
 
-    setFont(this.fontStyle);
-    // frames["center-frame"].document.body.style.fontFamily = this.fontStyle;
+    setFont(fontStyle);
     
     try {
-    	this.fontSize = pref.getCharPref(zealousPreference("fontSize"));
+    	var fontSize = pref.getCharPref(zealousPreference("fontSize"));
     } catch (err) {
     	pref.setCharPref(zealousPreference("fontSize"), frames["center-frame"].document.body.style.fontSize);
     	doFontStyleAndSize();
     }
 
-    setSize(this.fontSize);
-    // frames["center-frame"].document.body.style.fontSize = this.fontSize;
+    setSize(fontSize);
 
     try {
-        this.preFontSize = pref.getCharPref(zealousPreference("fixedFontSize"));
+        var preFontSize = pref.getCharPref(zealousPreference("fixedFontSize"));
     } catch (err) {
         pref.setCharPref(zealousPreference("fixedFontSize"), "10pt");
         doFontStyleAndSize();
     }
 
-    setFixedSize(this.preFontSize);
+    setFixedSize(preFontSize);
 
+    try {
+        var fontStyle = pref.getCharPref(zealousPreference("sbFontStyle"));
+    } catch (err) {
+        pref.setCharPref(zealousPreference("sbFontStyle"), frames["scrollback"].document.body.style.fontFamily);
+        doFontStyleAndSize();
+    }
+
+    setSBFont(fontStyle);
+
+    try {
+        var fontSize = pref.getCharPref(zealousPreference("sbSize"));
+    } catch (err) {
+        pref.setCharPref(zealousPreference("sbSize"), frames["scrollback"].document.body.style.fontSize);
+        doFontStyleAndSize();
+    }
+
+    setSBSize(fontSize);
+
+    try {
+        var preFontSize = pref.getCharPref(zealousPreference("sbPreSize"));
+    } catch (err) {
+        pref.setCharPref(zealousPreference("sbPreSize"), "10pt");
+        doFontStyleAndSize();
+    }
+
+    setSBPreSize(preFontSize);
 }
 
 function helpMenuInit(str) 
@@ -1299,21 +1323,42 @@ function doPrefs()
         var font = pref.getCharPref(zealousPreference("fontStyle"));
         if (font) pref.setCharPref("zealous.temp.fontStyle", font);
     } catch (err) {
-        pref.setCharPref("zealous.temp.fontStyle", null);
+        pref.setCharPref("zealous.temp.fontStyle", false);
+    }
+
+    try {
+	var sbFont = pref.getCharPref(zealousPreference("sbFontStyle"));
+	if (sbFont) pref.setCharPref("zealous.temp.sbFontStyle", sbFont);
+    } catch (err) {
+	pref.setCharPref("zealous.temp.sbFontStyle", false);
     }
 
     try {
         var size = pref.getCharPref(zealousPreference("fontSize"));
-        if (font) pref.setCharPref("zealous.temp.fontSize", size);
+        if (size) pref.setCharPref("zealous.temp.fontSize", size);
     } catch (err) {
-        pref.setCharPref("zealous.temp.fontSize", null);
+        pref.setCharPref("zealous.temp.fontSize", false);
     }
 
     try {
         var fixedSize = pref.getCharPref(zealousPreference("fixedFontSize"));
-        if (font) pref.setCharPref("zealous.temp.fixedFontSize", fixedSize);
+        if (fixedSize) pref.setCharPref("zealous.temp.fixedFontSize", fixedSize);
     } catch (err) {
-        pref.setCharPref("zealous.temp.fixedFontSize", null);
+        pref.setCharPref("zealous.temp.fixedFontSize", false);
+    }
+
+    try {
+	var sbSize = pref.getCharPref(zealousPreference("sbSize"));
+	if (sbSize) pref.setCharPref("zealous.temp.sbSize", sbSize);
+    } catch (err) {
+	pref.setCharPref("zealous.temp.sbSize", false);
+    }
+
+    try {
+	var sbPreSize = pref.getCharPref(zealousPreference("sbPreSize"));
+	if (sbPreSize) pref.setCharPref("zealous.temp.sbPreSize", sbPreSize);
+    } catch (err) {
+	pref.setCharPref("zealous.temp.sbPreSize", false);
     }
 
     var themeArr = new Array("bg_image", "left_side", "right_side", "left_logo", "right_logo", "get_button", "master_button");
@@ -1384,6 +1429,9 @@ function doFinishPrefs()
     setFont();
     setSize();
     setFixedSize();
+    setSBPreSize();
+    setSBSize();
+    setSBFont();
     setTheme();
 }
 
@@ -1486,7 +1534,6 @@ function setTheme(styles)
     // OOO: This apparently doesn't want to work. Not sure why at this point.
     var body = document.getElementById('left-frame').contentDocument.getElementsByTagName('body')[0];
     if (body) {
-	alert("Trying to set image");
         var link = document.createElement('img');
         link.setAttribute('border', '1');
 	link.setAttribute('id', 'zelly');

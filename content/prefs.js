@@ -200,31 +200,6 @@ function setMasterButton(url)
     pref.setCharPref("zealous.temp.get_button", url);
 }
 
-function submitSkotosSelectCommand(elementName)
-{
-    var rdoc      = document.getElementById('right-frame').contentDocument;
-    var elementDo = rdoc.getElementById(elementName);
-    var chatCode  = rdoc.chatMode ? "/" : "";
-    handleInputLine(chatCode + elementDo.options[elementDo.selectedIndex].value);
-    elementDo.selectedIndex = 0;
-
-    /* Refocus the input window after clicking in the output window. */
-    var obj = document.getElementById("input");
-    obj.focus();
-}
-
-function submitSkotosClickCommand(elementName)
-{
-    var rdoc      = document.getElementById('right-frame').contentDocument;
-    var elementDo = rdoc.getElementById(elementName);
-    var chatCode  = rdoc.chatMode ? "/" : "";
-    handleInputLine(chatCode + elementDo.title);
-
-    /* Refocus the input window after clicking in the output window. */
-    var obj = document.getElementById("input");
-    obj.focus();
-}
-
 function generate_fontmenu()
 {
     var langgroup = new Array("x-western");
@@ -275,7 +250,6 @@ function generate_fontmenu()
 	pitem.setAttribute('oncommand', 'setSBFont("' + menuitems[z] + '");');
         item.style.fontFamily = menuitems[z];
 	pitem.style.fontFamily = menuitems[z];
-        // elements[letter].appendChild(item);
         popup.appendChild(item);
 	prepop.appendChild(pitem);
     }
@@ -310,6 +284,26 @@ function generate_fontmenu()
         var ft = null;
     }
 
+    try {
+        var sbs = pref.getCharPref("zealous.temp.sbSize");
+        sbs = sbs.substr(0, sbs.length-2);
+    } catch (err) {
+        var sbs = null;
+    }
+
+    try {
+        var sbp = pref.getCharPref("zealous.temp.sbPreSize");
+        sbp = sbp.substr(0, sbp.length-2);
+    } catch (err) {
+        var sbp = null;
+    }
+
+    try {
+        var sbf = pref.getCharPref("zealous.temp.sbFontStyle");
+    } catch (err) {
+        var sbf = null;
+    }
+
     for (var z = 6; z < 30; z++) {
         size_el = d.createElement('menuitem');
         size_pre_el = d.createElement('menuitem');
@@ -341,48 +335,24 @@ function generate_fontmenu()
     switchSelection('psize', sf);
     switchSelection('font', ft);
 
-}
+    switchSelection('sbsize', sbs);
+    switchSelection('sbpsize', sbp);
+    switchSelection('sbfont', sbf);
 
-function submitSkotosLink(link)
-{
-    var rdoc = document.getElementById('right-frame').contentDocument;
-    var chatCode = rdoc.chatMode ? "/" : "";
-    handleInputLine(chatCode+link);
-    
-    /* Refocus the input window after clicking in the output window. */
-    var obj = document.getElementById("input");
-    obj.focus();
-}
 
-function bubbleSettings()
-{
-    var sb = document.getElementById('scrollback').contentDocument;
-    sb.open();
-    sb.write
-        ('<html><head><style></style></head><body></body>');
-    sb.close();
-    centerStyleTag = document.getElementById('center-frame').contentDocument.getElementsByTagName("style")[0];
-    scrollbackStyleTag = sb.getElementsByTagName("style")[0];
-    
-    var rframe = document.getElementById('right-frame').contentDocument;
-    var cframe = document.getElementById('center-frame').contentDocument;
 
-    rframe.rs = submitSkotosSelectCommand;
-    rframe.rc = submitSkotosClickCommand;
-
-    cframe.skotosLink = submitSkotosLink;
-    generate_fontmenu();
-    generate_bgList();
 }
 
 /*
  * Font/size switch function.
  */
-var cletter, cfont, csize, cpsize;
-var pletter = "m_";
-var psize   = "s_";
-var pfont   = "fm_";
-var ppsize  = "sp_";
+var cfont, csize, cpsize;
+var psize    = "s_";
+var pfont    = "fm_";
+var ppsize   = "sp_";
+var psbsize  = "sb_";
+var psbpsize = "sbp_";
+var psbfont  = "pfm_";
 
 function switchSelection(what, val)
 {
@@ -422,7 +392,7 @@ function setSBFont(family)
 {
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
-    pref.setCharPref("zealous.temp.sbFontStyle", pts);
+    pref.setCharPref("zealous.temp.sbFontStyle", family);
 }
 
 
@@ -452,22 +422,6 @@ function setSBPreSize(pts)
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
     pref.setCharPref("zealous.temp.sbPreSize", pts);
-}
-
-
-
-var inputRows = 2;
-var foop;
-    
-function onInput()
-{
-    var inEl = document.getElementById('input');
-    if        (inEl.inputField.rows < inputRows) {
-        alert ("<rows");
-    } else if (inEl.inputField.rows > inputRows) {
-        alert (">rows");
-    }
-    inputRows = inEl.inputField.rows;
 }
 
 function generate_bgList()
@@ -545,3 +499,4 @@ function doDelete()
     alert("Deleting is not available yet!");
     return;
 }
+0
