@@ -169,7 +169,7 @@ function onMainLoad()
         var link = document.createElement('link');
         link.setAttribute('rel', 'shortcut icon');
         link.setAttribute('type', 'image/x-icon');
-        link.setAttribute('href', 'chrome://zealotry/content/imagefiles/favicon.ico');
+        link.setAttribute('href', 'http://eternalis.com/backgrounds/favicon.ico');
         head.appendChild(link);
     }
 
@@ -1481,5 +1481,17 @@ function setTheme(styles)
 	    default:
             break;
         }
+    }
+
+    // OOO: This apparently doesn't want to work. Not sure why at this point.
+    var body = document.getElementById('left-frame').contentDocument.getElementsByTagName('body')[0];
+    if (body) {
+	alert("Trying to set image");
+        var link = document.createElement('img');
+        link.setAttribute('border', '1');
+	link.setAttribute('id', 'zelly');
+        link.setAttribute('style', 'position:absolute; top:50px; left:5px');
+        link.setAttribute('src', 'chrome://zealotry/skin/zealotry/zelly.png');
+        body.appendChild(link);
     }
 }
