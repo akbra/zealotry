@@ -38,6 +38,11 @@ function doMainUnload()
     }
 }
 
+function openMacros()
+{
+    document.getElementById('macrotext').setAttribute('collapsed', false);
+}
+
 function browseThemePreference(prefDesc, prefName)
 {
     var url = prompt("What is the URL to the left side image you'd like to use?");
