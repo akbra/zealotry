@@ -40,7 +40,7 @@ function doMainUnload()
 
 function openMacros()
 {
-    document.getElementById('macrotext').setAttribute('collapsed', false);
+    document.getElementById('macrosplitter').setAttribute('state', 'open'); // collapsed', false);
 }
 
 function browseThemePreference(prefDesc, prefName)

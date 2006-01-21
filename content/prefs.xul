@@ -9,7 +9,7 @@
     onunload="doMainUnload();"
     title="Zealotry Preferences"
     flex="1"
-    orient="horizontal" windowtype="zealotry:preferences">
+    orient="vertical" windowtype="zealotry:preferences">
 
     <script type="application/x-javascript" src="prefs.js"/>
 
@@ -22,7 +22,7 @@
 		<tab label="Logging"/>
 		<tab label="Macros"/>
 	    </tabs>
-	    <tabpanels>
+	    <tabpanels flex="1">
 		<tabpanel id="generalpanel">
 		    <vbox flex="1">
 			<box orient="horizontal" align="center">
@@ -177,14 +177,17 @@
 		    </grid>
 		</tabpanel>
 		<tabpanel id="loggingpanel" orient="vertical"/>
-		<tabpanel id="macropanel" orient="vertical">
+		<tabpanel id="macropanel" orient="vertical" flex="1">
 		    <button label="Open Macros" id="openmacros" oncommand="openMacros();"/>
+		    <vbox flex="1">
+			<splitter id="macrosplitter" resizeafter="grow" state="collapsed" collapse="after"/>
+			<textbox id="macrotext" flex="1" rows="20" multiline="true"/>
+		    </vbox>
 		</tabpanel>
 	    </tabpanels>
 	</tabbox>
-	<spacer style="height: 10px" flex="1"/>
-        <textbox id="macrotext" rows="10" multiline="true" collapsed="true"/>
-	<splitter resizeafter="grow"/>
+	<!-- spacer style="height: 10px" flex="1"/>
+	<splitter resizeafter="grow"/ -->
 	<spacer style="height: 10px"/>
 	<hbox>
 	<button id="find-button" label="Ok" default="true" onclick="window.close();"/>
