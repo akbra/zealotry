@@ -1167,7 +1167,7 @@ function doFontStyleAndSize()
     try {
         this.preFontSize = pref.getCharPref(zealousPreference("fixedFontSize"));
     } catch (err) {
-        pref.setCharPref(zealousPreferences("fixedFontSize"), "10pt");
+        pref.setCharPref(zealousPreference("fixedFontSize"), "10pt");
         doFontStyleAndSize();
     }
 
