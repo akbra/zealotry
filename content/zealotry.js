@@ -1327,7 +1327,7 @@ function doPrefs()
         pref.setCharPref("zealous.temp." + themeArr[i] + ".list", list);
     }
 
-    window.open("chrome://zealotry/content/prefs.xul", "_blank", "resizable=yes, scrollbars=no, status=no, modal, dialog, chrome, width=550, height=350, screenX=100, screenY=100");
+    window.open("chrome://zealotry/content/prefs.xul", "_blank", "resizable=yes, scrollbars=no, status=no, modal, dialog, screenX=100, screenY=100");
 
     doFinishPrefs();
 }
