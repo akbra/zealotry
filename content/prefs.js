@@ -68,7 +68,6 @@ function doMainUnload()
     if (macro && macro != false && macro != "false") {
         var macro = new File(macro);
         if (macro.exists()) {
-	    alert("C");
             macro.open("w");
             macro.write(document.getElementById('macrotext').value);
 	    macro.close();

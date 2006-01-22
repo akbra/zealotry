@@ -87,7 +87,7 @@ function process(input) {
    } else if (arr = (/ADD ([^ ]+) (.+)/).exec(input)) {
       this.add(arr[1], arr[2]);
    } else {
-      outputLine("[MACRO: Usage: MACRO [LOAD STORE ADD REMOVE REMOVEALL LIST]");
+      outputLine("[MACRO: Macro support can be found in the Preferences popup.]");
    }
 
 

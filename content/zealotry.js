@@ -334,7 +334,7 @@ function onPageUp()
 }
 
 function handleInputLine(str) {
-    if (!handleCommands(str)) {
+   if (!handleCommands(str)) {
         var expanded = myMacros.applyMacros(str);
         if (expanded) {
             window.client.onInputCompleteLine(expanded);
@@ -926,17 +926,28 @@ function outputText(str) {
 function handleCommands(str) {
 
     if (str == "MACRO" || (arr = (/^MACRO (.+)/).exec(str))) {
-        window.myMacros.processMacroCommand(arr ? arr[1] : str);
-        return true;
+	outputLine("[MACRO: Macro support can be found in the Preferences popup.]");
+	return true;
     }
+    return false;
+}
+
+function handleMacros(str) {
+    if (str == "MACRO" || (arr = (/^MACRO (.+)/).exec(str))) {	
+    	window.myMacros.processMacroCommand(arr ? arr[1] : str);
+    	return true;
+    }
+    return false;
+}
+
 /*
     if (str == "CONFIG WRITE") {
         writeConfigurationFile();
         return true;
     }
-*/
     return false;
 }
+*/
 
 function safe(s) {
     return s.replace(/[\/\:]/g, "_");
@@ -984,7 +995,7 @@ function readConfigurationFile(str) {
         configFile.open("r");
         while (!configFile.EOF) {
             var configLine = configFile.readline();
-            handleCommands(configLine);
+            handleMacros(configLine);
         }
         configFile.close();
         outputLine("[MACRO: Finished loading macros]");
@@ -1465,6 +1476,7 @@ function doFinishPrefs()
     setSBSize();
     setSBFont();
     setTheme();
+    readConfigurationFile();
 }
 
 function setTheme(styles)
