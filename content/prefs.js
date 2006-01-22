@@ -2,6 +2,7 @@ var preNode = null;
 var sbPreNode = null;
 var centerStyleTag = null;
 var scrollbackStyleTag = null;
+var submit = null;
 
 var pm = netscape.security.PrivilegeManager;
 var privs = "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect";
@@ -92,11 +93,18 @@ function doMainUnload()
 	configFile.write(document.getElementById('macrotext').value);
 	configFile.close();
     }
+    window.submit = true;
+
     window.close();
 }
 
 function doCancel()
 {
+    if (submit) {
+	window.close
+	return;
+    }
+
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
     pref.setCharPref("zealous.temp.state", "cancel");
