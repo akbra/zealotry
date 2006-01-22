@@ -6,6 +6,7 @@
     xmlns:html="http://www.w3.org/1999/xhtml"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
     onload="doMainLoad();"
+    onunload="doCancel();"
     title="Zealotry Preferences"
     flex="1"
     orient="vertical" windowtype="zealotry:preferences">
