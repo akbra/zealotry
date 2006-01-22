@@ -924,14 +924,17 @@ function outputText(str) {
 }
 
 function handleCommands(str) {
+
     if (str == "MACRO" || (arr = (/^MACRO (.+)/).exec(str))) {
         window.myMacros.processMacroCommand(arr ? arr[1] : str);
         return true;
     }
+/*
     if (str == "CONFIG WRITE") {
         writeConfigurationFile();
         return true;
     }
+*/
     return false;
 }
 
@@ -967,16 +970,15 @@ function readConfigurationFile(str) {
     }
 
     try {
-        this.homeFolder = pref.getCharPref("zealous.homeFolder");
+        this.homeFolder = pref.getCharPref(zealousPreference("macro"));
     } catch (err) {
         return;
     }
 
     configFile = new File(this.homeFolder);
-    configFile.appendRelativePath("zealous." + safe(charName) + ".config");
     if (!configFile.exists()) {
         configFile = new File(this.homeFolder);
-        configFile.appendRelativePath("zealous.config");
+        configFile.appendRelativePath(zealousPreference("macro"));
     }
     if (configFile.exists()) {
         configFile.open("r");
@@ -985,11 +987,14 @@ function readConfigurationFile(str) {
             handleCommands(configLine);
         }
         configFile.close();
-        outputLine("[CONFIG: Finished reading configuration]");
+        outputLine("[MACRO: Finished loading macros]");
         return;
     }
 
+
     // Unable to locate the config file.. lets give them a chance to locate it manually
+    // Removing menu options... -- Jess
+/*
     if(str == "menu") {
 	var nsIFilePicker = Components.interfaces.nsIFilePicker;
 	var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
@@ -1008,6 +1013,8 @@ function readConfigurationFile(str) {
 	outputLine("[CONFIG: Finished reading configuration]");
 	return;
     }
+*/
+
 }
 
 function writeConfigurationFile() {
@@ -1361,6 +1368,15 @@ function doPrefs()
 	pref.setCharPref("zealous.temp.sbPreSize", false);
     }
 
+    try {
+	var macro = pref.getCharPref(zealousPreference("macro"));
+	if (macro) pref.setCharPref("zealous.temp.macro", macro);
+    } catch (err) {
+	pref.setCharPref("zealous.temp.macro", false);
+    }
+
+    pref.setCharPref("zealous.temp.filename", zealousPreference("macro"));
+
     var themeArr = new Array("bg_image", "left_side", "right_side", "left_logo", "right_logo", "get_button", "master_button");
 
     for (var i = 0; i < 7; i++) {
@@ -1372,9 +1388,14 @@ function doPrefs()
         pref.setCharPref("zealous.temp." + themeArr[i] + ".list", list);
     }
 
-    window.open("chrome://zealotry/content/prefs.xul", "_blank", "scrollbars=no, status=no, modal, dialog, chrome, screenX=100, screenY=100");
+    window.open("chrome://zealotry/content/prefs.xul", "_blank", "scrollbars=no, status=no, modal, dialog, chrome, width=850, height=250, screenX=100, screenY=100");
 
-    doFinishPrefs();
+    try {
+	pref.getCharPref("zealous.temp.state");
+	pref.clearUserPref("zealous.temp.state");
+    } catch (err) {
+    	doFinishPrefs();
+    } 
 }
 
 function doFinishPrefs() 
@@ -1424,6 +1445,17 @@ function doFinishPrefs()
 
     if (enableBuffer == "true") {
         window.client.enableBuffer = true;
+    }
+
+    try {
+	macro = pref.getCharPref("zealous.temp.macro");
+    } catch (err) {
+	macro = "false";
+    }
+
+    if (macro && macro != "false") {
+	pref.setCharPref(zealousPreference("macro"), macro);
+	pref.clearUserPref("zealous.temp.macro");
     }
 
     setFont();

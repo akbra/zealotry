@@ -15,6 +15,28 @@ function doMainLoad()
     document.getElementById('scrollbackcheck').setAttribute("checked", pref.getCharPref("zealous.temp.buffer"));
     generate_fontmenu();
     generate_themeLists();
+
+    try {
+	var macro = pref.getCharPref("zealous.temp.macro");
+	if (macro == false) macro = null;
+    } catch (err) {
+	macro = null;
+    }
+
+    if (macro && macro != false && macro != "false") {
+	document.getElementById('macrostore').setAttribute("value", macro);
+	var macro = new File(macro);
+	if (macro.exists()) {
+	    macro.open("r");
+	    var macros = macro.read();
+	}
+    } else {
+	 document.getElementById('macrostore').setAttribute("value", "No macro file set...");
+    }
+
+    if (macros) {
+	document.getElementById('macrotext').value = macros;
+    }
 }
 
 function doMainUnload()
@@ -36,11 +58,66 @@ function doMainUnload()
     } else {
         pref.setCharPref("zealous.temp.buffer", "false");
     }
+
+    try {
+        var macro = pref.getCharPref("zealous.temp.macro");
+    } catch (err) {
+        macro = false;
+    }
+
+    if (macro && macro != false && macro != "false") {
+        var macro = new File(macro);
+        if (macro.exists()) {
+	    alert("C");
+            macro.open("w");
+            macro.write(document.getElementById('macrotext').value);
+	    macro.close();
+        }
+    } else if (document.getElementById('macrotext').value.length > 0) {
+	// Player set some macros but doesn't have a place to store them. Lets fix that.
+        var nsIFilePicker = Components.interfaces.nsIFilePicker;
+        var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+        filePicker.init(window, "Where should macro files live?", nsIFilePicker.modeGetFolder);
+        var res = filePicker.show();
+        if (res == nsIFilePicker.returnCancel) {
+            return;
+        }
+        macroFolder = filePicker.file.path;
+        pref.setCharPref("zealous.temp.macro", macroFolder + "/" + pref.getCharPref("zealous.temp.filename"));
+
+        configFile = new File(macroFolder);
+        configFile.appendRelativePath(pref.getCharPref("zealous.temp.filename"));
+
+	configFile.create();
+        configFile.open("w");
+	configFile.write(document.getElementById('macrotext').value);
+	configFile.close();
+    }
+    window.close();
 }
+
+function doCancel()
+{
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+    pref.setCharPref("zealous.temp.state", "cancel");
+    window.close();
+}    
 
 function openMacros()
 {
-    document.getElementById('macrosplitter').setAttribute('state', 'open'); // collapsed', false);
+    el = document.getElementById('macrotext');
+
+    if (el.collapsed == true) {
+	window.resizeBy(0, 400);
+	el.setAttribute('collapsed', 'false');
+	document.getElementById('openmacro').setAttribute("label", "Hide Macros");
+        return;
+    }
+
+    window.resizeBy(0, -400);
+    el.setAttribute('collapsed', 'true');
+    document.getElementById('openmacro').setAttribute("label", "Show Macros");
 }
 
 function browseThemePreference(prefDesc, prefName)

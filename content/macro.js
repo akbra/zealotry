@@ -86,6 +86,12 @@ function process(input) {
       outputLine("MACRO ADD Usage: MACRO ADD in_macro out_macro");
    } else if (arr = (/ADD ([^ ]+) (.+)/).exec(input)) {
       this.add(arr[1], arr[2]);
+   } else {
+      outputLine("[MACRO: Usage: MACRO [LOAD STORE ADD REMOVE REMOVEALL LIST]");
+   }
+
+
+/*
    } else if (input == "LIST") {
       this.list();
    } else if (arr = (/REMOVE (.+)/).exec(input)) {
@@ -130,6 +136,8 @@ function process(input) {
    } else {
       outputLine("[MACRO: Usage: MACRO [LOAD STORE ADD REMOVE REMOVEALL LIST]");
    }
+*/
+
 }
 
 MacroStruct.prototype.applyMacros =

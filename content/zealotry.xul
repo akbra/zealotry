@@ -53,12 +53,12 @@
 			<menupopup id="edit-popup" onpopupshowing="editMenuInit();">
 			    <menuitem id="menuitem_copy" label="Copy"   oncommand="onCopy();" accesskey="C"/>
 			    <menuitem id="menuitem_paste" label="Paste" oncommand="onPaste();" accesskey="P"/>
-			    <menuseparator/>
+			    <!-- menuseparator/>
 			    <menuitem label="Load Macros" accesskey="O" oncommand="window.myMacros.processMacroCommand('LOAD');"/>
 			    <menuitem label="Save Macros" accesskey="A" oncommand="window.myMacros.processMacroCommand('STORE');"/>
 			    <menuseparator/>
 			    <menuitem label="Load Config" accesskey="L" oncommand="readConfigurationFile('menu');"/>
-			    <menuitem label="Save Config" accesskey="S" oncommand="writeConfigurationFile();"/>
+			    <menuitem label="Save Config" accesskey="S" oncommand="writeConfigurationFile();"/ -->
 			</menupopup>
 		    </menu>
 		    <menu id="font-and-size" label="Options" accesskey="O">

@@ -6,11 +6,13 @@
     xmlns:html="http://www.w3.org/1999/xhtml"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
     onload="doMainLoad();"
-    onunload="doMainUnload();"
     title="Zealotry Preferences"
     flex="1"
     orient="vertical" windowtype="zealotry:preferences">
 
+    <script type="application/x-javascript" src="jslib.js"/>
+    <script type="application/x-javascript" src="filesystem.js"/>
+    <script type="application/x-javascript" src="file.js"/>
     <script type="application/x-javascript" src="prefs.js"/>
 
     <vbox flex="1">
@@ -178,20 +180,35 @@
 		</tabpanel>
 		<tabpanel id="loggingpanel" orient="vertical"/>
 		<tabpanel id="macropanel" orient="vertical" flex="1">
-		    <button label="Open Macros" id="openmacros" oncommand="openMacros();"/>
-		    <vbox flex="1">
-			<splitter id="macrosplitter" resizeafter="grow" state="collapsed" collapse="after"/>
-			<textbox id="macrotext" flex="1" rows="20" multiline="true"/>
-		    </vbox>
+		    <description>
+			From here you can add, remove or edit your macros. Macros must start with MACRO ADD, all in capital letters.
+		    </description>
+		    <grid>
+		    	<columns>
+			    <column flex="1"/>
+			    <column flex="1"/>
+			    <column flex="1"/>
+		    	</columns>
+                    	<rows>
+                            <row align="center">
+                            	<hbox pack="start">
+                                    <label value="Macros stored in: " crop="end"/>
+                            	</hbox>
+				<label id="macrostore"/>
+				<button label="Show Macros" id="openmacro" oncommand="openMacros();"/>
+			    </row>
+                        </rows>
+		    </grid>
 		</tabpanel>
 	    </tabpanels>
 	</tabbox>
-	<!-- spacer style="height: 10px" flex="1"/>
-	<splitter resizeafter="grow"/ -->
+        <vbox flex="1">
+            <textbox id="macrotext" flex="1" rows="10" collapsed="true" multiline="true"/>
+        </vbox>
 	<spacer style="height: 10px"/>
 	<hbox>
-	<button id="find-button" label="Ok" default="true" onclick="window.close();"/>
-	<button id="cancel-button" label="Cancel" onclick="window.close();"/>
+	<button id="submit-button" label="Submit Changes" default="true" onclick="doMainUnload();"/>
+	<button id="cancel-button" label="Cancel" onclick="doCancel();"/>
 	</hbox>
     </vbox>
 </window>
