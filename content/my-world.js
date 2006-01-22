@@ -41,7 +41,8 @@ var MyWorldSpecification = function() {
         s7  : "skotos-seven.skotos.net/Theatre/Zealous",
         laz : "lazarus.skotos.net/Theatre/Zealous",
         ic  : "ironclaw.skotos.net/Theatre/Zealous",
-        stages : "stages.skotos.net/Theatre/Zealous"};
+        stages : "stages.skotos.net/Theatre/Zealous",
+        jonkichi : "chattheatre.ito.com/Theatre/Zealous"};
 
     /*
      * This is a list of shortcuts pointing to specific servers. Multiple
@@ -63,7 +64,9 @@ var MyWorldSpecification = function() {
         ironclaw : "ic",
         stages : "stages",
         oasis : "stages",
-        st : "stages" };
+        st : "stages",
+        jonkichi : "jonkichi",
+        jon : "jonkichi"};
 
     /*
      * This is a list of WOE server configs.
@@ -75,7 +78,8 @@ var MyWorldSpecification = function() {
         s7  : "skotos-seven.skotos.net:6090",
         laz : "lazarus.skotos.net:2090",
         ic  : "ironclaw.skotos.net:4090",
-        stages : "stages.skotos.net:6090" };
+        stages : "stages.skotos.net:6090",
+        jonkichi : "chattheatre.ito.com:2090"};
 
     /*
      * This is a list of shortcuts for WOE servers.
@@ -96,7 +100,9 @@ var MyWorldSpecification = function() {
         ironclaw  : "ic",
         stages    : "stages",
         oasis     : "stages",
-        st        : "stages"};
+        st        : "stages",
+        jonkichi  : "jonkichi",
+        jon       : "jonkichi"};
 }
 
 var MyWorld = new MyWorldSpecification();
