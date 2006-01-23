@@ -1211,7 +1211,7 @@ function doFontStyleAndSize()
     try {
         var fontSize = pref.getCharPref(zealousPreference("sbSize"));
     } catch (err) {
-        pref.setCharPref(zealousPreference("sbSize"), frames["scrollback"].document.body.style.fontSize);
+        pref.setCharPref(zealousPreference("sbSize"), frames["center-frame"].document.body.style.fontSize);
         doFontStyleAndSize();
     }
 
