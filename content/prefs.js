@@ -588,4 +588,14 @@ function doDelete()
     alert("Deleting is not available yet!");
     return;
 }
-0
+
+function parseXML()
+{
+    var xmlDoc = document.implementation.createDocument("", "", null);
+    xmlDoc.async=false;
+    xmlDoc.load("theme.xml");
+    var element = xmlDoc.getElementsByTagName("theme");
+    alert(element[0].attributes["background"].value);
+}
+
+
