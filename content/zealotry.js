@@ -1399,7 +1399,7 @@ function doPrefs()
         pref.setCharPref("zealous.temp." + themeArr[i] + ".list", list);
     }
 
-    window.open("chrome://zealotry/content/prefs.xul", "_blank", "scrollbars=no, status=no, modal, dialog, chrome, width=850, height=250, screenX=100, screenY=100");
+    window.open("chrome://zealotry/content/prefs.xul", "_blank", "scrollbars=no, status=no, resizable=yes, modal, dialog, chrome, width=850, height=250, screenX=100, screenY=100");
 
     try {
 	pref.getCharPref("zealous.temp.state");
