@@ -161,7 +161,8 @@ function onMainLoad()
     frames['center-frame'].location.href = baseURL + "Center.sam"; // ?zealous=" + ZEALOUS_VERSION;
     frames['right-frame'].location.href = baseURL + "Right.sam"; // ?zealous=" + ZEALOUS_VERSION;
 
-    document.title = makeCharName() + " @ " + window.gameName;
+    var cn = makeCharName().replace(/[ ]/g, "");
+    document.title = (cn ? makeCharName() + " @ " : "") + window.gameName;
 
     // OOO: This apparently doesn't want to work. Not sure why at this point.
     var head = document.getElementById('center-frame').contentDocument.getElementsByTagName('head')[0];
