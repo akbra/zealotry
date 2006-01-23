@@ -1202,7 +1202,7 @@ function doFontStyleAndSize()
     try {
         var fontStyle = pref.getCharPref(zealousPreference("sbFontStyle"));
     } catch (err) {
-        // pref.setCharPref(zealousPreference("sbFontStyle"), frames["scrollback"].document.body.style.fontFamily);
+        pref.setCharPref(zealousPreference("sbFontStyle"), frames["center-frame"].document.body.style.fontFamily);
         doFontStyleAndSize();
     }
 
