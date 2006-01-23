@@ -7,17 +7,10 @@
 	<resources>
 	    <stylesheet src="custom.css"/>
 	</resources>
-	<content>
-	    <html:a xbl:inherits="href=src"><children /></html:a>
-	</content>
-    </binding>
-    <binding id="zealotry-ignore">
-	<resources>
-	    <stylesheet src="custom.css"/>
-	</resources>
 	<implementation>
 	    <constructor>
 		<![CDATA[
+		if (this.getAttribute('src')) return; // regular zealotry tag
 		function clean_nodelist(nl)
 		{
 		    var ix = nl.length;
@@ -26,12 +19,13 @@
 		        clean_nodelist(nl.item(i).childNodes);
 		    }
 		}
+		// it's a ignore-style zealotry-tag.
 		clean_nodelist(this.childNodes);
                 ]]>
 	    </constructor>
 	</implementation>
 	<content>
-	    <children/>
+	    <html:a xbl:inherits="href=src"><children /></html:a>
 	</content>
     </binding>
 </bindings>
