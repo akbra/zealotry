@@ -61,32 +61,7 @@
 		    </menu>
 		    <menu id="font-and-size" label="Options" accesskey="O">
 			<menupopup id="fonts-and-sizes-menu" onpopupshowing="optionMenuInit();">
-			    <!-- menu id="fonts" label="Font Style" accesskey="S">
-				<menupopup id="font-list">
-				</menupopup>
-			    </menu>
-			    <menu id="sizes" label="Font Size" accesskey="Z">
-				<menupopup id="sizes-menu"/>
-			    </menu>
-			    <menu id="pre-sizes" label="Fixed Font Size" accesskey="F">
-				<menupopup id="pre-sizes-menu"/>
-			    </menu>
-			    <menuseparator/>
-			    <menuitem label="Dictionary Lookup" key="dict-key" oncommand="helpMenuInit('dictionary');"/>
-			    <menuitem label="Clear Scrollback Buffer" accesskey="C" oncommand="clearScrollback();"/>
-			    <menuitem label="Enable Scrollback Buffer" type="checkbox" accesskey="E"
-				id="menuitem_buffer" oncommand="onToggleBuffer(event);"/> 
-			    <menuseparator/>
-			    <menu id="background" label="Background Options" accesskey="O">
-				<menupopup id="background-popup">
-				    <menuitem label="Add New Background" accesskey="A" oncommand="changeBg();"/>
-				    <menuitem label="Remove Current Background" accesskey="R" oncommand="changeBg('remove');"/>
-					<menuseparator/>
-				</menupopup>
-			    </menu>
-			    <menuseparator/ -->
 			    <menuitem label="Preferences" oncommand="doPrefs();"/>
-			    <menuitem label="Test Image" oncommand="testImg();"/>
 			</menupopup>
 		    </menu>
 		    <menu id="help" label="Help" accesskey="H">
