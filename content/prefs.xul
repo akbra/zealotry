@@ -35,7 +35,6 @@
 			    <checkbox id="scrollbackcheck" label="Enable Scrollback Buffer"/>
 			</box>
 		    </vbox>
-                    <button label="Parse XML" oncommand="parseXML();"/>
 		</tabpanel>
 		<tabpanel id="fontspanel" orient="vertical">
 		    <description>
