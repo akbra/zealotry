@@ -68,11 +68,12 @@ function doMainUnload()
 
     if (macro && macro != false && macro != "false") {
         var macro = new File(macro);
-        if (macro.exists()) {
+        // XXX: Kalle removed the if case. If macros break apart, re-add it.
+        // if (macro.exists()) {
             macro.open("w");
             macro.write(document.getElementById('macrotext').value);
-	    macro.close();
-        }
+            macro.close();
+        //}
     } else if (document.getElementById('macrotext').value.length > 0) {
 	// Player set some macros but doesn't have a place to store them. Lets fix that.
         var nsIFilePicker = Components.interfaces.nsIFilePicker;

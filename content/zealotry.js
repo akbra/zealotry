@@ -26,7 +26,7 @@
  *
  */
 
-const ZEALOUS_VERSION = "0.7.4.2";
+const ZEALOUS_VERSION = "0.7.5";
 const POLL_DELAY = 50;
 
 var bgCrap = null;
