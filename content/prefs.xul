@@ -207,7 +207,7 @@
         <vbox flex="1">
             <textbox id="macrotext" flex="1" rows="10" collapsed="true" multiline="true"/>
         </vbox>
-	<spacer style="height: 10px"/>
+	<!-- spacer style="height: 10px"/ -->
 	<hbox>
 	<button id="submit-button" label="Submit Changes" default="true" onclick="doMainUnload();"/>
 	<button id="cancel-button" label="Cancel" onclick="doCancel();"/>
