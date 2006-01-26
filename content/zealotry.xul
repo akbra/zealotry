@@ -1,6 +1,4 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-
 
 <window id="main-window"
     xmlns:html="http://www.w3.org/1999/xhtml"
@@ -88,6 +86,7 @@
 			    </menu>
 			    <menuseparator/ -->
 			    <menuitem label="Preferences" oncommand="doPrefs();"/>
+			    <menuitem label="Test Image" oncommand="testImg();"/>
 			</menupopup>
 		    </menu>
 		    <menu id="help" label="Help" accesskey="H">
@@ -105,7 +104,7 @@
 		name="scrollback" 
 		id="scrollback" 
 		type="content" 
-		height="700%"
+		style="min-height: 70%; max-height: 70%"
 		src="about:blank"/>
 	    <splitter id="scroll_splitter" state="collapsed" collapse="before">
 	    <grippy/>

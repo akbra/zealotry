@@ -38,6 +38,8 @@ var scrolling = false;
 var scrolltarg = null;
 var enableBuffer = "false";
 
+document.domain = "skotos.net";
+
 function makeCharName()
 {
     var ztitle, index, zlist, i;
@@ -1586,4 +1588,14 @@ function setTheme(styles)
         link.setAttribute('src', 'chrome://zealotry/skin/zealotry/zelly.png');
         body.appendChild(link);
     }
+}
+
+function testImg()
+{
+    image = new File("/home/kargh");
+    image.appendRelativePath("bgtest.jpg");
+    image.open("r");
+    
+    document.getElementById('center-frame').style.background = 'white url(file:///home/kargh/bgtest.jpg) no-repeat';
+    document.getElementById('right-frame').contentDocument.getElementById('Skotos_Logo').src = 'file:///home/kargh/bgtest.jpg';
 }
