@@ -56,6 +56,7 @@ function makeCharName()
         zlist[i] = zlist[i].substring(0, 1).toUpperCase() +
             zlist[i].substring(1);
     }
+
     return zlist.join(' ');
 }
 
@@ -265,6 +266,22 @@ function doAlert()
 	return;
     } 
 
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+
+    try {
+	var blink = pref.getCharPref(zealousPreference("noBlink"));
+    } catch (err) {
+	pref.setCharPref(zealousPreference("noBlink"), "false");
+	blink = "false";
+    }
+
+    if (blink == "true") {
+        var cn = makeCharName().replace(/[ ]/g, "");
+        document.title = (cn ? "*" + makeCharName() + " @ " : "") + window.gameName;
+        return;
+    }
+
     if (window.isblinking == true) {
 	return;
     } else {
@@ -287,7 +304,7 @@ function doBlink()
     } else {
 	window.blink = false;
     	var cn = makeCharName().replace(/[ ]/g, "");
-    	document.title = (cn ? makeCharName() + " @ " : "") + window.gameName;
+    	document.title = (cn ? "*" + makeCharName() + " @ " : "") + window.gameName;
     }
     window.isblinking = true;
     setTimeout("doBlink()", 2000);
@@ -1398,6 +1415,17 @@ function doPrefs()
     }
 
     try {
+        var blink = pref.getCharPref(zealousPreference("noBlink"));
+        if (blink == "true") {
+            pref.setCharPref("zealous.temp.blink", false);
+        } else {
+            pref.setCharPref("zealous.temp.blink", true);
+        }
+    } catch (err) {
+        pref.setCharPref("zealous.temp.blink", true);
+    }
+
+    try {
         var font = pref.getCharPref(zealousPreference("fontStyle"));
         if (font) pref.setCharPref("zealous.temp.fontStyle", font);
     } catch (err) {
@@ -1506,6 +1534,16 @@ function doFinishPrefs()
     }
 
     pref.clearUserPref("zealous.temp.buffer");
+
+    var ab = pref.getCharPref("zealous.temp.blink");
+
+    if (ab == "true") {
+        pref.setCharPref(zealousPreference("noBlink"), "true");
+    } else {
+        pref.setCharPref(zealousPreference("noBlink"), "false");
+    }
+
+    pref.clearUserPref("zealous.temp.blink");
 
     try {
         enableBuffer = pref.getCharPref(zealousPreference("enableBuffer"));

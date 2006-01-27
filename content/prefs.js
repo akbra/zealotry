@@ -14,6 +14,7 @@ function doMainLoad()
 
     document.getElementById('echocheck').setAttribute("checked", pref.getCharPref("zealous.temp.echo"));
     document.getElementById('scrollbackcheck').setAttribute("checked", pref.getCharPref("zealous.temp.buffer"));
+    document.getElementById('blinkcheck').setAttribute("checked", pref.getCharPref("zealous.temp.blink"));
     generate_fontmenu();
     generate_themeLists();
 
@@ -47,6 +48,7 @@ function doMainUnload()
 
     var cb = document.getElementById('echocheck').checked;
     var bb = document.getElementById('scrollbackcheck').checked;
+    var ab = document.getElementById('blinkcheck').checked;
 
     if (cb == true) {
         pref.setCharPref("zealous.temp.echo", "true");
@@ -58,6 +60,12 @@ function doMainUnload()
         pref.setCharPref("zealous.temp.buffer", "true");
     } else {
         pref.setCharPref("zealous.temp.buffer", "false");
+    }
+
+    if (ab == true) {
+	pref.setCharPref("zealous.temp.blink", "false");
+    } else {
+	pref.setCharPref("zealous.temp.blink", "true");
     }
 
     try {

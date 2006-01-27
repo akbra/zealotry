@@ -34,6 +34,9 @@
 			<box orient="horizontal" align="center">
 			    <checkbox id="scrollbackcheck" label="Enable Scrollback Buffer"/>
 			</box>
+			<box orient="horizontal" align="center">
+			    <checkbox id="blinkcheck" label="Enable Title Alert"/>
+			</box>
 		    </vbox>
 		</tabpanel>
 		<tabpanel id="fontspanel" orient="vertical">
