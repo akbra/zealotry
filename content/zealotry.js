@@ -38,8 +38,6 @@ var scrolling = false;
 var scrolltarg = null;
 var enableBuffer = "false";
 
-document.domain = "skotos.net";
-
 function makeCharName()
 {
     var ztitle, index, zlist, i;
@@ -66,6 +64,8 @@ function onMainLoad()
     // Init some values.
     scroll_splitter = document.getElementById('scroll_splitter');
     scrollback = document.getElementById('scrollback');
+
+    window.hasFocus = true;
 
     // Remove the onload trigger on the XUL
     window.onload = null;
@@ -234,11 +234,63 @@ function mainStep()
     obj.addEventListener("keyup", onInputKeyUp, false);
     window.onkeypress = onWindowKeyPress;
 
+    window.addEventListener ("focus", handleGotFocus, true);
+    window.addEventListener ("blur", handleLostFocus, true);
+
     client.connection.write("SKOTOS Zealous " + ZEALOUS_VERSION + "\n");
 
     setTheme();
     startAutoLogging();
     doFontStyleAndSize();
+}
+
+function handleGotFocus()
+{
+    var cn = makeCharName().replace(/[ ]/g, "");
+    document.title = (cn ? makeCharName() + " @ " : "") + window.gameName;
+    window.hasFocus = true;
+    window.isblinking = false;
+}
+
+function handleLostFocus()
+{
+    window.hasFocus = false;
+}
+
+function doAlert()
+{
+    if (window.hasFocus == true) {
+    	var cn = makeCharName().replace(/[ ]/g, "");
+    	document.title = (cn ? makeCharName() + " @ " : "") + window.gameName;
+	return;
+    } 
+
+    if (window.isblinking == true) {
+	return;
+    } else {
+    	doBlink();
+    }
+}
+
+function doBlink()
+{
+    if (window.hasFocus == true) {
+        var cn = makeCharName().replace(/[ ]/g, "");
+        document.title = (cn ? makeCharName() + " @ " : "") + window.gameName;
+	window.isblinking = false;
+        return;
+    }
+
+    if (!window.blink || window.blink == false) {
+	window.blink = true;
+        document.title = "";
+    } else {
+	window.blink = false;
+    	var cn = makeCharName().replace(/[ ]/g, "");
+    	document.title = (cn ? makeCharName() + " @ " : "") + window.gameName;
+    }
+    window.isblinking = true;
+    setTimeout("doBlink()", 2000);
 }
 
 function onNextCmd()

@@ -150,6 +150,7 @@ function client_ot(msg) {
     var cloned = this.outputNode(newNode);
     cloned.lastTextNode = this.currentScrollbackText;
     this.currentScrollbackText = cloned;
+    doAlert();
 }
 
 function doScroll() {
