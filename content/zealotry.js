@@ -367,6 +367,9 @@ function onInputKeyDown(e)
         	break;
 	}
     case 13:
+        if (e.ctrlKey || e.shiftKey || e.altKey) {
+            break;
+        }
         enter_down = true;
         handleInputLine(e.target.value);
         e.target.value = "";
@@ -387,18 +390,20 @@ function onInputKeyUp(e)
 	break;
 
     case 13: // CR
-        if (!enter_down) {
-            /*
-             * onInputKeyDown() failed to trigger for the 
-             * CR, which means it's lost if we don't grab
-             * it here.
-             */
-            
-            handleInputLine(e.target.value);
-        }
-        enter_down = false;
-        e.target.value = "";
-        break;
+       if (e.ctrlKey || e.shiftKey || e.altKey) {
+           break;
+       }
+       if (!enter_down) {
+          /*
+           * onInputKeyDown() failed to trigger for the
+           * CR, which means it's lost if we don't grab
+           * it here.
+           */
+          handleInputLine(e.target.value);
+       }
+       enter_down = false;
+       e.target.value = "";
+       break;
 
     case 38:
         // 'Up' cursor key
