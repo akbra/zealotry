@@ -7,8 +7,6 @@
     style="width:760px; height:480px;"
     orient="vertical" persist="width height" windowtype="skotos:zealotry">
     
-    <script type="application/x-javascript" src="debug.js"/>
-
     <script type="application/x-javascript" src="my-world.js"/>
 
     <script type="application/x-javascript" src="init.js"/>
@@ -23,7 +21,6 @@
     <script type="application/x-javascript" src="network.js"/>
     <script type="application/x-javascript" src="client.js"/>
 
-    <script type="application/x-javascript" src="sound.js"/>    
     <script type="application/x-javascript" src="macro.js"/>
     
     <script type="application/x-javascript" src="zealotry.js"/>
