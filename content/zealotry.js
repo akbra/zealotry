@@ -177,6 +177,19 @@ function onMainLoad()
         head.appendChild(link);
     }
 
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+
+    try {
+        window.pageBeep = pref.getCharPref(zealousPreference("pageBeep"));
+        if (pageBeep == "true") {
+            window.pageBeep = true;
+        }
+    } catch (err) {
+        window.pageBeep = false;
+        pref.setCharPref(zealousPreference("pageBeep"), "false");
+    }
+
     // we have to use a polling system to support mozilla 1.0
     // XXX: Do we care at this point? I don't. If a user uses Moz 1.0, they need to upgrade anyway for more reasons than I can count.
     setTimeout("pollFrames()", POLL_DELAY);
@@ -386,6 +399,10 @@ function onPageDown()
 
 function onPageUp()
 {
+    gSound = Components.classes["@mozilla.org/sound;1"].createInstance(Components.interfaces.nsISound);
+    gSound.beep();
+
+
     if (enableBuffer == "true") {
 	var w = scrollback.contentWindow; // window.scrollback;
     } else {
@@ -926,12 +943,21 @@ function mungeForDisplay(str) {
         munge_buffer = "<" + RegExp.rightContext;
         str = RegExp.leftContext;
     }
+
+    if (pageBeep == true) {
+    	var pattern = /\[OOC Page\] from/;
+    	if (pattern.test(str) == true) {
+    	    gSound = Components.classes["@mozilla.org/sound;1"].createInstance(Components.interfaces.nsISound);
+    	    gSound.beep();
+	}
+    }
+
     outputText(str);
 }
 
 function outputNL(nolog) {
     window.client.outputNL();
-    // scrolltarg.appendChild(document.createElement("br"));
+	    // scrolltarg.appendChild(document.createElement("br"));
     if (!nolog && window.logFile) {
         doLogging("\n");
     }
@@ -1426,6 +1452,17 @@ function doPrefs()
     }
 
     try {
+	var beep = pref.getCharPref(zealousPreference("pageBeep"));
+	if (beep == "true") {
+	    pref.setCharPref("zealous.temp.pageBeep", true);
+	} else {
+	    pref.setCharPref("zealous.temp.pageBeep", false);
+	}
+    } catch (err) {
+	pref.setCharPref("zealous.temp.pageBeep", false);
+    }
+
+    try {
         var font = pref.getCharPref(zealousPreference("fontStyle"));
         if (font) pref.setCharPref("zealous.temp.fontStyle", font);
     } catch (err) {
@@ -1544,6 +1581,18 @@ function doFinishPrefs()
     }
 
     pref.clearUserPref("zealous.temp.blink");
+
+    var pb = pref.getCharPref("zealous.temp.pageBeep");
+
+    if (pb == "true") {
+	pref.setCharPref(zealousPreference("pageBeep"), "true");
+	window.pageBeep = true;
+    } else {
+	pref.setCharPref(zealousPreference("pageBeep"), "false");
+	window.pageBeep = false;
+    }
+
+    pref.clearUserPref("zealous.temp.pageBeep");
 
     try {
         enableBuffer = pref.getCharPref(zealousPreference("enableBuffer"));

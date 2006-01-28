@@ -37,6 +37,9 @@
 			<box orient="horizontal" align="center">
 			    <checkbox id="blinkcheck" label="Enable Title Alert"/>
 			</box>
+			<box orient="horizontal" align="center">
+			    <checkbox id="pagecheck" label="Enable Page System Beep"/>
+			</box>
 		    </vbox>
 		</tabpanel>
 		<tabpanel id="fontspanel" orient="vertical">
