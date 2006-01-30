@@ -160,9 +160,9 @@ function onMainLoad()
     var rf = document.getElementById('right-frame');
 
     // XXX: Why were the "?zealous=<version>" parts removed?
-    frames['left-frame'].location.href = baseURL + "Left.sam"; // ?zealous=" + ZEALOUS_VERSION;
-    frames['center-frame'].location.href = baseURL + "Center.sam"; // ?zealous=" + ZEALOUS_VERSION;
-    frames['right-frame'].location.href = baseURL + "Right.sam"; // ?zealous=" + ZEALOUS_VERSION;
+    frames['left-frame'].location.href = baseURL + "Left.sam?zealous=0.6";
+    frames['center-frame'].location.href = baseURL + "Center.sam?zealous=0.6";
+    frames['right-frame'].location.href = baseURL + "Right.sam?zealous=0.6";
 
     var cn = makeCharName().replace(/[ ]/g, "");
     document.title = (cn ? makeCharName() + " @ " : "") + window.gameName;
@@ -211,6 +211,7 @@ function pollFrames() {
         mainStep();
         return;
     }
+
     setTimeout("pollFrames()", POLL_DELAY);
 }
 
@@ -399,9 +400,6 @@ function onPageDown()
 
 function onPageUp()
 {
-    gSound = Components.classes["@mozilla.org/sound;1"].createInstance(Components.interfaces.nsISound);
-    gSound.beep();
-
 
     if (enableBuffer == "true") {
 	var w = scrollback.contentWindow; // window.scrollback;
@@ -547,13 +545,12 @@ function onCopy() {
 
 function onClose(status, errStr)
 {
-    if (status == 0)
+    if (status == 0) {
         displayLine("Connection closed - session ended", "sys");
-    else if (status == NS_BINDING_ABORTED)
-        displayLine("Connection lost - session ended", "sys");
-    else
+    / * else if (status == NS_BINDING_ABORTED) displayLine("Connection lost - session ended", "sys"); */
+    } else { 
         displayLine("Connection failed: '"+errStr+"'", "sys");
-    
+    }
     connectionTerminated();
 }
 
@@ -1707,7 +1704,7 @@ function setTheme(styles)
             } catch (err) {
                 break; // No getting started button to set
             }
-            document.getElementById('right-frame').contentDocument.getElementById('elementStarting').src = url;
+            document.getElementById('right-frame').contentDocument.getElementById('Getting_Started').src = url;
             break;
         case "master_button":
             try {
@@ -1715,7 +1712,7 @@ function setTheme(styles)
             } catch (err) {
                 break; // No mastering chat button to set
             }
-            document.getElementById('right-frame').contentDocument.getElementById('elementMastering').src = url;
+            document.getElementById('right-frame').contentDocument.getElementById('Mastering_Chat').src = url;
             break;
 	    default:
             break;

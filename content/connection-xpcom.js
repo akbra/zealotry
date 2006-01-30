@@ -143,12 +143,12 @@ function bc_connect(host, port, bind, tcp_flag, isSecure, observer)
     this.port = port;
     this.bind = bind;
     this.tcp_flag = tcp_flag;
+    // isSecure = true;
 
     // Lets get a transportInfo for this
     var cls =
         Components.classes["@mozilla.org/network/protocol-proxy-service;1"];
     var pps = cls.getService(Components.interfaces.nsIProtocolProxyService);
-
     if (!pps)
         throw ("Couldn't get protocol proxy service");
 
@@ -156,12 +156,16 @@ function bc_connect(host, port, bind, tcp_flag, isSecure, observer)
       getService(Components.interfaces.nsIIOService);
     var spec = "irc://" + host + ':' + port;
     var uri = ios.newURI(spec,null,null);
+
     // As of 2005-03-25, 'examineForProxy' was replaced by 'resolve'.
+
     var info = null;
     if ("resolve" in pps)
         info = pps.resolve(uri, 0);
     else if ("examineForProxy" in pps)
         info = pps.examineForProxy(uri);
+
+    // info =  pps.newProxyInfo("socks", "70.92.65.147", parseInt("1080"), 0, 30, null);
 
     if (jsenv.HAS_STREAM_PROVIDER)
     {
@@ -221,11 +225,11 @@ function bc_connect(host, port, bind, tcp_flag, isSecure, observer)
 
         /* if we don't have an event queue, then all i/o must be blocking */
         var openFlags;
-        if (jsenv.HAS_NSPR_EVENTQ)
+        if (jsenv.HAS_NSPR_EVENTQ) {
             openFlags = 0;
-        else
+        } else {
             openFlags = Components.interfaces.nsITransport.OPEN_BLOCKING;
-
+	}
         /* no limit on the output stream buffer */
         this._outputStream =
             this._transport.openOutputStream(openFlags, 4096, -1);
