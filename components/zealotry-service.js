@@ -50,6 +50,9 @@ const nsISupports = Components.interfaces.nsISupports;
 const nsIIOService = Components.interfaces.nsIIOService;
 const nsIProtocolHandler = Components.interfaces.nsIProtocolHandler;
 const nsIURI = Components.interfaces.nsIURI;
+const STANDARDURL_CONTRACTID =
+    "@mozilla.org/network/standard-url;1";
+const nsIStandardURL     = Components.interfaces.nsIStandardURL;
 
 function Protocol()
 {
@@ -66,9 +69,10 @@ Protocol.prototype =
         },
 
         scheme: kSCHEME,
-        defaultPort: 12645,
+        defaultPort: 443,
         protocolFlags: nsIProtocolHandler.URI_NORELATIVE |
-        nsIProtocolHandler.URI_NOAUTH,
+                       nsIProtocolHandler.URI_NOAUTH |
+                       nsIProtocolHandler.ALLOWS_PROXY,
 
         allowPort: function(port, scheme)
         {
@@ -89,7 +93,7 @@ Protocol.prototype =
             
             return ios.newChannel("chrome://zealotry/content/zealotry.xul", null, null);
         },
-    }
+    };
 
 var ProtocolFactory = new Object();
 

@@ -37,6 +37,7 @@ var scrollback = null;
 var scrolling = false;
 var scrolltarg = null;
 var enableBuffer = "false";
+var madeCharName = null;
 
 function makeCharName()
 {
@@ -159,13 +160,24 @@ function onMainLoad()
     var cf = document.getElementById('center-frame');
     var rf = document.getElementById('right-frame');
 
-    // XXX: Why were the "?zealous=<version>" parts removed?
-    frames['left-frame'].location.href = baseURL + "Left.sam?zealous=0.6";
-    frames['center-frame'].location.href = baseURL + "Center.sam?zealous=0.6";
-    frames['right-frame'].location.href = baseURL + "Right.sam?zealous=0.6";
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
+    // Grab the "left, center and right sam" modifiers from the preferences.
+    var lModifier, rModifier, cModifier;
+    try {
+        lModifier = pref.getCharPref(zealousPreference("leftModifier"));
+        rModifier = pref.getCharPref(zealousPreference("rightModifier"));
+        cModifier = pref.getCharPref(zealousPreference("centerModifier"));
+    } catch (e) {}
+    
+    frames['left-frame'].location.href = baseURL + "Left.sam?zealous=0.6&" + lModifier; // ?zealous=" + ZEALOUS_VERSION;
+    frames['center-frame'].location.href = baseURL + "Center.sam?zealous=0.6&" + cModifier; // ?zealous=" + ZEALOUS_VERSION;
+    frames['right-frame'].location.href = baseURL + "Right.sam?zealous=0.6&" + rModifier; // ?zealous=" + ZEALOUS_VERSION;
+
+    madeCharName = makeCharName();
     var cn = makeCharName().replace(/[ ]/g, "");
-    document.title = (cn ? makeCharName() + " @ " : "") + window.gameName;
+    document.title = (cn ? madeCharName + " @ " : "") + window.gameName;
 
     // OOO: This apparently doesn't want to work. Not sure why at this point.
     var head = document.getElementById('center-frame').contentDocument.getElementsByTagName('head')[0];
@@ -176,9 +188,6 @@ function onMainLoad()
         link.setAttribute('href', 'http://eternalis.com/backgrounds/favicon.ico');
         head.appendChild(link);
     }
-
-    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
-    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
     try {
         window.pageBeep = pref.getCharPref(zealousPreference("pageBeep"));
@@ -261,8 +270,8 @@ function mainStep()
 
 function handleGotFocus()
 {
-    var cn = makeCharName().replace(/[ ]/g, "");
-    document.title = (cn ? makeCharName() + " @ " : "") + window.gameName;
+    var cn = madeCharName.replace(/[ ]/g, "");
+    document.title = (cn ? madeCharName + " @ " : "") + window.gameName;
     window.hasFocus = true;
     window.isblinking = false;
 }
@@ -275,29 +284,29 @@ function handleLostFocus()
 function doAlert()
 {
     if (window.hasFocus == true) {
-    	var cn = makeCharName().replace(/[ ]/g, "");
-    	document.title = (cn ? makeCharName() + " @ " : "") + window.gameName;
-	return;
+    	var cn = madeCharName.replace(/[ ]/g, "");
+    	document.title = (cn ? madeCharName + " @ " : "") + window.gameName;
+        return;
     } 
 
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
     try {
-	var blink = pref.getCharPref(zealousPreference("noBlink"));
+        var blink = pref.getCharPref(zealousPreference("blink"));
     } catch (err) {
-	pref.setCharPref(zealousPreference("noBlink"), "false");
-	blink = "false";
+        pref.setCharPref(zealousPreference("blink"), "false");
+        blink = "false";
     }
 
-    if (blink == "true") {
-        var cn = makeCharName().replace(/[ ]/g, "");
-        document.title = (cn ? "*" + makeCharName() + " @ " : "") + window.gameName;
+    if (blink == "false") {
+        var cn = madeCharName.replace(/[ ]/g, "");
+        document.title = (cn ? "*" + madeCharName + " @ " : "") + window.gameName;
         return;
     }
 
     if (window.isblinking == true) {
-	return;
+        return;
     } else {
     	doBlink();
     }
@@ -306,19 +315,19 @@ function doAlert()
 function doBlink()
 {
     if (window.hasFocus == true) {
-        var cn = makeCharName().replace(/[ ]/g, "");
-        document.title = (cn ? makeCharName() + " @ " : "") + window.gameName;
-	window.isblinking = false;
+        var cn = madeCharName.replace(/[ ]/g, "");
+        document.title = (cn ? madeCharName + " @ " : "") + window.gameName;
+        window.isblinking = false;
         return;
     }
 
-    if (!window.blink || window.blink == false) {
-	window.blink = true;
-        document.title = "";
+    if (!window.blink) {
+        window.blink = true;
+        document.title = document.title.toString().toUpperCase();
     } else {
-	window.blink = false;
-    	var cn = makeCharName().replace(/[ ]/g, "");
-    	document.title = (cn ? "*" + makeCharName() + " @ " : "") + window.gameName;
+        window.blink = false;
+    	var cn = madeCharName.replace(/[ ]/g, "");
+    	document.title = (cn ? "*" + madeCharName + " @ " : "") + window.gameName;
     }
     window.isblinking = true;
     setTimeout("doBlink()", 2000);
@@ -338,7 +347,7 @@ function onWindowKeyPress(e)
 {
     switch (e.keyCode) {
     case 9: // tab
-         return false;  // Don't allow for tab switching.
+        return false;  // Don't allow for tab switching.
 
     case 34: // page down
         if (e.ctrlKey != true && e.shiftKey != true && e.altKey != true) {
@@ -354,7 +363,7 @@ function onWindowKeyPress(e)
             if (!scrolling && enableBuffer == "true") {
                 scroll_splitter.setAttribute('state', 'open');
                 doScroll();
-	        scrollback.contentDocument.body.scrollTop = scrollback.contentDocument.body.scrollHeight;
+                scrollback.contentDocument.body.scrollTop = scrollback.contentDocument.body.scrollHeight;
                 scrolling = true;
             }
             onPageUp();
@@ -384,9 +393,9 @@ function onWindowKeyPress(e)
 function onPageDown()
 {
     if (enableBuffer == "true") {
-	var w = scrollback.contentWindow; // window.center_frame;
+        var w = scrollback.contentWindow; // window.center_frame;
     } else {
-	var w = window.center_frame;
+        var w = window.center_frame;
     }
 
     newOfs = w.pageYOffset + (w.innerHeight / 2);
@@ -402,9 +411,9 @@ function onPageUp()
 {
 
     if (enableBuffer == "true") {
-	var w = scrollback.contentWindow; // window.scrollback;
+        var w = scrollback.contentWindow; // window.scrollback;
     } else {
-	var w = window.center_frame;
+        var w = window.center_frame;
     }
 
     if (w.scrollMaxY == w.pageYOffset && enableBuffer == "true") {
@@ -421,7 +430,7 @@ function onPageUp()
 }
 
 function handleInputLine(str) {
-   if (!handleCommands(str)) {
+    if (!handleCommands(str)) {
         var expanded = myMacros.applyMacros(str);
         if (expanded) {
             window.client.onInputCompleteLine(expanded);
@@ -449,7 +458,7 @@ function onInputKeyDown(e)
         if (e.ctrlKey != true && e.shiftKey != true && e.altKey != true) {
 	        window.client.tabCompleteInputBuffer();
         	break;
-	}
+        }
     case 13:
         if (e.ctrlKey || e.shiftKey || e.altKey) {
             break;
@@ -471,23 +480,23 @@ function onInputKeyUp(e)
     switch (e.keyCode) {
 
     case 9: // Tab
-	break;
+        break;
 
     case 13: // CR
-       if (e.ctrlKey || e.shiftKey || e.altKey) {
-           break;
-       }
-       if (!enter_down) {
-          /*
-           * onInputKeyDown() failed to trigger for the
-           * CR, which means it's lost if we don't grab
-           * it here.
-           */
-          handleInputLine(e.target.value);
-       }
-       enter_down = false;
-       e.target.value = "";
-       break;
+        if (e.ctrlKey || e.shiftKey || e.altKey) {
+            break;
+        }
+        if (!enter_down) {
+            /*
+             * onInputKeyDown() failed to trigger for the
+             * CR, which means it's lost if we don't grab
+             * it here.
+             */
+            handleInputLine(e.target.value);
+        }
+        enter_down = false;
+        e.target.value = "";
+        break;
 
     case 38:
         // 'Up' cursor key
@@ -547,10 +556,10 @@ function onClose(status, errStr)
 {
     if (status == 0) {
         displayLine("Connection closed - session ended", "sys");
-    / * else if (status == NS_BINDING_ABORTED) displayLine("Connection lost - session ended", "sys"); */
-    } else { 
-        displayLine("Connection failed: '"+errStr+"'", "sys");
-    }
+        / * else if (status == NS_BINDING_ABORTED) displayLine("Connection lost - session ended", "sys"); */
+            } else { 
+                displayLine("Connection failed: '"+errStr+"'", "sys");
+            }
     connectionTerminated();
 }
 
@@ -581,13 +590,13 @@ function onRead(bigstr) {
     var munge_it = false;
     
     if (window.client == null) {
-       /*
-       **	This seems to happen in mid-reload sometimes: the
-       **	function is still being called, but the 'window'
-       **	is no longer connected... just return here and
-       **	await our doom
-       */
-       return;
+        /*
+        **	This seems to happen in mid-reload sometimes: the
+        **	function is still being called, but the 'window'
+        **	is no longer connected... just return here and
+        **	await our doom
+        */
+        return;
     }
     
     for (var i = 0; i < lines.length; i++) {
@@ -728,10 +737,10 @@ function onToggleBuffer(event) {
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
     if (enableBuffer == "true") {
-	pref.setCharPref(zealousPreference("enableBuffer"), "false");
-	document.getElementById("menuitem_buffer").setAttribute("checked", false);
-	enableBuffer = "false";
-	return;
+        pref.setCharPref(zealousPreference("enableBuffer"), "false");
+        document.getElementById("menuitem_buffer").setAttribute("checked", false);
+        enableBuffer = "false";
+        return;
     }
     pref.setCharPref(zealousPreference("enableBuffer"), "true");
     document.getElementById("menuitem_buffer").setAttribute("checked", true);
@@ -747,16 +756,16 @@ function onToggleEcho(event) {
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
     try {
-	this.echo = pref.getCharPref(zealousPreference("echo"));
+        this.echo = pref.getCharPref(zealousPreference("echo"));
     } catch(err) {
-	pref.setCharPref(zealousPreference("echo"), "false");
+        pref.setCharPref(zealousPreference("echo"), "false");
         return;
     }
     	
     if (this.echo == "true") {
     	pref.setCharPref(zealousPreference("echo"), "false");
     } else {
-	pref.setCharPref(zealousPreference("echo"), "true");
+        pref.setCharPref(zealousPreference("echo"), "true");
     }
 }
 
@@ -946,7 +955,7 @@ function mungeForDisplay(str) {
     	if (pattern.test(str) == true) {
     	    gSound = Components.classes["@mozilla.org/sound;1"].createInstance(Components.interfaces.nsISound);
     	    gSound.beep();
-	}
+        }
     }
 
     outputText(str);
@@ -954,7 +963,7 @@ function mungeForDisplay(str) {
 
 function outputNL(nolog) {
     window.client.outputNL();
-	    // scrolltarg.appendChild(document.createElement("br"));
+    // scrolltarg.appendChild(document.createElement("br"));
     if (!nolog && window.logFile) {
         doLogging("\n");
     }
@@ -1026,8 +1035,8 @@ function outputText(str) {
 function handleCommands(str) {
 
     if (str == "MACRO" || (arr = (/^MACRO (.+)/).exec(str))) {
-	outputLine("[MACRO: Macro support can be found in the Preferences popup.]");
-	return true;
+        outputLine("[MACRO: Macro support can be found in the Preferences popup.]");
+        return true;
     }
     return false;
 }
@@ -1041,12 +1050,12 @@ function handleMacros(str) {
 }
 
 /*
-    if (str == "CONFIG WRITE") {
-        writeConfigurationFile();
-        return true;
-    }
-    return false;
-}
+  if (str == "CONFIG WRITE") {
+  writeConfigurationFile();
+  return true;
+  }
+  return false;
+  }
 */
 
 function safe(s) {
@@ -1058,26 +1067,26 @@ function readConfigurationFile(str) {
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
     try {
-	this.localEcho = pref.getCharPref(zealousPreference("echo"));
+        this.localEcho = pref.getCharPref(zealousPreference("echo"));
     } catch (err) {
-	window.client.optionEchoSent = true;
+        window.client.optionEchoSent = true;
     }
 
     if (this.localEcho == "false") {
-	window.client.optionEchoSent = false;	
+        window.client.optionEchoSent = false;	
     } else {
-	window.client.optionEchoSent = true;
+        window.client.optionEchoSent = true;
     }
 
     try { 
-	enableBuffer = pref.getCharPref(zealousPreference("enableBuffer"));
+        enableBuffer = pref.getCharPref(zealousPreference("enableBuffer"));
     } catch (err) {
-	window.client.enableBuffer = false;
-	enableBuffer = "false";
+        window.client.enableBuffer = false;
+        enableBuffer = "false";
     }
 
     if (enableBuffer == "true") {
-	window.client.enableBuffer = true;
+        window.client.enableBuffer = true;
     }
 
     try {
@@ -1105,26 +1114,26 @@ function readConfigurationFile(str) {
 
     // Unable to locate the config file.. lets give them a chance to locate it manually
     // Removing menu options... -- Jess
-/*
-    if(str == "menu") {
-	var nsIFilePicker = Components.interfaces.nsIFilePicker;
-	var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
-  	filePicker.init(window, "Please Select Your Zealous Config File...", nsIFilePicker.modeGetFile);
-       	var res = filePicker.show();
-   	if (res == nsIFilePicker.returnCancel) {
-        return;
-	}
-  	var configFile = new File(filePicker.file.path);
-	configFile.open("r");
-	while(!configFile.EOF) {
-		var configLine = configFile.readline();
-		handleCommands(configLine);
-	}
-	configFile.close();
-	outputLine("[CONFIG: Finished reading configuration]");
-	return;
-    }
-*/
+    /*
+      if(str == "menu") {
+      var nsIFilePicker = Components.interfaces.nsIFilePicker;
+      var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+      filePicker.init(window, "Please Select Your Zealous Config File...", nsIFilePicker.modeGetFile);
+      var res = filePicker.show();
+      if (res == nsIFilePicker.returnCancel) {
+      return;
+      }
+      var configFile = new File(filePicker.file.path);
+      configFile.open("r");
+      while(!configFile.EOF) {
+      var configLine = configFile.readline();
+      handleCommands(configLine);
+      }
+      configFile.close();
+      outputLine("[CONFIG: Finished reading configuration]");
+      return;
+      }
+    */
 
 }
 
@@ -1330,7 +1339,7 @@ function doFontStyleAndSize()
 function helpMenuInit(str) 
 {
     switch(str) {
-        case "new": // Opens whats new window
+    case "new": // Opens whats new window
 		window.open("textfiles/whatsnew.html", "newWindow", 'resizable, scrollbars, status=no, width=550, height=650, screenX=100, screenY=100');
 		return;
 	case "about": // Open about dialog
@@ -1343,7 +1352,7 @@ function helpMenuInit(str)
 		var word = prompt("What word do you wish to define?");
 		if (word) {
 			var DICT = "http://www.dictionary.net/";
-		        window.open(DICT + word, 'Dictionary', 'height=200,width=650,scrollbars=yes,screenX=100,screenY=100');
+            window.open(DICT + word, 'Dictionary', 'height=200,width=650,scrollbars=yes,screenX=100,screenY=100');
 		}
 		return;	
 	case "content": // Open help contents dialog
@@ -1438,25 +1447,25 @@ function doPrefs()
     }
 
     try {
-        var blink = pref.getCharPref(zealousPreference("noBlink"));
+        var blink = pref.getCharPref(zealousPreference("blink"));
         if (blink == "true") {
-            pref.setCharPref("zealous.temp.blink", false);
-        } else {
             pref.setCharPref("zealous.temp.blink", true);
+        } else {
+            pref.setCharPref("zealous.temp.blink", false);
         }
     } catch (err) {
-        pref.setCharPref("zealous.temp.blink", true);
+        pref.setCharPref("zealous.temp.blink", false);
     }
 
     try {
-	var beep = pref.getCharPref(zealousPreference("pageBeep"));
-	if (beep == "true") {
-	    pref.setCharPref("zealous.temp.pageBeep", true);
-	} else {
-	    pref.setCharPref("zealous.temp.pageBeep", false);
-	}
+        var beep = pref.getCharPref(zealousPreference("pageBeep"));
+        if (beep == "true") {
+            pref.setCharPref("zealous.temp.pageBeep", true);
+        } else {
+            pref.setCharPref("zealous.temp.pageBeep", false);
+        }
     } catch (err) {
-	pref.setCharPref("zealous.temp.pageBeep", false);
+        pref.setCharPref("zealous.temp.pageBeep", false);
     }
 
     try {
@@ -1467,10 +1476,10 @@ function doPrefs()
     }
 
     try {
-	var sbFont = pref.getCharPref(zealousPreference("sbFontStyle"));
-	if (sbFont) pref.setCharPref("zealous.temp.sbFontStyle", sbFont);
+        var sbFont = pref.getCharPref(zealousPreference("sbFontStyle"));
+        if (sbFont) pref.setCharPref("zealous.temp.sbFontStyle", sbFont);
     } catch (err) {
-	pref.setCharPref("zealous.temp.sbFontStyle", false);
+        pref.setCharPref("zealous.temp.sbFontStyle", false);
     }
 
     try {
@@ -1488,24 +1497,24 @@ function doPrefs()
     }
 
     try {
-	var sbSize = pref.getCharPref(zealousPreference("sbSize"));
-	if (sbSize) pref.setCharPref("zealous.temp.sbSize", sbSize);
+        var sbSize = pref.getCharPref(zealousPreference("sbSize"));
+        if (sbSize) pref.setCharPref("zealous.temp.sbSize", sbSize);
     } catch (err) {
-	pref.setCharPref("zealous.temp.sbSize", false);
+        pref.setCharPref("zealous.temp.sbSize", false);
     }
 
     try {
-	var sbPreSize = pref.getCharPref(zealousPreference("sbPreSize"));
-	if (sbPreSize) pref.setCharPref("zealous.temp.sbPreSize", sbPreSize);
+        var sbPreSize = pref.getCharPref(zealousPreference("sbPreSize"));
+        if (sbPreSize) pref.setCharPref("zealous.temp.sbPreSize", sbPreSize);
     } catch (err) {
-	pref.setCharPref("zealous.temp.sbPreSize", false);
+        pref.setCharPref("zealous.temp.sbPreSize", false);
     }
 
     try {
-	var macro = pref.getCharPref(zealousPreference("macro"));
-	if (macro) pref.setCharPref("zealous.temp.macro", macro);
+        var macro = pref.getCharPref(zealousPreference("macro"));
+        if (macro) pref.setCharPref("zealous.temp.macro", macro);
     } catch (err) {
-	pref.setCharPref("zealous.temp.macro", false);
+        pref.setCharPref("zealous.temp.macro", false);
     }
 
     pref.setCharPref("zealous.temp.filename", zealousPreference("macro"));
@@ -1524,8 +1533,8 @@ function doPrefs()
     window.open("chrome://zealotry/content/prefs.xul", "_blank", "scrollbars=no, status=no, resizable=yes, modal, dialog, chrome, width=850, height=300, screenX=100, screenY=100");
 
     try {
-	pref.getCharPref("zealous.temp.state");
-	pref.clearUserPref("zealous.temp.state");
+        pref.getCharPref("zealous.temp.state");
+        pref.clearUserPref("zealous.temp.state");
     } catch (err) {
     	doFinishPrefs();
     } 
@@ -1572,9 +1581,9 @@ function doFinishPrefs()
     var ab = pref.getCharPref("zealous.temp.blink");
 
     if (ab == "true") {
-        pref.setCharPref(zealousPreference("noBlink"), "true");
+        pref.setCharPref(zealousPreference("blink"), "true");
     } else {
-        pref.setCharPref(zealousPreference("noBlink"), "false");
+        pref.setCharPref(zealousPreference("blink"), "false");
     }
 
     pref.clearUserPref("zealous.temp.blink");
@@ -1582,11 +1591,11 @@ function doFinishPrefs()
     var pb = pref.getCharPref("zealous.temp.pageBeep");
 
     if (pb == "true") {
-	pref.setCharPref(zealousPreference("pageBeep"), "true");
-	window.pageBeep = true;
+        pref.setCharPref(zealousPreference("pageBeep"), "true");
+        window.pageBeep = true;
     } else {
-	pref.setCharPref(zealousPreference("pageBeep"), "false");
-	window.pageBeep = false;
+        pref.setCharPref(zealousPreference("pageBeep"), "false");
+        window.pageBeep = false;
     }
 
     pref.clearUserPref("zealous.temp.pageBeep");
@@ -1603,14 +1612,14 @@ function doFinishPrefs()
     }
 
     try {
-	macro = pref.getCharPref("zealous.temp.macro");
+        macro = pref.getCharPref("zealous.temp.macro");
     } catch (err) {
-	macro = "false";
+        macro = "false";
     }
 
     if (macro && macro != "false") {
-	pref.setCharPref(zealousPreference("macro"), macro);
-	pref.clearUserPref("zealous.temp.macro");
+        pref.setCharPref(zealousPreference("macro"), macro);
+        pref.clearUserPref("zealous.temp.macro");
     }
 
     setFont();
@@ -1724,19 +1733,9 @@ function setTheme(styles)
     if (body) {
         var link = document.createElement('img');
         link.setAttribute('border', '1');
-	link.setAttribute('id', 'zelly');
+        link.setAttribute('id', 'zelly');
         link.setAttribute('style', 'position:absolute; top:50px; left:5px');
         link.setAttribute('src', 'chrome://zealotry/skin/zealotry/zelly.png');
         body.appendChild(link);
     }
-}
-
-function testImg()
-{
-    image = new File("/home/kargh");
-    image.appendRelativePath("bgtest.jpg");
-    image.open("r");
-    
-    document.getElementById('center-frame').style.background = 'white url(file:///home/kargh/bgtest.jpg) no-repeat';
-    document.getElementById('right-frame').contentDocument.getElementById('Skotos_Logo').src = 'file:///home/kargh/bgtest.jpg';
 }

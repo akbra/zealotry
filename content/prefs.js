@@ -4,6 +4,7 @@ var centerStyleTag = null;
 var scrollbackStyleTag = null;
 var submit = null;
 
+// XXX: Is this crap even used these days?
 var pm = netscape.security.PrivilegeManager;
 var privs = "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect";
 
@@ -20,25 +21,25 @@ function doMainLoad()
     generate_themeLists();
 
     try {
-	var macro = pref.getCharPref("zealous.temp.macro");
-	if (macro == false) macro = null;
+        var macro = pref.getCharPref("zealous.temp.macro");
+        if (macro == false) macro = null;
     } catch (err) {
-	macro = null;
+        macro = null;
     }
 
     if (macro && macro != false && macro != "false") {
-	document.getElementById('macrostore').setAttribute("value", macro);
-	var macro = new File(macro);
-	if (macro.exists()) {
-	    macro.open("r");
-	    var macros = macro.read();
-	}
+        document.getElementById('macrostore').setAttribute("value", macro);
+        var macro = new File(macro);
+        if (macro.exists()) {
+            macro.open("r");
+            var macros = macro.read();
+        }
     } else {
-	 document.getElementById('macrostore').setAttribute("value", "No macro file set...");
+        document.getElementById('macrostore').setAttribute("value", "No macro file set...");
     }
 
     if (macros) {
-	document.getElementById('macrotext').value = macros;
+        document.getElementById('macrotext').value = macros;
     }
 }
 
@@ -65,15 +66,15 @@ function doMainUnload()
     }
 
     if (ab == true) {
-	pref.setCharPref("zealous.temp.blink", "false");
+        pref.setCharPref("zealous.temp.blink", "true");
     } else {
-	pref.setCharPref("zealous.temp.blink", "true");
+        pref.setCharPref("zealous.temp.blink", "false");
     }
 
     if (pb == true) {
-	pref.setCharPref("zealous.temp.pageBeep", "true");
+        pref.setCharPref("zealous.temp.pageBeep", "true");
     } else {
-	pref.setCharPref("zealous.temp.pageBeep", "false");
+        pref.setCharPref("zealous.temp.pageBeep", "false");
     }
 
     try {
@@ -86,12 +87,12 @@ function doMainUnload()
         var macro = new File(macro);
         // XXX: Kalle removed the if case. If macros break apart, re-add it.
         // if (macro.exists()) {
-            macro.open("w");
-            macro.write(document.getElementById('macrotext').value);
-            macro.close();
+        macro.open("w");
+        macro.write(document.getElementById('macrotext').value);
+        macro.close();
         //}
     } else if (document.getElementById('macrotext').value.length > 0) {
-	// Player set some macros but doesn't have a place to store them. Lets fix that.
+        // Player set some macros but doesn't have a place to store them. Lets fix that.
         var nsIFilePicker = Components.interfaces.nsIFilePicker;
         var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
         filePicker.init(window, "Where should macro files live?", nsIFilePicker.modeGetFolder);
@@ -105,10 +106,10 @@ function doMainUnload()
         configFile = new File(macroFolder);
         configFile.appendRelativePath(pref.getCharPref("zealous.temp.filename"));
 
-	configFile.create();
+        configFile.create();
         configFile.open("w");
-	configFile.write(document.getElementById('macrotext').value);
-	configFile.close();
+        configFile.write(document.getElementById('macrotext').value);
+        configFile.close();
     }
     window.submit = true;
 
@@ -118,8 +119,8 @@ function doMainUnload()
 function doCancel()
 {
     if (submit) {
-	window.close
-	return;
+        window.close
+            return;
     }
 
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
@@ -133,9 +134,9 @@ function openMacros()
     el = document.getElementById('macrotext');
 
     if (el.collapsed == true) {
-	window.resizeBy(0, 400);
-	el.setAttribute('collapsed', 'false');
-	document.getElementById('openmacro').setAttribute("label", "Hide Macros");
+        window.resizeBy(0, 400);
+        el.setAttribute('collapsed', 'false');
+        document.getElementById('openmacro').setAttribute("label", "Hide Macros");
         return;
     }
 
@@ -347,17 +348,17 @@ function generate_fontmenu()
     
     for (var z = 0; z < l; z++) {
         var item = d.createElement('menuitem');
-	var pitem = d.createElement('menuitem');
+        var pitem = d.createElement('menuitem');
         item.setAttribute('id', 'fm_' + menuitems[z]);
-	pitem.setAttribute('id', 'pfm_' + menuitems[z]);
+        pitem.setAttribute('id', 'pfm_' + menuitems[z]);
         item.setAttribute('label', menuitems[z]);
-	pitem.setAttribute('label', menuitems[z]);
+        pitem.setAttribute('label', menuitems[z]);
         item.setAttribute('oncommand', 'setFont("' + menuitems[z] + '");');
-	pitem.setAttribute('oncommand', 'setSBFont("' + menuitems[z] + '");');
+        pitem.setAttribute('oncommand', 'setSBFont("' + menuitems[z] + '");');
         item.style.fontFamily = menuitems[z];
-	pitem.style.fontFamily = menuitems[z];
+        pitem.style.fontFamily = menuitems[z];
         popup.appendChild(item);
-	prepop.appendChild(pitem);
+        prepop.appendChild(pitem);
     }
     
     /* Font sizes. */
@@ -413,28 +414,28 @@ function generate_fontmenu()
     for (var z = 6; z < 30; z++) {
         size_el = d.createElement('menuitem');
         size_pre_el = d.createElement('menuitem');
-	size_sb_el = d.createElement('menuitem');
-	size_sb_pre_el = d.createElement('menuitem');
+        size_sb_el = d.createElement('menuitem');
+        size_sb_pre_el = d.createElement('menuitem');
 
         size_el.setAttribute('id', 's_'+z);
         size_pre_el.setAttribute('id', 'sp_'+z);
-	size_sb_el.setAttribute('id', 'sb_'+z);
-	size_sb_pre_el.setAttribute('id', 'sbp_'+z);
+        size_sb_el.setAttribute('id', 'sb_'+z);
+        size_sb_pre_el.setAttribute('id', 'sbp_'+z);
 
         size_el.setAttribute('label', z);
         size_pre_el.setAttribute('label', z);
-	size_sb_el.setAttribute('label', z);
-	size_sb_pre_el.setAttribute('label', z);
+        size_sb_el.setAttribute('label', z);
+        size_sb_pre_el.setAttribute('label', z);
 
         size_el.setAttribute('oncommand', 'setSize(' + z + ' + "pt");');
         size_pre_el.setAttribute('oncommand', 'setFixedSize(' + z + ' + "pt");');
-	size_sb_el.setAttribute('oncommand', 'setSBSize(' + z + ' + "pt");');
-	size_sb_pre_el.setAttribute('oncommand', 'setSBPreSize(' + z + ' + "pt");');
+        size_sb_el.setAttribute('oncommand', 'setSBSize(' + z + ' + "pt");');
+        size_sb_pre_el.setAttribute('oncommand', 'setSBPreSize(' + z + ' + "pt");');
 
         popup.appendChild(size_el);
         pre_popup.appendChild(size_pre_el);
-	sbpopup.appendChild(size_sb_el);
-	sbpre_popup.appendChild(size_sb_pre_el);
+        sbpopup.appendChild(size_sb_el);
+        sbpre_popup.appendChild(size_sb_pre_el);
     }
 
     switchSelection('size', sz);
