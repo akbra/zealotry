@@ -199,6 +199,16 @@ function onMainLoad()
         pref.setCharPref(zealousPreference("pageBeep"), "false");
     }
 
+    try {
+	window.ignoreOOC = pref.getCharPref(zealousPreference("ignoreOOC"));
+   	if (ignoreOOC == "true") {
+	    window.ignoreOOC = true;
+	}
+    } catch (err) {
+	window.ignoreOOC = false;
+	pref.setCharPref(zealousPreference("ignoreOOC"), "false");
+    }
+
     // we have to use a polling system to support mozilla 1.0
     // XXX: Do we care at this point? I don't. If a user uses Moz 1.0, they need to upgrade anyway for more reasons than I can count.
     setTimeout("pollFrames()", POLL_DELAY);
@@ -951,11 +961,18 @@ function mungeForDisplay(str) {
     }
 
     if (pageBeep == true) {
-    	var pattern = /\[OOC Page\] from/;
+    	var pattern = /^\[OOC Page\] from/;
     	if (pattern.test(str) == true) {
     	    gSound = Components.classes["@mozilla.org/sound;1"].createInstance(Components.interfaces.nsISound);
     	    gSound.beep();
         }
+    }
+
+    if (ignoreOOC == true) {
+	var pattern = /^OOC --+/;
+	if (pattern.test(str) == true) {
+	    return;
+	}
     }
 
     outputText(str);
@@ -1469,6 +1486,17 @@ function doPrefs()
     }
 
     try {
+        var ignore = pref.getCharPref(zealousPreference("ignoreOOC"));
+        if (ignore == "true") {
+            pref.setCharPref("zealous.temp.ignoreOOC", true);
+        } else {
+            pref.setCharPref("zealous.temp.ignoreOOC", false);
+        }
+    } catch (err) {
+        pref.setCharPref("zealous.temp.ignoreOOC", false);
+    }
+
+    try {
         var font = pref.getCharPref(zealousPreference("fontStyle"));
         if (font) pref.setCharPref("zealous.temp.fontStyle", font);
     } catch (err) {
@@ -1599,6 +1627,18 @@ function doFinishPrefs()
     }
 
     pref.clearUserPref("zealous.temp.pageBeep");
+
+    var pb = pref.getCharPref("zealous.temp.ignoreOOC");
+
+    if (pb == "true") {
+        pref.setCharPref(zealousPreference("ignoreOOC"), "true");
+        window.ignoreOOC = true;
+    } else {
+        pref.setCharPref(zealousPreference("ignoreOOC"), "false");
+        window.ignoreOOC = false;
+    }
+
+    pref.clearUserPref("zealous.temp.ignoreOOC");
 
     try {
         enableBuffer = pref.getCharPref(zealousPreference("enableBuffer"));

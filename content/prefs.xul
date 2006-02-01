@@ -40,6 +40,9 @@
 			<box orient="horizontal" align="center">
 			    <checkbox id="pagecheck" label="Enable Page System Beep"/>
 			</box>
+			<box orient="horizontal" align="center">
+			    <checkbox id="ooccheck" label="Ignore OOC Comments"/>
+			</box>
 		    </vbox>
 		</tabpanel>
 		<tabpanel id="fontspanel" orient="vertical">

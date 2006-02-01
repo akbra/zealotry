@@ -17,6 +17,7 @@ function doMainLoad()
     document.getElementById('scrollbackcheck').setAttribute("checked", pref.getCharPref("zealous.temp.buffer"));
     document.getElementById('blinkcheck').setAttribute("checked", pref.getCharPref("zealous.temp.blink"));
     document.getElementById('pagecheck').setAttribute("checked", pref.getCharPref("zealous.temp.pageBeep"));
+    document.getElementById('ooccheck').setAttribute("checked", pref.getCharPref("zealous.temp.ignoreOOC"));
     generate_fontmenu();
     generate_themeLists();
 
@@ -52,6 +53,7 @@ function doMainUnload()
     var bb = document.getElementById('scrollbackcheck').checked;
     var ab = document.getElementById('blinkcheck').checked;
     var pb = document.getElementById('pagecheck').checked;
+    var ob = document.getElementById('ooccheck').checked;
 
     if (cb == true) {
         pref.setCharPref("zealous.temp.echo", "true");
@@ -75,6 +77,12 @@ function doMainUnload()
         pref.setCharPref("zealous.temp.pageBeep", "true");
     } else {
         pref.setCharPref("zealous.temp.pageBeep", "false");
+    }
+
+    if (ob == true) {
+        pref.setCharPref("zealous.temp.ignoreOOC", "true");
+    } else {
+        pref.setCharPref("zealous.temp.ignoreOOC", "false");
     }
 
     try {
