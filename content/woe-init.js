@@ -46,6 +46,7 @@ WoeHandlerClass.prototype = {
     host: null,
     port: 5090,
     xwi: null,
+    lastselected: "",
         
     getHost: function()
     {
@@ -273,12 +274,19 @@ WoeHandlerClass.prototype = {
             // deselect
             return;
         }
+        
         var el = this.xtree.contentView.getItemAtIndex(index);
         if (!el.src) {
             // selected folder, not object
             return;
         }
-        
+        var src = el.src;
+	dump("src / lastselected :: " + src + " / " + this.lastselected + "\n");
+        // When someone opens/closes folders, the onselect is triggered as well. This makes sure it doesn't
+        // reload the current selection repeatedly when browsing through folders.
+        if (src == this.lastselected) return;
+        this.lastselected = src;
+
         window.open("http://" + this.getHost() + "/" + el.src, 'pageFrame');
     }
 };
