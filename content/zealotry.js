@@ -26,7 +26,7 @@
  *
  */
 
-const ZEALOUS_VERSION = "0.7.6";
+const ZEALOUS_VERSION = "0.8";
 const POLL_DELAY = 50;
 
 var bgCrap = null;
@@ -180,6 +180,8 @@ function onMainLoad()
     document.title = (cn ? madeCharName + " @ " : "") + window.gameName;
 
     // OOO: This apparently doesn't want to work. Not sure why at this point.
+    // XXX: Removing this. Let's not refer to eternalis.com if we don't have to, and I have no idea what this does.
+    /*
     var head = document.getElementById('center-frame').contentDocument.getElementsByTagName('head')[0];
     if (head) {
         var link = document.createElement('link');
@@ -188,6 +190,7 @@ function onMainLoad()
         link.setAttribute('href', 'http://eternalis.com/backgrounds/favicon.ico');
         head.appendChild(link);
     }
+    */
 
     try {
         window.pageBeep = pref.getCharPref(zealousPreference("pageBeep"));
@@ -200,13 +203,13 @@ function onMainLoad()
     }
 
     try {
-	window.ignoreOOC = pref.getCharPref(zealousPreference("ignoreOOC"));
-   	if (ignoreOOC == "true") {
-	    window.ignoreOOC = true;
-	}
+        window.ignoreOOC = pref.getCharPref(zealousPreference("ignoreOOC"));
+        if (ignoreOOC == "true") {
+            window.ignoreOOC = true;
+        }
     } catch (err) {
-	window.ignoreOOC = false;
-	pref.setCharPref(zealousPreference("ignoreOOC"), "false");
+        window.ignoreOOC = false;
+        pref.setCharPref(zealousPreference("ignoreOOC"), "false");
     }
 
     // we have to use a polling system to support mozilla 1.0
@@ -249,9 +252,17 @@ function mainStep()
 
     window.client.clearHistory();
 
-    window.myMacros = new MacroStruct(client);
+    try {
+        window.myMacros = new MacroStruct(client);
+    } catch (e) {
+        dump("Exception in mainStep when loading macros: " + e);
+    }
 
-    readConfigurationFile();
+    try {
+        readConfigurationFile();
+    } catch (e) {
+        dump("Exception in mainStep when loading configuration file: " + e);
+    }
 
     window.client.connect
         (window.center_frame.getHost(),
@@ -648,15 +659,17 @@ function onRead(bigstr) {
                 } catch (err) {}
                 break;
 
-            case "MAPURL":
-                try {
+                /*
+                case "MAPURL":
+                    XXX: This is obsolete.
+                    try {
                     window.center_frame.newSkootMessage
                         ("1",
                          str.substring(7),
                          window.left_frame,
                          window.right_frame);
-                } catch (err) {}
-                break;
+                         } catch (err) {}
+                break; */
 
             default:
                 munge_it = true;
@@ -892,8 +905,19 @@ function mungeForDisplay(str) {
      */
     str = munge_buffer + str;
     munge_buffer = "";
-    
-    if (arr = (/<font color=([^>]*)>/i).exec(str)) {
+
+    /* SKOOT 2.0: */
+    if        (arr = (/<skoot id=\'([^\']*)\' val=\'([^>]*)\'\/>/i).exec(str)) {
+        try {
+            window.center_frame.newSkootMessage
+                (arr[1],
+                 arr[2],
+                 window.left_frame,
+                 window.right_frame);
+        } catch (err) {}
+        // We don't want the client to actually input this element.
+        arr = null;
+    } else if (arr = (/<font color=([^>]*)>/i).exec(str)) {
         style = "color: " + arr[1];
     } else if (arr = (/<b>/i).exec(str)) {
         style = "font-weight: bold";
@@ -953,6 +977,7 @@ function mungeForDisplay(str) {
         }
         return;
     } else if( !(/<([^>]*)>/i).exec(str) && (arr = (/</i).exec(str)) ) {
+        // XXX: This may cause issues with the SKOOT 2.0 deal, since we null arr.
         /*
          * We've caught a chopped off tag.
          */
@@ -969,10 +994,10 @@ function mungeForDisplay(str) {
     }
 
     if (ignoreOOC == true) {
-	var pattern = /^OOC --+/;
-	if (pattern.test(str) == true) {
-	    return;
-	}
+        var pattern = /^OOC --+/;
+        if (pattern.test(str) == true) {
+            return;
+        }
     }
 
     outputText(str);
@@ -1108,6 +1133,11 @@ function readConfigurationFile(str) {
 
     try {
         this.homeFolder = pref.getCharPref(zealousPreference("macro"));
+        // Hack-in for the bug where / was used in place of \\ on Win clients.
+        if (this.homeFolder && this.homeFolder[1] == ':') {
+            this.homeFolder = this.homeFolder.replace(/\/zealous/g, "\\zealous");
+            pref.setCharPref(zealousPreference("macro"), this.homeFolder);
+        }
     } catch (err) {
         return;
     }

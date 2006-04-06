@@ -116,6 +116,7 @@ initPath : function(args)
   var rv = null;
   try {
     if (typeof(args)=='object') {
+      dump((args ? args[0] : "args is null") + "\n" + this.mPath + "\n");
       this.mFileInst = new JS_FS_File_Path(args[0]?args[0]:this.mPath);
       if (args.length>1)
         for (i=1; i<args.length; i++)

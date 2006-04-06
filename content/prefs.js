@@ -109,7 +109,9 @@ function doMainUnload()
             return;
         }
         macroFolder = filePicker.file.path;
-        pref.setCharPref("zealous.temp.macro", macroFolder + "/" + pref.getCharPref("zealous.temp.filename"));
+        // Figure out if we need \\ or /.
+        var separator = (macroFolder && macroFolder[1] == ':' ? "\\" : "/");
+        pref.setCharPref("zealous.temp.macro", macroFolder + separator + pref.getCharPref("zealous.temp.filename"));
 
         configFile = new File(macroFolder);
         configFile.appendRelativePath(pref.getCharPref("zealous.temp.filename"));
