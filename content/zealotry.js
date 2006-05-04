@@ -659,19 +659,18 @@ function onRead(bigstr) {
                          window.right_frame);
                 } catch (err) {}
                 break;
-
-                /*
-                case "MAPURL":
-                    XXX: This is obsolete.
-                    try {
+                
+            case "MAPURL":
+                // XXX: This is obsolete.
+                try {
                     window.center_frame.newSkootMessage
                         ("1",
                          str.substring(7),
                          window.left_frame,
                          window.right_frame);
-                         } catch (err) {}
-                break; */
-
+                } catch (err) {}
+                break; 
+                
             default:
                 munge_it = true;
                 break;
