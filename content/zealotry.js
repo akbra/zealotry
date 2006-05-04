@@ -27,6 +27,7 @@
  */
 
 const ZEALOUS_VERSION = "0.8";
+const ZEALOUS_SUPPORT = "SKOOT2";
 const POLL_DELAY = 50;
 
 var bgCrap = null;
@@ -282,7 +283,7 @@ function mainStep()
     window.addEventListener ("focus", handleGotFocus, true);
     window.addEventListener ("blur", handleLostFocus, true);
 
-    client.connection.write("SKOTOS Zealous " + ZEALOUS_VERSION + "\n");
+    client.connection.write("SKOTOS Zealous " + ZEALOUS_VERSION + " " + ZEALOUS_SUPPORT + "\n");
 
     setTheme();
     startAutoLogging();
@@ -896,7 +897,7 @@ function escapeSkotosLink(s)
         }
     return res + s.substring(seq);
 }
-
+var cow = 0;
 function mungeForDisplay(str) {
     var element, style, pop, arr;
 
@@ -908,16 +909,21 @@ function mungeForDisplay(str) {
 
     /* SKOOT 2.0: */
     if        (arr = (/<skoot id=\'([^\']*)\' val=\'([^>]*)\'\/>/i).exec(str)) {
-        try {
-            window.center_frame.newSkootMessage
-                (arr[1],
-                 arr[2],
-                 window.left_frame,
-                 window.right_frame);
-        } catch (err) {}
+        // try {
+        str = RegExp.rightContext;
+        var num = arr[1] - 0;
+        window.center_frame.newSkootMessage
+            (num,
+             unescape(arr[2].replace(/\+/g, " ")),
+             window.left_frame,
+             window.right_frame);
+        // } catch (err) {}
         // We don't want the client to actually input this element.
         arr = null;
-    } else if (arr = (/<font color=([^>]*)>/i).exec(str)) {
+    }
+    /* End SKOOT 2.0. */
+
+    if (arr = (/<font color=([^>]*)>/i).exec(str)) {
         style = "color: " + arr[1];
     } else if (arr = (/<b>/i).exec(str)) {
         style = "font-weight: bold";
@@ -927,6 +933,7 @@ function mungeForDisplay(str) {
         element = document.createElementNS("http://www.w3.org/1999/xhtml",
                                            "html:pre");
     } else if (arr = (/<body bgcolor=\'([^\']*)\' text=\'([^\']*)\'[^>]*>/i).exec(str)) {
+        dump("body [" + arr + "]");
         setTheme(arr);
         frames["center-frame"].document.body.style.color = arr[2];
         scrollback.contentDocument.body.style.color = arr[2];
@@ -934,13 +941,6 @@ function mungeForDisplay(str) {
         element = document.createElementNS("http://www.w3.org/1999/xhtml",
                                            "html:a");
         element.setAttribute( "href", "javascript:document.skotosLink('"+escapeSkotosLink(arr[1])+"');" );
-        /* } else if (arr = (/&lt;inshow what='([^>]*)'&gt;/i).exec(str)) {
-           element = document.createElementNS("http://www.w3.org/1999/xhtml",
-           "html:img");
-           element.style.border = 'solid #aaaa99 1px;';
-           element.setAttribute( "src", arr[1] );
-           } else if (arr = (/&lt;\/inshow&gt;/i).exec(str)) {
-           pop = true; */
     } else if (arr = (/<\/[a-z]+>/i).exec(str)) {
         pop = true;
     }
@@ -976,7 +976,7 @@ function mungeForDisplay(str) {
             mungeForDisplay(right);
         }
         return;
-    } else if( !(/<([^>]*)>/i).exec(str) && (arr = (/</i).exec(str)) ) {
+    } else if (!(/<([^>]*)>/i).exec(str) && (arr = (/</i).exec(str))) {
         // XXX: This may cause issues with the SKOOT 2.0 deal, since we null arr.
         /*
          * We've caught a chopped off tag.
