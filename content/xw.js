@@ -68,6 +68,14 @@ WoeClass.prototype = {
         }
     },
 
+    ping:
+    // ping facility to ensure connection behind routers.
+    function()
+    {
+        setTimeout('CurrWoe.ping();', 60000);
+        this.client.connection.write("SEND iJustCalledToSayILoveYou\n");
+    },
+
     mainStep: function()
     {
         this.client = new CClient();
@@ -79,6 +87,7 @@ WoeClass.prototype = {
 
         this.client.connection.write("TreeOfWoe " + TOW_VERSION + "\n");
         this.client.connection.write("SEND \n");
+        setTimeout("CurrWoe.ping();", 60000); 
     },
 
     onClose: function(status, errStr)

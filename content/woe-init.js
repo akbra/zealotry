@@ -278,10 +278,12 @@ WoeHandlerClass.prototype = {
         var el = this.xtree.contentView.getItemAtIndex(index);
         if (!el.src) {
             // selected folder, not object
+            // but we still want to set last selected, otherwise we won't be able to reload an item
+            // by clicking on a nearby folder and then on the item again.
+            this.lastselected = null;
             return;
         }
         var src = el.src;
-	dump("src / lastselected :: " + src + " / " + this.lastselected + "\n");
         // When someone opens/closes folders, the onselect is triggered as well. This makes sure it doesn't
         // reload the current selection repeatedly when browsing through folders.
         if (src == this.lastselected) return;
