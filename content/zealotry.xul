@@ -74,7 +74,7 @@
 		    </menu>
 		</menubar>
 	    </toolbox>
-	    <iframe 
+	    <!-- iframe 
 		name="scrollback" 
 		id="scrollback" 
 		type="content" 
@@ -82,7 +82,7 @@
 		src="about:blank"/>
 	    <splitter id="scroll_splitter" state="collapsed" collapse="before">
 	    <grippy/>
-	    </splitter>
+	    </splitter -->
 	    <iframe name="center-frame" id="center-frame" type="content" flex="1" src="about:blank"/>
 	    <splitter state="open" collapse="before"/>
 	    <textbox autostretch="true" style="margin: 0; padding: 0" onkeypress="onInput();" rows="2" multiline="true" id="input"/>

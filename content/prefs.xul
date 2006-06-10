@@ -31,9 +31,9 @@
 			<box orient="horizontal" align="center">
 			    <checkbox id="echocheck" label="Echo"/>
 			</box>
-			<box orient="horizontal" align="center">
+			<!-- box orient="horizontal" align="center">
 			    <checkbox id="scrollbackcheck" label="Enable Scrollback Buffer"/>
-			</box>
+			</box -->
 			<box orient="horizontal" align="center">
 			    <checkbox id="blinkcheck" label="Enable Title Alert"/>
 			</box>
@@ -79,7 +79,7 @@
 				    <menupopup id="pre-sizes-menu"/>
 				</menulist>
 			    </row>
-			    <row align="center">
+			    <!-- row align="center">
 				<hbox pack="start">
 				    <label value="Scrollback Font Style: " control="sb-font" crop="end"/>
 				</hbox>
@@ -102,7 +102,7 @@
                                 <menulist id="sb-presize" label="Select Your Scrollback Fixed Font Size">
                                     <menupopup id="sb_presize"/>
                                 </menulist>
-                            </row>
+                            </row -->
 			</rows>
 		    </grid>
 		</tabpanel>

@@ -1,7 +1,7 @@
 var preNode = null;
 var sbPreNode = null;
 var centerStyleTag = null;
-var scrollbackStyleTag = null;
+// var scrollbackStyleTag = null;
 
 var pm = netscape.security.PrivilegeManager;
 var privs = "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect";
@@ -44,13 +44,14 @@ function submitSkotosLink(link)
 
 function bubbleSettings()
 {
-    var sb = document.getElementById('scrollback').contentDocument;
+    /* var sb = document.getElementById('scrollback').contentDocument;
     sb.open();
     sb.write
         ('<html><head><style></style></head><body></body>');
     sb.close();
+    */
     centerStyleTag = document.getElementById('center-frame').contentDocument.getElementsByTagName("style")[0];
-    scrollbackStyleTag = sb.getElementsByTagName("style")[0];
+    // scrollbackStyleTag = sb.getElementsByTagName("style")[0];
     
     var rframe = document.getElementById('right-frame').contentDocument;
     var cframe = document.getElementById('center-frame').contentDocument;
@@ -80,6 +81,7 @@ function setFont(font)
     }
 }
 
+/*
 function setSBFont(font) 
 {
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
@@ -96,7 +98,7 @@ function setSBFont(font)
 	pref.setCharPref(zealousPreference("sbFontStyle"), font);
     }
 }
-
+*/
 function setSize(pts)
 {
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
@@ -114,7 +116,7 @@ function setSize(pts)
     	document.getElementById('input').style.fontSize = size;
     }
 }
-
+/*
 function setSBSize(pts)
 {
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
@@ -131,7 +133,7 @@ function setSBSize(pts)
     	document.getElementById('scrollback').contentDocument.body.style.fontSize = size;
     }
 }
-
+*/
 
 function setFixedSize(pts) 
 {
@@ -156,6 +158,7 @@ function setFixedSize(pts)
     }
 }
 
+/*
 function setSBPreSize(pts)
 {
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
@@ -178,18 +181,14 @@ function setSBPreSize(pts)
     	styles.appendChild(sbPreNode);
     }	    
 }
-    
+*/
+
 var inputRows = 2;
 var foop;
     
 function onInput()
 {
     var inEl = document.getElementById('input');
-    if        (inEl.inputField.rows < inputRows) {
-        alert ("<rows");
-    } else if (inEl.inputField.rows > inputRows) {
-        alert (">rows");
-    }
     inputRows = inEl.inputField.rows;
 }
 
@@ -217,6 +216,7 @@ function generate_bgList()
     }
 }
 
+/*
 function clearScrollback()
 {
     if(confirm("Are you sure you want to clear you scrollback buffer?")) {
@@ -225,3 +225,4 @@ function clearScrollback()
     }
     return;
 }
+*/

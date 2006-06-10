@@ -219,7 +219,7 @@ WoeHandlerClass.prototype = {
         switch (process[0]) {
         case "SET" :
             if (process[2]) {
-                this.xw_queryWoeObject(process[2]).src = process[1];
+                this.xw_queryWoeObject(process.splice(2).join(' ')).src = process[1];
             } else {
                 alert("queryWoeObject(" + process[0] + " - " + process[1] + " - " + process[2] + ") isn't valid");
             }
@@ -228,7 +228,7 @@ WoeHandlerClass.prototype = {
         case "CLEAR" :
             // alert(cmd);
             // clear object
-            this.xw_clearObject(process[1]);
+            this.xw_clearObject(process.splice(1).join(' '));
             break;
             
         default :

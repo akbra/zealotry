@@ -24,11 +24,11 @@
  *
  */
 
-function CClient(doc, window, sback)
+function CClient(doc, window) // , sback)
 {
   this.document = doc;
   this.window = window;
-  this.sback = sback;
+  // this.sback = sback;
 
   this.optionMaxMessages   =  1000; // scrollback buffer size
   this.optionMaxHistory    =    50; // last commands buffer
@@ -47,14 +47,14 @@ function CClient(doc, window, sback)
 
   this.current_output = false;
   this.topmost_output = false;
-  this.sco = false;
-  this.stmo = false;
+  // this.sco = false;
+  // this.stmo = false;
 }
 
 CClient.prototype.setClientOutput =
-function client_sco(output, cboutput) {
+function client_sco(output) { // , cboutput) {
     this.current_output = this.topmost_output = output;
-    this.sco = this.stmo = cboutput;
+    // this.sco = this.stmo = cboutput;
 }
 
 CClient.prototype.isConnected =
@@ -147,9 +147,10 @@ function client_ot(msg) {
     this.currentTextNode = newNode;
     // this.currentScrollbackTextNode = sNode;
 
-    var cloned = this.outputNode(newNode);
-    cloned.lastTextNode = this.currentScrollbackText;
-    this.currentScrollbackText = cloned;
+    this.outputNode(newNode);
+    // var cloned = this.outputNode(newNode);
+    // cloned.lastTextNode = this.currentScrollbackText;
+    // this.currentScrollbackText = cloned;
     doAlert();
 }
 
@@ -168,16 +169,16 @@ function testScrollbarPosition() {
 
 // output_node returns the scrollback node.
 CClient.prototype.outputNode =
-function output_node(node, no_cloning) {
+function output_node(node) { // , no_cloning) {
     var scrollFlag = testScrollbarPosition();
-    var cloned = no_cloning ? null : node.cloneNode(true);
+    // var cloned = no_cloning ? null : node.cloneNode(true);
     
     this.current_output.appendChild(node);
-    if (!no_cloning) this.sco.appendChild(cloned);
+    // if (!no_cloning) this.sco.appendChild(cloned);
     if (scrollFlag) {
        doScroll();
     }
-    return cloned;
+    // return cloned;
 }
 
 CClient.prototype.outputNL =
@@ -201,11 +202,11 @@ function client_obs(num) {
             num -= len;
         }
         this.currentTextNode.deleteData(offset, len-offset);
-        this.currentScrollbackText.deleteData(offset, len-offset);
+        // this.currentScrollbackText.deleteData(offset, len-offset);
         /* if we deleted all the text in the current node, find the next one */
         while (this.currentTextNode && this.currentTextNode.length == 0) {
             this.currentTextNode = this.currentTextNode.lastTextNode;
-            this.currentScrollbackText = this.currentScrollbackText.lastTextNode;
+            // this.currentScrollbackText = this.currentScrollbackText.lastTextNode;
         }
     }
     if (scrollFlag) {
@@ -216,12 +217,13 @@ function client_obs(num) {
 
 CClient.prototype.pushTag =
 function client_push(element) {
-    
-    var cloned = this.outputNode(element);
+
+    this.outputNode(element);
+    // var cloned = this.outputNode(element);
     element.next_output = this.current_output;
     this.current_output = element;
-    cloned.next_output = this.sco;
-    this.sco = cloned;
+    // cloned.next_output = this.sco;
+    // this.sco = cloned;
 }
 
 CClient.prototype.popTag =
@@ -231,7 +233,7 @@ function client_pop(msg) {
         return;
     }
     this.current_output = this.current_output.next_output;
-    this.sco = this.sco.next_output;
+    // this.sco = this.sco.next_output;
 }
 
 CClient.prototype.connect =

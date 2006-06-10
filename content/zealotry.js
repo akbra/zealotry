@@ -34,7 +34,7 @@ var bgCrap = null;
 var munge_buffer = "";
 var enter_down = false;
 var scroll_splitter = null;
-var scrollback = null;
+// var scrollback = null;
 var scrolling = false;
 var scrolltarg = null;
 var enableBuffer = "false";
@@ -65,8 +65,8 @@ function makeCharName()
 function onMainLoad()
 {
     // Init some values.
-    scroll_splitter = document.getElementById('scroll_splitter');
-    scrollback = document.getElementById('scrollback');
+    // scroll_splitter = document.getElementById('scroll_splitter');
+    // scrollback = document.getElementById('scrollback');
 
     window.hasFocus = true;
 
@@ -165,7 +165,7 @@ function onMainLoad()
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
     // Grab the "left, center and right sam" modifiers from the preferences.
-    var lModifier, rModifier, cModifier;
+    var lModifier = "", rModifier = "", cModifier = "";
     try {
         lModifier = pref.getCharPref(zealousPreference("leftModifier"));
         rModifier = pref.getCharPref(zealousPreference("rightModifier"));
@@ -203,6 +203,7 @@ function onMainLoad()
         pref.setCharPref(zealousPreference("pageBeep"), "false");
     }
 
+    // XXX: This should be a server-side setting -- and is a server-side setting. @toggle ooc-noise.
     try {
         window.ignoreOOC = pref.getCharPref(zealousPreference("ignoreOOC"));
         if (ignoreOOC == "true") {
@@ -249,7 +250,7 @@ function mainStep()
 
     window.client = new CClient(document, window);
 
-    window.client.setClientOutput(output, scrollback.contentDocument.body);
+    window.client.setClientOutput(output); // , scrollback.contentDocument.body);
 
     window.client.clearHistory();
 
@@ -373,21 +374,26 @@ function onWindowKeyPress(e)
 
     case 34: // page down
         if (e.ctrlKey != true && e.shiftKey != true && e.altKey != true) {
+            onPageDown();
+            /*
             if (!onPageDown() && enableBuffer == "true") { // onPageDown() is true or false depending on if we're at document bottom or not
                 scroll_splitter.setAttribute('state', 'collapsed');
                 scrolling = false;
             }
+            */
         }
         break;
 
     case 33: // page up
         if (e.ctrlKey != true && e.shiftKey != true && e.altKey != true) {
+            /*
             if (!scrolling && enableBuffer == "true") {
                 scroll_splitter.setAttribute('state', 'open');
                 doScroll();
                 scrollback.contentDocument.body.scrollTop = scrollback.contentDocument.body.scrollHeight;
                 scrolling = true;
             }
+            */
             onPageUp();
         }
         break;
@@ -414,11 +420,11 @@ function onWindowKeyPress(e)
 
 function onPageDown()
 {
-    if (enableBuffer == "true") {
+    /* if (enableBuffer == "true") {
         var w = scrollback.contentWindow; // window.center_frame;
-    } else {
-        var w = window.center_frame;
-    }
+        } else { */
+    var w = window.center_frame;
+    // }
 
     newOfs = w.pageYOffset + (w.innerHeight / 2);
     if (newOfs < (w.innerHeight + w.pageYOffset))
@@ -426,17 +432,15 @@ function onPageDown()
     else
         w.scrollTo(w.pageXOffset, (w.innerHeight + w.pageYOffset));
     return newOfs < w.scrollMaxY;
-
 }
 
 function onPageUp()
 {
-
-    if (enableBuffer == "true") {
+    /* if (enableBuffer == "true") {
         var w = scrollback.contentWindow; // window.scrollback;
-    } else {
-        var w = window.center_frame;
-    }
+        } else { */
+    var w = window.center_frame;
+    // }
 
     if (w.scrollMaxY == w.pageYOffset && enableBuffer == "true") {
         newOfs = w.pageYOffset - 1;
@@ -448,7 +452,6 @@ function onPageUp()
         w.scrollTo(w.pageXOffset, newOfs);
     else
         w.scrollTo(w.pageXOffset, 0);
-
 }
 
 function handleInputLine(str) {
@@ -677,6 +680,7 @@ function onRead(bigstr) {
             }
         }
         if (munge_it) {
+            // dump(str+"\n");
             mungeForDisplay(str);
             if (i < lines.length-1) {
                 outputNL();
@@ -935,7 +939,7 @@ function mungeForDisplay(str) {
         dump("body [" + arr + "]");
         setTheme(arr);
         frames["center-frame"].document.body.style.color = arr[2];
-        scrollback.contentDocument.body.style.color = arr[2];
+        // scrollback.contentDocument.body.style.color = arr[2];
     } else if (arr = (/<a xch_cmd='([^>]*)'>/i).exec(str)) {
         element = document.createElementNS("http://www.w3.org/1999/xhtml",
                                            "html:a");
@@ -1354,7 +1358,7 @@ function doFontStyleAndSize()
 
     setFixedSize(preFontSize);
 
-    try {
+    /* try {
         var fontStyle = pref.getCharPref(zealousPreference("sbFontStyle"));
     } catch (err) {
         pref.setCharPref(zealousPreference("sbFontStyle"), frames["center-frame"].document.body.style.fontFamily);
@@ -1380,6 +1384,7 @@ function doFontStyleAndSize()
     }
 
     setSBPreSize(preFontSize);
+    */
 }
 
 function helpMenuInit(str) 
@@ -1417,11 +1422,11 @@ function doBgSetup(arr)
         if (!bgCrap) return;
         
         document.getElementById('center-frame').style.background = bgCrap[1];
-        document.getElementById('scrollback').style.background = bgCrap[1];
+        // document.getElementById('scrollback').style.background = bgCrap[1];
         return;
     }
     document.getElementById('center-frame').style.background = 'white url(' + this.bgImage + ') no-repeat';
-    document.getElementById('scrollback').style.background = 'white url(' + this.bgImage + ') no-repeat';
+    // document.getElementById('scrollback').style.background = 'white url(' + this.bgImage + ') no-repeat';
 }
 
 function changeBg(url)
@@ -1450,7 +1455,7 @@ function changeBg(url)
 	        var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
         	pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
         	pref.setCharPref(zealousPreference("background"), url);
-            document.getElementById('scrollback').style.background = 'white url(' + url + ') no-repeat';
+            // document.getElementById('scrollback').style.background = 'white url(' + url + ') no-repeat';
         } else {
             doBgSetup();
         }
@@ -1705,7 +1710,7 @@ function setTheme(styles)
 {
     if (styles) {
         document.getElementById('center-frame').style.background = styles[1];
-        document.getElementById('scrollback').style.background = styles[1];
+        // document.getElementById('scrollback').style.background = styles[1];
     }
 
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
@@ -1742,7 +1747,7 @@ function setTheme(styles)
                 break; // No background image to set
             }
             document.getElementById('center-frame').style.background = 'white url(' + url + ') no-repeat';
-            document.getElementById('scrollback').style.background = 'white url(' + url + ') no-repeat';
+            // document.getElementById('scrollback').style.background = 'white url(' + url + ') no-repeat';
             break;
 	    case "left_side":
             try {
