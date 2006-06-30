@@ -34,7 +34,7 @@ function submitSkotosClickCommand(elementName)
 function submitSkotosLink(link)
 {
     var rdoc = document.getElementById('right-frame').contentDocument;
-    var chatCode = rdoc.chatMode && link[0] != '!' && link[0] != '+' ? "/" : "";
+    var chatCode = rdoc.chatMode && link[0] != '!' && link[0] != '+' && link[0] != '/' ? "/" : "";
     handleInputLine(chatCode+link);
     
     /* Refocus the input window after clicking in the output window. */
