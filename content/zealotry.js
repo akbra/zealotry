@@ -39,6 +39,7 @@ var scrolling = false;
 var scrolltarg = null;
 var enableBuffer = "false";
 var madeCharName = null;
+var skip_newline = false;
 
 function makeCharName()
 {
@@ -923,6 +924,7 @@ function mungeForDisplay(str) {
         // } catch (err) {}
         // We don't want the client to actually input this element.
         arr = null;
+        skip_newline = true;
     }
     /* End SKOOT 2.0. */
 
@@ -1007,13 +1009,16 @@ function mungeForDisplay(str) {
 }
 
 function outputNL(nolog) {
-    window.client.outputNL();
-    // scrolltarg.appendChild(document.createElement("br"));
-    if (!nolog && window.logFile) {
-        doLogging("\n");
+    if (skip_newline) {
+        skip_newline = false;
+    } else {
+        window.client.outputNL();
+        // scrolltarg.appendChild(document.createElement("br"));
+        if (!nolog && window.logFile) {
+            doLogging("\n");
+        }
     }
 }
-
 
 function outputStyledText(str, style) {
     var span;

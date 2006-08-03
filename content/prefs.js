@@ -46,26 +46,29 @@ function doMainLoad()
 
 function doMainUnload()
 {
+    dump("doMainUnload()\n");
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
+    dump("got interface\n");
     var cb = document.getElementById('echocheck').checked;
-    var bb = document.getElementById('scrollbackcheck').checked;
+    // var bb = document.getElementById('scrollbackcheck').checked;
     var ab = document.getElementById('blinkcheck').checked;
     var pb = document.getElementById('pagecheck').checked;
     var ob = document.getElementById('ooccheck').checked;
-
+    dump("got element values\n");
+    
     if (cb == true) {
         pref.setCharPref("zealous.temp.echo", "true");
     } else {
         pref.setCharPref("zealous.temp.echo", "false");
     }
 
-    if (bb == true) {
+    /* if (bb == true) {
         pref.setCharPref("zealous.temp.buffer", "true");
     } else {
         pref.setCharPref("zealous.temp.buffer", "false");
-    }
+        } */
 
     if (ab == true) {
         pref.setCharPref("zealous.temp.blink", "true");
@@ -85,34 +88,43 @@ function doMainUnload()
         pref.setCharPref("zealous.temp.ignoreOOC", "false");
     }
 
+    dump("set initial prefs\n");
+
     try {
         var macro = pref.getCharPref("zealous.temp.macro");
     } catch (err) {
         macro = false;
     }
 
+    dump("macro = " + macro + "\n");
     if (macro && macro != false && macro != "false") {
-        var macro = new File(macro);
+        dump("it is, it isn't false, it isn't \"false\"\n");
+        var mptr = new File(macro);
+        // Changed "var macro = new File(macro);" to "var mptr = ...".
         // XXX: Kalle removed the if case. If macros break apart, re-add it.
-        // if (macro.exists()) {
-        macro.open("w");
-        macro.write(document.getElementById('macrotext').value);
-        macro.close();
+        // if (mptr.exists()) {
+        mptr.open("w");
+        mptr.write(document.getElementById('macrotext').value);
+        mptr.close();
         //}
     } else if (document.getElementById('macrotext').value.length > 0) {
+        dump("it isn't, or it's false, or it's \"false\"\n");
         // Player set some macros but doesn't have a place to store them. Lets fix that.
         var nsIFilePicker = Components.interfaces.nsIFilePicker;
         var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
         filePicker.init(window, "Where should macro files live?", nsIFilePicker.modeGetFolder);
         var res = filePicker.show();
         if (res == nsIFilePicker.returnCancel) {
+            dump("result is canceled. exiting\n");
             return;
         }
         macroFolder = filePicker.file.path;
         // Figure out if we need \\ or /.
         var separator = (macroFolder && macroFolder[1] == ':' ? "\\" : "/");
+        dump("separator (os dependent) detected to be: " + separator + "\n");
         pref.setCharPref("zealous.temp.macro", macroFolder + separator + pref.getCharPref("zealous.temp.filename"));
 
+        dump("configFile creation: " + macroFolder + "\n");
         configFile = new File(macroFolder);
         configFile.appendRelativePath(pref.getCharPref("zealous.temp.filename"));
 
@@ -120,6 +132,7 @@ function doMainUnload()
         configFile.open("w");
         configFile.write(document.getElementById('macrotext').value);
         configFile.close();
+        dump("done creating\n");
     }
     window.submit = true;
 
@@ -128,9 +141,11 @@ function doMainUnload()
 
 function doCancel()
 {
+    dump("doCancel\n");
     if (submit) {
-        window.close
-            return;
+        dump("submit\n");
+        doMainUnload();
+        return;
     }
 
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();

@@ -42,7 +42,8 @@ var MyWorldSpecification = function() {
         laz : "lazarus.skotos.net/Theatre/Zealous",
         ic  : "ironclaw.skotos.net/Theatre/Zealous",
         stages : "stages.skotos.net/Theatre/Zealous",
-        jonkichi : "chattheatre.ito.com/Theatre/Zealous"};
+        chattheatre : "gables.chattheatre.net/Theatre/Zealous",
+        hq : "hq.skotos.net/Theatre/Zealous"};
 
     /*
      * This is a list of shortcuts pointing to specific servers. Multiple
@@ -57,6 +58,7 @@ var MyWorldSpecification = function() {
         abn : "lc",
         lovecraft : "lc",
         s7 : "s7",
+        hq : "hq",
         skotos7 : "s7",
         laz : "laz",
         lazarus : "laz",
@@ -65,8 +67,8 @@ var MyWorldSpecification = function() {
         stages : "stages",
         oasis : "stages",
         st : "stages",
-        jonkichi : "jonkichi",
-        jon : "jonkichi"};
+        ct : "chattheatre",
+        gables : "chattheatre"};
 
     /*
      * This is a list of WOE server configs.
@@ -76,10 +78,11 @@ var MyWorldSpecification = function() {
         mv  : "mv.skotos.net:5090",
         lc  : "lovecraft.skotos.net:3090",
         s7  : "skotos-seven.skotos.net:6090",
+        hq  : "hq.skotos.net:4090",
         laz : "lazarus.skotos.net:2090",
         ic  : "ironclaw.skotos.net:4090",
         stages : "stages.skotos.net:6090",
-        jonkichi : "chattheatre.ito.com:2090"};
+        chattheatre : "gables.chattheatre.net:2090"};
 
     /*
      * This is a list of shortcuts for WOE servers.
@@ -90,6 +93,7 @@ var MyWorldSpecification = function() {
         mv        : "mv",
         mortalis  : "mv",
         lc        : "lc",
+        hq        : "hq",
         abn       : "lc",
         lovecraft : "lc",
         s7        : "s7",
@@ -101,8 +105,9 @@ var MyWorldSpecification = function() {
         stages    : "stages",
         oasis     : "stages",
         st        : "stages",
-        jonkichi  : "jonkichi",
-        jon       : "jonkichi"};
+        gables    : "chattheatre",
+        ct        : "chattheatre",
+        jon       : "chattheatre"};
 }
 
 var MyWorld = new MyWorldSpecification();
