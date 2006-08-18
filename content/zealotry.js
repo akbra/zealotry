@@ -26,7 +26,7 @@
  *
  */
 
-const ZEALOUS_VERSION = "0.8";
+const ZEALOUS_VERSION = "0.7.9";
 const ZEALOUS_SUPPORT = "SKOOT2";
 const POLL_DELAY = 50;
 
@@ -285,7 +285,7 @@ function mainStep()
     window.addEventListener ("focus", handleGotFocus, true);
     window.addEventListener ("blur", handleLostFocus, true);
 
-    client.connection.write("SKOTOS Zealous " + ZEALOUS_VERSION + " " + ZEALOUS_SUPPORT + "\n");
+    client.connection.write("SKOTOS Zealous " + ZEALOUS_VERSION + /* " " + ZEALOUS_SUPPORT + */ "\n");
 
     setTheme();
     startAutoLogging();
