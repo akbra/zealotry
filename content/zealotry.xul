@@ -7,23 +7,23 @@
     style="width:760px; height:480px;"
     orient="vertical" persist="width height" windowtype="skotos:zealotry">
     
-    <script type="application/x-javascript" src="my-world.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/my-world.js"/>
 
-    <script type="application/x-javascript" src="init.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/init.js"/>
     
-    <script type="application/x-javascript" src="jslib.js"/>
-    <script type="application/x-javascript" src="filesystem.js"/>
-    <script type="application/x-javascript" src="file.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/jslib.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/filesystem.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/file.js"/>
     
-    <script type="application/x-javascript" src="utils.js"/>
-    <script type="application/x-javascript" src="md5.js"/>
-    <script type="application/x-javascript" src="connection-xpcom.js"/>
-    <script type="application/x-javascript" src="network.js"/>
-    <script type="application/x-javascript" src="client.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/utils.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/md5.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/connection-xpcom.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/network.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/client.js"/>
 
-    <script type="application/x-javascript" src="macro.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/macro.js"/>
     
-    <script type="application/x-javascript" src="zealotry.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/zealotry.js"/>
     
     <hbox style="-moz-box-flex: 1">
 	<html:iframe name="left-frame" id="left-frame" type="content"

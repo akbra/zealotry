@@ -81,7 +81,7 @@ var MyWorldSpecification = function() {
         hq  : "hq.skotos.net:4090",
         laz : "lazarus.skotos.net:2090",
         ic  : "ironclaw.skotos.net:4090",
-        stages : "stages.skotos.net:6090",
+        stages : "stages.skotos.net:4090",
         chattheatre : "gables.chattheatre.net:2090"};
 
     /*

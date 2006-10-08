@@ -77,9 +77,11 @@ WoeProtocol.prototype =
 
         newURI: function(spec, charset, baseURI)
         {
-            var uri = Components.classes[kSIMPLEURI_CONTRACTID].createInstance(nsIURI);
-            uri.spec = spec;
-            return uri;
+                try {
+                        var uri = Components.classes[kSIMPLEURI_CONTRACTID].createInstance(nsIURI);
+                        uri.spec = spec;
+                        return uri;
+                } catch (e) {}
         },
 
         newChannel: function(aURI)

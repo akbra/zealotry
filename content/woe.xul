@@ -8,13 +8,13 @@
     title="XWoe"
     orient="vertical" persist="width height" windowtype="skotos:woe">
     
-    <script type="application/x-javascript" src="utils.js"/>
-    <script type="application/x-javascript" src="connection-xpcom.js"/>
-    <script type="application/x-javascript" src="network.js"/>
-    <script type="application/x-javascript" src="client.js"/>
-    <script type="application/x-javascript" src="my-world.js"/>
-    <script type="application/x-javascript" src="woe-init.js"/>
-    <script type="application/x-javascript" src="xw.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/utils.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/connection-xpcom.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/network.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/client.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/my-world.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/woe-init.js"/>
+    <script type="application/x-javascript" src="chrome://zealotry/content/xw.js"/>
 
     <hbox style="-moz-box-flex: 1">
 	<vbox style="width: 200px;">

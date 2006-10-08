@@ -59,7 +59,12 @@ function bubbleSettings()
     rframe.rs = submitSkotosSelectCommand;
     rframe.rc = submitSkotosClickCommand;
 
-    cframe.skotosLink = submitSkotosLink;
+    document.getElementById('right-frame').contentWindow.hello = "right";
+    document.getElementById('left-frame').contentWindow.hello = "left";
+    document.getElementById('center-frame').contentWindow.hello = "center";
+
+    document.getElementById('center-frame').contentWindow.skotosLink = submitSkotosLink;
+    document.getElementById('center-frame').contentWindow.smorgasbord = "tjo!";
     generate_bgList();
 }
 

@@ -81,16 +81,21 @@ Protocol.prototype =
 
         newURI: function(spec, charset, baseURI)
         {
-            var uri = Components.classes[kSIMPLEURI_CONTRACTID].createInstance(nsIURI);
-            uri.spec = spec;
+            try {//if (spec.indexOf('.js') != -1) return;
+                var uri = Components.classes[kSIMPLEURI_CONTRACTID].createInstance(nsIURI);
+                dump("spec=" + spec + ";baseURI=" + baseURI + "\n");
+                uri.spec = spec;
+            } catch (e) {
+                return null;
+            }
             return uri;
         },
 
         newChannel: function(aURI)
         {
             /* create dummy nsIURI and nsIChannel instances */
+            dump("newChannel(" + aURI + ")\n");
             var ios = Components.classes[kIOSERVICE_CONTRACTID].getService(nsIIOService);
-            
             return ios.newChannel("chrome://zealotry/content/zealotry.xul", null, null);
         },
     };
