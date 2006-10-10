@@ -945,7 +945,7 @@ function mungeForDisplay(str) {
     } else if (arr = (/<a xch_cmd='([^>]*)'>/i).exec(str)) {
         element = document.createElementNS("http://www.w3.org/1999/xhtml",
                                            "html:a");
-        element.setAttribute( "href", "javascript:document.skotosLink('"+escapeSkotosLink(arr[1])+"');" );
+        element.setAttribute( "href", "javascript:alert(window.hello);skotosLink('"+escapeSkotosLink(arr[1])+"');" );
     } else if (arr = (/<\/[a-z]+>/i).exec(str)) {
         pop = true;
     }

@@ -62,6 +62,8 @@ function bubbleSettings()
     document.getElementById('right-frame').contentWindow.hello = "right";
     document.getElementById('left-frame').contentWindow.hello = "left";
     document.getElementById('center-frame').contentWindow.hello = "center";
+    window.hello = "docwin";
+    window.skotosLink = submitSkotosLink;
 
     document.getElementById('center-frame').contentWindow.skotosLink = submitSkotosLink;
     document.getElementById('center-frame').contentWindow.smorgasbord = "tjo!";
