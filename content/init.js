@@ -66,7 +66,7 @@ function bubbleSettings()
     window.skotosLink = submitSkotosLink;
 
     document.getElementById('center-frame').contentWindow.skotosLink = submitSkotosLink;
-    document.getElementById('center-frame').contentWindow.smorgasbord = "tjo!";
+    document.getElementById('center-frame').contentWindow.document.smorgasbord = "tjo!";
     generate_bgList();
 }
 

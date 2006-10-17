@@ -6,7 +6,7 @@
     onload="onMainLoad();" onunload="onUnLoad();"
     style="width:760px; height:480px;"
     orient="vertical" persist="width height" windowtype="skotos:zealotry">
-    
+
     <script type="application/x-javascript" src="chrome://zealotry/content/my-world.js"/>
 
     <script type="application/x-javascript" src="chrome://zealotry/content/init.js"/>
