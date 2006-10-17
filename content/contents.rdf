@@ -7,7 +7,7 @@
     </RDF:Seq>
     
     <RDF:Description about="urn:mozilla:package:zealotry"
-	chrome:displayName="Skotos Zealotry 0.7.10.2"
+	chrome:displayName="Skotos Zealotry 0.7.10.3"
 	chrome:author="Skotos Tech"
 	chrome:authorURL="http://www.skotos.net"
 	chrome:name="zealotry"
