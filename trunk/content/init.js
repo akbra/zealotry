@@ -42,6 +42,28 @@ function submitSkotosLink(link)
     obj.focus();
 }
 
+function submitOpenerWindow(elementName)
+{
+        var fdoc      = frames["right-frame"].document;
+        var elementDo = fdoc.getElementById(elementName);
+        if (!elementDo) {
+                fdoc      = frames["left-frame"].document;
+                elementDo = fdoc.getElementById(elementName);
+        }
+        filename = elementDo.title;
+
+        if (!top.window.opener || top.window.opener.closed) {
+                window.open(filename, top.window.openerName);
+        } else {
+                try { top.window.opener.focus(); } catch (fe) {}
+                top.window.opener.location.href = filename;
+        }
+
+        /* Refocus the input window after clicking in the output window. */
+        var obj = document.getElementById("input");
+        obj.focus();
+}
+
 function bubbleSettings()
 {
     /* var sb = document.getElementById('scrollback').contentDocument;
@@ -52,22 +74,24 @@ function bubbleSettings()
     */
     centerStyleTag = document.getElementById('center-frame').contentDocument.getElementsByTagName("style")[0];
     // scrollbackStyleTag = sb.getElementsByTagName("style")[0];
-    
-    var rframe = document.getElementById('right-frame').contentDocument;
-    var cframe = document.getElementById('center-frame').contentDocument;
+
+    var rwin = frames["right-frame"]; // document.getElementById('right-frame');
+    var rframe = rwin.document;
+    var cframe = frames["center-frame"].document; // document.getElementById('center-frame').contentDocument;
 
     rframe.rs = submitSkotosSelectCommand;
     rframe.rc = submitSkotosClickCommand;
 
-    document.getElementById('right-frame').contentWindow.hello = "right";
-    document.getElementById('left-frame').contentWindow.hello = "left";
-    document.getElementById('center-frame').contentWindow.hello = "center";
-    window.hello = "docwin";
+    rframe.ro = submitOpenerWindow;
+    frames["left-frame"].document.lo = submitOpenerWindow;
+
     window.skotosLink = submitSkotosLink;
 
-    document.getElementById('center-frame').contentWindow.skotosLink = submitSkotosLink;
-    document.getElementById('center-frame').contentWindow.document.smorgasbord = "tjo!";
+    frames["center-frame"].document.
+            // document.getElementById('center-frame').contentWindow.
+            skotosLink = submitSkotosLink;
     generate_bgList();
+    // rwin.window.wrap_skotos_events();
 }
 
 function setFont(font)
