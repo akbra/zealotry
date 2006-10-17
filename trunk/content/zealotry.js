@@ -883,9 +883,8 @@ function sendCommand(str) {
 
 function escapeSkotosLink(s)
 {
-        if (navigator.userAgent.indexOf("/1.5.0") == -1) { // This is a ridiculous thing.
-                return s;
-        }
+        // XXX: No longer needed?
+        return s;
         // we can't use regexp replace here, because we will overwrite
         // the global RegExp object with new regexp results. 
         var len = s.length;
