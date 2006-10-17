@@ -1,7 +1,7 @@
 var preNode = null;
 var sbPreNode = null;
 var centerStyleTag = null;
-var scrollbackStyleTag = null;
+// var scrollbackStyleTag = null;
 var submit = null;
 
 // XXX: Is this crap even used these days?
@@ -14,7 +14,7 @@ function doMainLoad()
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
     document.getElementById('echocheck').setAttribute("checked", pref.getCharPref("zealous.temp.echo"));
-    document.getElementById('scrollbackcheck').setAttribute("checked", pref.getCharPref("zealous.temp.buffer"));
+    // document.getElementById('scrollbackcheck').setAttribute("checked", pref.getCharPref("zealous.temp.buffer"));
     document.getElementById('blinkcheck').setAttribute("checked", pref.getCharPref("zealous.temp.blink"));
     document.getElementById('pagecheck').setAttribute("checked", pref.getCharPref("zealous.temp.pageBeep"));
     document.getElementById('ooccheck').setAttribute("checked", pref.getCharPref("zealous.temp.ignoreOOC"));
@@ -364,7 +364,7 @@ function generate_fontmenu()
 
     var d           = document;
     var popup       = d.getElementById('font-list');
-    var prepop	    = d.getElementById('sb_font');
+    // var prepop	    = d.getElementById('sb_font');
     var menuitems   = results;
     var l           = menuitems.length;
     var elements    = new Array();
@@ -383,14 +383,14 @@ function generate_fontmenu()
         item.style.fontFamily = menuitems[z];
         pitem.style.fontFamily = menuitems[z];
         popup.appendChild(item);
-        prepop.appendChild(pitem);
+        // prepop.appendChild(pitem);
     }
     
     /* Font sizes. */
     popup = d.getElementById('sizes-menu');
     var pre_popup = d.getElementById('pre-sizes-menu');
-    var sbpopup = d.getElementById('sb_size');
-    var sbpre_popup = d.getElementById('sb_presize');
+    // var sbpopup = d.getElementById('sb_size');
+    // var sbpre_popup = d.getElementById('sb_presize');
     var size_el, size_pre_el, size_sb_el, size_sb_pre_el;
     
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
@@ -416,7 +416,7 @@ function generate_fontmenu()
         var ft = null;
     }
 
-    try {
+    /* try {
         var sbs = pref.getCharPref("zealous.temp.sbSize");
         sbs = sbs.substr(0, sbs.length-2);
     } catch (err) {
@@ -434,45 +434,42 @@ function generate_fontmenu()
         var sbf = pref.getCharPref("zealous.temp.sbFontStyle");
     } catch (err) {
         var sbf = null;
-    }
+        } */
 
     for (var z = 6; z < 30; z++) {
         size_el = d.createElement('menuitem');
         size_pre_el = d.createElement('menuitem');
-        size_sb_el = d.createElement('menuitem');
-        size_sb_pre_el = d.createElement('menuitem');
+        // size_sb_el = d.createElement('menuitem');
+        // size_sb_pre_el = d.createElement('menuitem');
 
         size_el.setAttribute('id', 's_'+z);
         size_pre_el.setAttribute('id', 'sp_'+z);
-        size_sb_el.setAttribute('id', 'sb_'+z);
-        size_sb_pre_el.setAttribute('id', 'sbp_'+z);
+        // size_sb_el.setAttribute('id', 'sb_'+z);
+        // size_sb_pre_el.setAttribute('id', 'sbp_'+z);
 
         size_el.setAttribute('label', z);
         size_pre_el.setAttribute('label', z);
-        size_sb_el.setAttribute('label', z);
-        size_sb_pre_el.setAttribute('label', z);
+        // size_sb_el.setAttribute('label', z);
+        // size_sb_pre_el.setAttribute('label', z);
 
         size_el.setAttribute('oncommand', 'setSize(' + z + ' + "pt");');
         size_pre_el.setAttribute('oncommand', 'setFixedSize(' + z + ' + "pt");');
-        size_sb_el.setAttribute('oncommand', 'setSBSize(' + z + ' + "pt");');
-        size_sb_pre_el.setAttribute('oncommand', 'setSBPreSize(' + z + ' + "pt");');
+        // size_sb_el.setAttribute('oncommand', 'setSBSize(' + z + ' + "pt");');
+        // size_sb_pre_el.setAttribute('oncommand', 'setSBPreSize(' + z + ' + "pt");');
 
         popup.appendChild(size_el);
         pre_popup.appendChild(size_pre_el);
-        sbpopup.appendChild(size_sb_el);
-        sbpre_popup.appendChild(size_sb_pre_el);
+        // sbpopup.appendChild(size_sb_el);
+        // sbpre_popup.appendChild(size_sb_pre_el);
     }
 
     switchSelection('size', sz);
     switchSelection('psize', sf);
     switchSelection('font', ft);
 
-    switchSelection('sbsize', sbs);
+    /* switchSelection('sbsize', sbs);
     switchSelection('sbpsize', sbp);
-    switchSelection('sbfont', sbf);
-
-
-
+    switchSelection('sbfont', sbf); */
 }
 
 /*
@@ -580,14 +577,14 @@ function generate_bgList()
     }
 }
 
-function clearScrollback()
+/* function clearScrollback()
 {
     if(confirm("Are you sure you want to clear you scrollback buffer?")) {
         scrollback.contentDocument.body.innerHTML = "";
         return;
     }
     return;
-}
+}*/
 
 function generate_themeLists(type, url)
 {

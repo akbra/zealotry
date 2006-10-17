@@ -26,7 +26,7 @@
  *
  */
 
-const ZEALOUS_VERSION = "0.7.9";
+const ZEALOUS_VERSION = "0.7.10";
 const ZEALOUS_SUPPORT = "SKOOT2";
 const POLL_DELAY = 50;
 
@@ -945,7 +945,9 @@ function mungeForDisplay(str) {
     } else if (arr = (/<a xch_cmd='([^>]*)'>/i).exec(str)) {
         element = document.createElementNS("http://www.w3.org/1999/xhtml",
                                            "html:a");
-        element.setAttribute( "href", "javascript:alert(window.top.document);skotosLink('"+escapeSkotosLink(arr[1])+"');" );
+        element.style.cursor = "pointer";
+        element.skotosLink = skotosLink;
+        element.onclick = eval("function (e) { this.skotosLink('" + escapeSkotosLink(arr[1]) + "'); }");
     } else if (arr = (/<\/[a-z]+>/i).exec(str)) {
         pop = true;
     }
@@ -1396,23 +1398,23 @@ function helpMenuInit(str)
 {
     switch(str) {
     case "new": // Opens whats new window
-		window.open("textfiles/whatsnew.html", "newWindow", 'resizable, scrollbars, status=no, width=550, height=650, screenX=100, screenY=100');
+		window.open("chrome://zealotry/content/textfiles/whatsnew.html", "newWindow", 'resizable, scrollbars, status=no, width=550, height=650, screenX=100, screenY=100');
 		return;
-	case "about": // Open about dialog
-		window.open("textfiles/aboutzealous.html", "aboutWindow", 'width=400, height=600, screenX=100, screenY=100, resizeable, scrollbars, status=no');
+    case "about": // Open about dialog
+		window.open("chrome://zealotry/content/textfiles/aboutzealous.html", "aboutWindow", 'width=400, height=600, screenX=100, screenY=100, resizeable, scrollbars, status=no');
 		return;
-	case "changelog": // Open changelog dialog
-		window.open("textfiles/changelog.html", "changeWindow", 'width=450, height=600, screenX=100, screenY=100, scrollbars, resizable, status=no');
+    case "changelog": // Open changelog dialog
+		window.open("chrome://zealotry/content/textfiles/changelog.html", "changeWindow", 'width=500, height=600, screenX=100, screenY=100, scrollbars, resizable, status=no');
 		return;
-	case "dictionary": // Open dictionary prompt
+    case "dictionary": // Open dictionary prompt
 		var word = prompt("What word do you wish to define?");
 		if (word) {
 			var DICT = "http://www.dictionary.net/";
             window.open(DICT + word, 'Dictionary', 'height=200,width=650,scrollbars=yes,screenX=100,screenY=100');
 		}
 		return;	
-	case "content": // Open help contents dialog
-		window.open("textfiles/aboutzealous.html", "aboutContent", 'width=400, height=600, screenX=100, screenY=100, resizable, scrollbars, status=no');
+    case "content": // Open help contents dialog
+		window.open("chrome://zealotry/content/textfiles/aboutzealous.html", "aboutContent", 'width=400, height=600, screenX=100, screenY=100, resizable, scrollbars, status=no');
 		return;
     }
 }
