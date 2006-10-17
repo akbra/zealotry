@@ -26,7 +26,7 @@
  *
  */
 
-const ZEALOUS_VERSION = "0.7.10";
+const ZEALOUS_VERSION = "0.7.10.2";
 const ZEALOUS_SUPPORT = "SKOOT2";
 const POLL_DELAY = 50;
 
@@ -273,7 +273,7 @@ function mainStep()
          onRead);
 
     /* window.client.connection.onClose = onClose; */
-    displayLine("SVN Zealotry version " + ZEALOUS_VERSION + " loading...");
+    displayLine("Zealotry version " + ZEALOUS_VERSION + " loading...");
 
     var obj = document.getElementById("input");
 
@@ -883,24 +883,28 @@ function sendCommand(str) {
 
 function escapeSkotosLink(s)
 {
-    // we can't use regexp replace here, because we will overwrite
-    // the global RegExp object with new regexp results. 
-    var len = s.length;
-    var res = "";
-    var seq = 0;
-    for (var i = 0; i < len; i++)
-        if (s[i] == "'") {
-            res += s.substring(seq, i) + "\\";
-            seq  = i;
-        } else if (s[i] == '%') {
-            res += s.substring(seq, i) + "%25";
-            seq  = i+1;
-        } else if (s.substr(i, 6) == "&quot;") {
-            res += s.substring(seq, i) + '"';
-            seq  = i+6;
+        if (navigator.userAgent.indexOf("/1.5.0") == -1) { // This is a ridiculous thing.
+                return s;
         }
-    return res + s.substring(seq);
+        // we can't use regexp replace here, because we will overwrite
+        // the global RegExp object with new regexp results. 
+        var len = s.length;
+        var res = "";
+        var seq = 0;
+        for (var i = 0; i < len; i++)
+                if (s[i] == "'") {
+                        res += s.substring(seq, i) + "\\";
+                        seq  = i;
+                } else if (s[i] == '%') {
+                        res += s.substring(seq, i) + "%25";
+                        seq  = i+1;
+                } else if (s.substr(i, 6) == "&quot;") {
+                        res += s.substring(seq, i) + '"';
+                        seq  = i+6;
+                }
+        return res + s.substring(seq);
 }
+
 var cow = 0;
 function mungeForDisplay(str) {
     var element, style, pop, arr;
