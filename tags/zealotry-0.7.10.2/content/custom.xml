@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<bindings xmlns="http://www.mozilla.org/xbl"
+    xmlns:xbl="http://www.mozilla.org/xbl" 
+    xmlns:xht="http://www.w3.org/1999/xhtml"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+    <binding id="zealotry">
+	<resources>
+	    <stylesheet src="custom.css"/>
+	</resources>
+	<content>
+	    <html:a xbl:inherits="href=src"><children /></html:a>
+	</content>
+    </binding>
+    <binding id="zealotry-ignore">
+	<resources>
+	    <stylesheet src="custom.css"/>
+	</resources>
+	<implementation>
+	    <constructor>
+		<![CDATA[
+		function clean_nodelist(nl)
+		{
+		    var ix = nl.length;
+		    for (var i = 0; i < ix; i++) {
+		        var n = nl.item(i);
+		        if (n.nodeType == 3) {
+		            n.textContent = "";
+		        }
+		        clean_nodelist(nl.item(i).childNodes);
+		    }
+		}
+		// it's a ignore-style zealotry-tag.
+		clean_nodelist(this.childNodes);
+                ]]>
+	    </constructor>
+	</implementation>
+    </binding>
+</bindings>
