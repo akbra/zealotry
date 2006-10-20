@@ -26,7 +26,7 @@
  *
  */
 
-const ZEALOUS_VERSION = "0.7.10.2";
+const ZEALOUS_VERSION = "0.7.10.4";
 const ZEALOUS_SUPPORT = "SKOOT2";
 const POLL_DELAY = 50;
 
@@ -883,25 +883,24 @@ function sendCommand(str) {
 
 function escapeSkotosLink(s)
 {
-        // XXX: No longer needed?
-        return s;
         // we can't use regexp replace here, because we will overwrite
         // the global RegExp object with new regexp results. 
         var len = s.length;
         var res = "";
         var seq = 0;
         for (var i = 0; i < len; i++)
-                if (s[i] == "'") {
+                /* if (s[i] == "'") {
                         res += s.substring(seq, i) + "\\";
                         seq  = i;
                 } else if (s[i] == '%') {
                         res += s.substring(seq, i) + "%25";
                         seq  = i+1;
-                } else if (s.substr(i, 6) == "&quot;") {
+                } else */ if (s.substr(i, 6) == "&quot;") {
                         res += s.substring(seq, i) + '"';
                         seq  = i+6;
                 }
         return res + s.substring(seq);
+        /* XXX: Somehow, the necessity to escape ' and % vanished. Or did it? */
 }
 
 var cow = 0;
