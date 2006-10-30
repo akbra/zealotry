@@ -1,3 +1,0 @@
-content 	zealotry  					jar:chrome/zealotry.jar!/content/
-skin    	zealotry  zealotry				jar:chrome/zealotry.jar!/skin/zealotry/
-style   	chrome://browser/content/browser.xul    	chrome://zealotry/skin/browserOverlay.css
