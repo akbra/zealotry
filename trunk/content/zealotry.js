@@ -26,7 +26,7 @@
  *
  */
 
-const ZEALOUS_VERSION = "0.7.10.4";
+const ZEALOUS_VERSION = "0.7.10.5";
 const ZEALOUS_SUPPORT = "SKOOT2";
 const POLL_DELAY = 50;
 
@@ -1288,6 +1288,18 @@ function startAutoLogging() {
     return;
 }
 
+function lz(v) {
+        v = "" + v;
+        return (v.length < 2 ? "0" : "") + v;
+}
+
+// Convert a date to UTC YYYYMMDD-HHMM string format
+Date.prototype.convertToYYYYMMDDHHMM = function()
+{
+        return (this.getUTCFullYear() + "." + lz(this.getUTCMonth()+1) + "." + lz(this.getUTCDate()) + "-" + lz(this.getUTCHours()) + "." + lz(this.getUTCMinutes()));
+}
+
+
 function onAutoLog() {
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
@@ -1316,7 +1328,7 @@ function onAutoLog() {
         pref.setCharPref(zealousPreference("autoLogFolder"), this.autoLogFolder);
     }
     autoLogFile = new File(this.autoLogFolder);
-    autoLogFile.appendRelativePath("autolog." + safe(gameName) + "." + safe(charName) + "." + new Date().getTime());
+    autoLogFile.appendRelativePath("autolog." + safe(gameName) + "." + safe(charName) + "." + (new Date().convertToYYYYMMDDHHMM()) + ".txt");
     
     if (autoLogFile.exists()) {
         autoLogFile.open("a");
@@ -1708,9 +1720,9 @@ function doFinishPrefs()
     setFont();
     setSize();
     setFixedSize();
-    setSBPreSize();
-    setSBSize();
-    setSBFont();
+    // setSBPreSize();
+    // setSBSize();
+    // setSBFont();
     setTheme();
     readConfigurationFile();
 }
@@ -1729,9 +1741,13 @@ function setTheme(styles)
 
     for (var i = 0; i < 7; i++) {
         try {
-            var url = pref.getCharPref("zealous.temp." + themeArr[i]);
+                var url = pref.getCharPref("zealous.temp." + themeArr[i]);
         } catch (err) {
-            continue;
+                try {
+                        // It was deleted in the preferences.
+                        pref.clearUserPref(zealousPreference(themeArr[i]));
+                } catch (err2) {}
+                continue;
         }
         pref.setCharPref(zealousPreference(themeArr[i]), url);
         pref.clearUserPref("zealous.temp." + themeArr[i]);
@@ -1751,9 +1767,9 @@ function setTheme(styles)
         switch(themeArr[i]) {
 	    case "bg_image":
             try {
-                var url = pref.getCharPref(zealousPreference("bg_image"));
+                    var url = pref.getCharPref(zealousPreference("bg_image"));
             } catch (err) {
-                break; // No background image to set
+                    break; // No background image to set
             }
             document.getElementById('center-frame').style.background = 'white url(' + url + ') no-repeat';
             // document.getElementById('scrollback').style.background = 'white url(' + url + ') no-repeat';
