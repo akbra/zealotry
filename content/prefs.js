@@ -244,36 +244,17 @@ function doNewMB()
 
 function newTheme(url, type)
 {
-    // XXX Can't we just do this?
-    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
-    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+        // XXX Can't we just do this? Yes we can; removing crud below.
+        var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+        pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
-    pref.setCharPref("zealous.temp." + type, url);
-    return;
-    
-    switch(type) {
-	case "bg_image":
-	    setBgImage(url);
-	    break;
-    case "left_side":
-        setLeftSide(url);
-        break;
-    case "right_side":
-        setRightSide(url);
-        break;
-    case "left_logo":
-        setLeftLogo(url);
-        break;
-    case "right_logo":
-        setRightLogo(url);
-        break;
-    case "get_button":
-        setGetButton(url);
-        break;
-    case "master_button":
-        setMasterButton(url);
-        break;
-    }
+        if (url == "[nothing]") {
+                try {
+                        pref.clearUserPref("zealous.temp." + type);
+                } catch (e) {}
+        } else {
+                pref.setCharPref("zealous.temp." + type, url);
+        }
 }
 
 function setBgImage(url)
@@ -598,28 +579,29 @@ function generate_themeLists(type, url)
     }
 
     for (var i = 0; i < themeArr.length; i++) {
-        try {
-            var list = pref.getCharPref("zealous.temp." + themeArr[i] + ".list");
-        } catch (err) {
-            continue; // Nothing to list
-        }
+            var list;
+            try {
+                    list = pref.getCharPref("zealous.temp." + themeArr[i] + ".list");
+            } catch (err) {
+                    continue; // Nothing to list
+            }
 
-        var popup = document.getElementById(themeArr[i]);
-        if (url) {
-            var list = url.split("@");
-        } else {
-    	    var list = list.split("@");
-        }
-    	var l = list.length;
-    	var el;
+            var popup = document.getElementById(themeArr[i]);
+            if (url) {
+                    list = ("[nothing]@" + url).split("@");
+            } else {
+                    list = ("[nothing]@" + list).split("@");
+            }
+            var l = list.length;
+            var el;
 
-    	for (var z = 0; z < l; z++) {
-            el = document.createElement( 'menuitem' );
-            el.setAttribute('id', 'th_'+z );
-            el.setAttribute('label', list[z] );
-            el.setAttribute('oncommand', 'newTheme("' + list[z] + '", "' + themeArr[i] + '");' );
-            popup.appendChild( el );
-        }
+            for (var z = 0; z < l; z++) {
+                    el = document.createElement( 'menuitem' );
+                    el.setAttribute('id', 'th_'+z );
+                    el.setAttribute('label', list[z] );
+                    el.setAttribute('oncommand', 'newTheme("' + list[z] + '", "' + themeArr[i] + '");' );
+                    popup.appendChild( el );
+            }
     }
 }
 
