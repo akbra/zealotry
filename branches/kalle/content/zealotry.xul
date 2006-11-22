@@ -85,7 +85,7 @@
 	    </splitter -->
 	    <iframe name="center-frame" id="center-frame" type="content" flex="1" src="about:blank"/>
 	    <splitter state="open" collapse="before"/>
-	    <textbox autostretch="true" style="margin: 0; padding: 0" onkeypress="onInput();" rows="2" multiline="true" id="input"/>
+	    <textbox spellcheck="true" autostretch="true" style="margin: 0; padding: 0" onkeypress="onInput();" rows="2" multiline="true" id="input"/>
 	</vbox>
 	<html:iframe name="right-frame" id="right-frame" type="content"
 	    style="-moz-box-flex: 0; width: 145px; height=100%; overflow: hidden"
