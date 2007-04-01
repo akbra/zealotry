@@ -49,6 +49,7 @@ function CClient(doc, window) // , sback)
   this.topmost_output = false;
   // this.sco = false;
   // this.stmo = false;
+  this.tagStack = new Array();
 }
 
 CClient.prototype.setClientOutput =
@@ -216,7 +217,7 @@ function client_obs(num) {
 
 
 CClient.prototype.pushTag =
-function client_push(element) {
+function client_push(name, element) {
 
     this.outputNode(element);
     // var cloned = this.outputNode(element);
@@ -224,14 +225,26 @@ function client_push(element) {
     this.current_output = element;
     // cloned.next_output = this.sco;
     // this.sco = cloned;
+    this.tagStack.push(name);
 }
 
 CClient.prototype.popTag =
-function client_pop(msg) {
+function client_pop(name) {
     if (!this.current_output.next_output) {
         // already bottom level
         return;
     }
+
+    if (this.tagStack.length == 0) {
+        // Sanity check, should cause same result as previous check.
+        return;
+    }
+    if (this.tagStack[this.tagStack.length -1] != name) {
+        // Popping wrong element, ignore.  This "hack" makes it possible to
+	// parse the "HTML" that TEC and Grendel's Revenge throw our way.
+        return;
+    }
+    this.tagStack.pop();
     this.current_output = this.current_output.next_output;
     // this.sco = this.sco.next_output;
 }
