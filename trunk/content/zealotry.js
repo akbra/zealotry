@@ -934,7 +934,7 @@ function escapeSkotosLink(s)
 
 var cow = 0;
 function mungeForDisplay(str) {
-    var element, style, pop, arr;
+    var element, element_name, style, pop, arr;
 
     /*
      * Add chopped munge-data.
@@ -959,13 +959,33 @@ function mungeForDisplay(str) {
     }
     /* End SKOOT 2.0. */
 
-    if (arr = (/<font color=([^>]*)>/i).exec(str)) {
+    if (arr = (/<font color=\"([^>]*)\">/i).exec(str)) {
+	element_name = "font";
         style = "color: " + arr[1];
+    } else if (arr = (/<font color=([^>]*)>/i).exec(str)) {
+	element_name = "font";
+        style = "color: " + arr[1];
+    } else if (arr = (/<font size=\+1>/i).exec(str)) {
+	element_name = "font";
+	style = "font-size: larger";
     } else if (arr = (/<b>/i).exec(str)) {
+	element_name = "b";
         style = "font-weight: bold";
     } else if (arr = (/<i>/i).exec(str)) {
+	element_name = "i";
         style = "font-style: italic";
+    } else if (arr = (/<hr>/i).exec(str)) {
+	element_name = "hr";
+        element = document.createElementNS("http://www.w3.org/1999/xhtml",
+                                           "html:hr");
+	element.style.width = "90%";
+	pop = true;
+    } else if (arr = (/<center>/i).exec(str)) {
+	element_name = "center";
+        element = document.createElementNS("http://www.w3.org/1999/xhtml",
+                                           "html:center");
     } else if (arr = (/<pre>/i).exec(str)) {
+	element_name = "pre";
         element = document.createElementNS("http://www.w3.org/1999/xhtml",
                                            "html:pre");
     } else if (arr = (/<body bgcolor=\'([^\']*)\' text=\'([^\']*)\'[^>]*>/i).exec(str)) {
@@ -974,19 +994,23 @@ function mungeForDisplay(str) {
         frames["center-frame"].document.body.style.color = arr[2];
         // scrollback.contentDocument.body.style.color = arr[2];
     } else if (arr = (/<a xch_cmd='([^>]*)'>/i).exec(str)) {
+	element_name = "a";
         element = document.createElementNS("http://www.w3.org/1999/xhtml",
                                            "html:a");
         element.style.cursor = "pointer";
         element.skotosLink = skotosLink;
         element.onclick = eval("function (e) { this.skotosLink('" + escapeSkotosLink(arr[1]) + "'); }");
-    } else if (arr = (/<\/[a-z]+>/i).exec(str)) {
+    } else if (arr = (/<xch_page clear=\"text\" \/>/).exec(str)) {
+	// Ignore?
+    } else if (arr = (/<\/([a-z]+)>/i).exec(str)) {
+	element_name = arr[1].toLowerCase(); // Sanitizing case, just in case.
         pop = true;
     }
     
     if (arr) {
         var left, right;
         
-	    left  = RegExp.leftContext;
+	left  = RegExp.leftContext;
     	right = RegExp.rightContext;
         
         if (left) {
@@ -1004,10 +1028,10 @@ function mungeForDisplay(str) {
             /* var copyEl = scrollback.contentDocument.importNode(element, true);
                scrollback.contentDocument.body.appendChild(copyEl); */
             // scrolltarg = copyEl;
-            window.client.pushTag(element);
+            window.client.pushTag(element_name, element);
         }
         if (pop) {
-            window.client.popTag();
+            window.client.popTag(element_name);
             // scrolltarg = scrolltarg.parentNode ? scrolltarg.parentNode : scrolltarg;
         }
         if (right) {
@@ -1059,9 +1083,9 @@ function outputStyledText(str, style) {
     span = document.createElementNS("http://www.w3.org/1999/xhtml",
                                     "html:span");
     span.setAttribute("style", style);
-    window.client.pushTag(span);
+    window.client.pushTag("span", span);
     outputText(str);
-    window.client.popTag();
+    window.client.popTag("span");
 }
 
 function outputText(str) {
