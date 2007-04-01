@@ -48,6 +48,10 @@ function makeCharName()
 
     ztitle = window.charName;
 
+    if (!ztitle || !ztitle.length) {
+        return "";
+    }
+
     index = ztitle.indexOf(':');
 
     if (index != -1)
@@ -87,8 +91,12 @@ function onMainLoad()
         h = h.substr(9);
 
         // we should now have [user]@[game]
-        var ugArr = h.split("@");
-        if (ugArr.length != 2) {
+        // var ugArr = h.split("@");
+        var ugArr;
+
+        if (ugArr = (/([^\@]*)\@(.*)/).exec(h)) {
+            ugArr = [ugArr[1], ugArr[2]];
+        } else {
             // failed to parse that url. maybe it's just the server. let's change user to *.
             ugArr = ["*", h];
         }
@@ -115,12 +123,12 @@ function onMainLoad()
         }
     }
     
-    if (!window.charName) {
+    if (window.charName == null) {
         alert("this client will not run without a base url");
         return;
     }
 
-    if (!window.baseURL) {
+    if (window.baseURL == null) {
         alert("this client will not run without a base url");
         return;
     }
@@ -658,7 +666,10 @@ function onRead(bigstr) {
                 client.connection.write("USER " + userName + "\n" +
                                         "SECRET " + secret + "\n" +
                                         "HASH " + hash + "\n" +
-                                        "CHAR " + window.charName + "\n");
+                                        (window.charName &&
+					 window.charName.length > 0 ?
+					 "CHAR " + window.charName + "\n" :
+					 ""));
                 break;
 
             case "SKOOT":
