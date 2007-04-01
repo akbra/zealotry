@@ -32,6 +32,7 @@ const POLL_DELAY = 50;
 
 var bgCrap = null;
 var munge_buffer = "";
+var onread_buffer = "";
 var enter_down = false;
 var scroll_splitter = null;
 // var scrollback = null;
@@ -610,11 +611,8 @@ function loadCookie(name) {
 } 
 
 function onRead(bigstr) {
-    var str;
-    var lines = bigstr.split('\r\n');
-    var ix = -1;
-    var munge_it = false;
-    
+    var str, lines;
+
     if (window.client == null) {
         /*
         **	This seems to happen in mid-reload sometimes: the
@@ -624,6 +622,20 @@ function onRead(bigstr) {
         */
         return;
     }
+
+    bigstr = onread_buffer + bigstr;
+    var nl_ix = bigstr.lastIndexOf("\r\n");
+    if (nl_ix == -1) {
+        onread_buffer = bigstr;
+        bigstr = "";
+        lines = new Array();
+    } else {
+        onread_buffer = bigstr.substr(nl_ix + 2);
+        bigstr = bigstr.substr(0, nl_ix + 2);
+        lines = bigstr.split('\r\n');
+    }
+    var ix = -1;
+    var munge_it = false;
     
     for (var i = 0; i < lines.length; i++) {
         str = lines[i];
@@ -688,6 +700,23 @@ function onRead(bigstr) {
             }
         }
     }
+
+    if (onread_buffer.length == 0) {
+        return;
+    }
+
+    // Check if onread_buffer starts with (the first few characters of) SECRET,
+    // SKOOT, or MAPURL.  If not, just send it out to the screen and keep track
+    // of the number of characters that we're now into the next line already.
+    var len = onread_buffer.length;
+
+    if (onread_buffer.substr(0, 5) == "SKOOT".substr(0, len) ||
+        onread_buffer.substr(0, 6) == "MAPURL".substr(0, len) ||
+        onread_buffer.substr(0, 6) == "SECRET".substr(0, len)) {
+        return;
+    }
+    mungeForDisplay(onread_buffer);
+    onread_buffer = "";
 }
 
 function goUpdateMenuItems(commandset)
