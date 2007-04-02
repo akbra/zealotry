@@ -6,6 +6,13 @@ var centerStyleTag = null;
 var pm = netscape.security.PrivilegeManager;
 var privs = "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect";
 
+function sendZealotryCommand(cmd, noecho)
+{
+    var rdoc     = document.getElementById('right-frame').contentDocument;
+    var chatCode = rdoc.chatMode ? "/" : "";
+    handleInputLine(chatCode + cmd, noecho);
+}
+
 function submitSkotosSelectCommand(elementName)
 {
     var rdoc      = document.getElementById('right-frame').contentDocument;
@@ -78,12 +85,17 @@ function bubbleSettings()
     var rwin = frames["right-frame"]; // document.getElementById('right-frame');
     var rframe = rwin.document;
     var cframe = frames["center-frame"].document; // document.getElementById('center-frame').contentDocument;
+    var lframe = frames["left-frame"].document;
 
     rframe.rs = submitSkotosSelectCommand;
     rframe.rc = submitSkotosClickCommand;
 
     rframe.ro = submitOpenerWindow;
-    frames["left-frame"].document.lo = submitOpenerWindow;
+    lframe.lo = submitOpenerWindow;
+
+    lframe.sendZealotryCommand = sendZealotryCommand;
+    cframe.sendZealotryCommand = sendZealotryCommand;
+    rframe.sendZealotryCommand = sendZealotryCommand;
 
     window.skotosLink = submitSkotosLink;
 
