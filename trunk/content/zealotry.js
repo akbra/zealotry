@@ -464,12 +464,12 @@ function onPageUp()
         w.scrollTo(w.pageXOffset, 0);
 }
 
-function handleInputLine(str) {
+function handleInputLine(str, noecho) {
     if (!handleCommands(str)) {
         var expanded = myMacros.applyMacros(str);
         if (expanded) {
             window.client.onInputCompleteLine(expanded);
-            if (window.client.optionEchoSent) {
+            if (window.client.optionEchoSent && !noecho) {
                 // note: this can be many lines of text
                 if (window.client.localEcho) { 
                     outputStyledText(str, "font-style: italic");
