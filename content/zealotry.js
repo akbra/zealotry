@@ -985,6 +985,18 @@ function mungeForDisplay(str) {
     } else if (arr = (/<i>/i).exec(str)) {
 	element_name = "i";
         style = "font-style: italic";
+    } else if (arr = (/<ol>/i).exec(str)) {
+	element_name = "ol";
+        element = document.createElementNS("http://www.w3.org/1999/xhtml",
+                                           "html:ol");
+    } else if (arr = (/<ul>/i).exec(str)) {
+	element_name = "ul";
+        element = document.createElementNS("http://www.w3.org/1999/xhtml",
+                                           "html:ul");
+    } else if (arr = (/<li>/i).exec(str)) {
+	element_name = "li";
+        element = document.createElementNS("http://www.w3.org/1999/xhtml",
+                                           "html:li");
     } else if (arr = (/<hr>/i).exec(str)) {
 	element_name = "hr";
         element = document.createElementNS("http://www.w3.org/1999/xhtml",
