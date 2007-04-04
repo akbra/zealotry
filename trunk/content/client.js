@@ -239,14 +239,16 @@ function client_pop(name) {
         // Sanity check, should cause same result as previous check.
         return;
     }
-    if (this.tagStack[this.tagStack.length -1] != name) {
-        // Popping wrong element, ignore.  This "hack" makes it possible to
-	// parse the "HTML" that TEC and Grendel's Revenge throw our way.
-        return;
+    for (i = this.tagStack.length - 1; i >= 0; i--) {
+        if (this.tagStack[i] == name) {
+	    for (j = this.tagStack.length - 1; j >= i; j--) {
+		this.tagStack.pop();
+		this.current_output = this.current_output.next_output;
+	    }
+        }
     }
-    this.tagStack.pop();
-    this.current_output = this.current_output.next_output;
-    // this.sco = this.sco.next_output;
+    // Popping wrong element, ignore.  This approach makes it possible to
+    // parse the "HTML" that TEC and Grendel's Revenge throw our way.
 }
 
 CClient.prototype.connect =
