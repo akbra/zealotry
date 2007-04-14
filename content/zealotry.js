@@ -754,17 +754,18 @@ function fileMenuInit() {
         var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
         pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
+        // XXX: What the fuck are these disabled/enabled lines up to? 
         try {
             this.autoLogging = pref.getCharPref(zealousPreference("autoLogging"));
         } catch (err) {
             el.setAttribute("checked",  window.logFile != null);
-            el.setAttribute("disabled", false);
-            el.setAttribute("enabled",  true);
+            /* el.setAttribute("disabled", false);
+               el.setAttribute("enabled",  true); */
             this.autoLogging = null;
         }
         if (this.autoLogging) {
-            el.setAttribute("enabled",  false);
-            el.setAttribute("disabled", true);
+                /* el.setAttribute("enabled",  false);
+                   el.setAttribute("disabled", true); */
             el.setAttribute("checked",  false);
         }
     }
@@ -780,13 +781,13 @@ function fileMenuInit() {
         try {
             this.autoLogging = pref.getCharPref(zealousPreference("Logging"));
         } catch (err) {
-            el.setAttribute("enabled",  true);
-            el.setAttribute("disabled", false);
+                /* el.setAttribute("enabled",  true);
+                   el.setAttribute("disabled", false); */
             this.autoLogging = null;
         }
         if (this.autoLogging) {
-            el.setAttribute("enabled",  false);
-            el.setAttribute("disabled", true);
+                /* el.setAttribute("enabled",  false);
+                   el.setAttribute("disabled", true); */
         }
         
         try {
