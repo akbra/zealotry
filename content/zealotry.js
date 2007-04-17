@@ -482,6 +482,11 @@ function handleInputLine(str, noecho) {
                 // window.client.outputNL();
                 
             }
+        } else {
+	    window.client.onInputCompleteLine("");
+	    if (window.client.optionEchoSent && !noecho) {
+	        outputNL(true);
+	    }
         }
     }
 }
