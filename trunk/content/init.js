@@ -11,6 +11,13 @@ function sendZealotryCommand(cmd, noecho)
     var rdoc     = document.getElementById('right-frame').contentDocument;
     var chatCode = rdoc.chatMode ? "/" : "";
     handleInputLine(chatCode + cmd, noecho);
+
+    /*
+     * Refocus the input window after this, because this may be triggered by
+     * a mouse click in one of the sidebars, for instance.
+     */
+    var obj = document.getElementById("input");
+    obj.focus();
 }
 
 function submitSkotosSelectCommand(elementName)
