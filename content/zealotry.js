@@ -41,6 +41,7 @@ var scrolltarg = null;
 var enableBuffer = "false";
 var madeCharName = null;
 var skip_newline = false;
+var onclick_counter = 0;
 
 function makeCharName()
 {
@@ -1028,7 +1029,8 @@ function mungeForDisplay(str) {
                                            "html:a");
         element.style.cursor = "pointer";
         element.skotosLink = skotosLink;
-        element.onclick = eval("function (e) { this.skotosLink('" + escapeSkotosLink(arr[1]) + "'); }");
+	onclick_counter++;
+        eval("function onclick" + onclick_counter + "(e) { this.skotosLink('" + escapeSkotosLink(arr[1]) + "'); } element.onclick = onclick" + onclick_counter);
     } else if (arr = (/<xch_page clear=\"text\" \/>/).exec(str)) {
 	// Ignore?
     } else if (arr = (/<\/([a-z]+)>/i).exec(str)) {
