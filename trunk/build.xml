@@ -13,6 +13,7 @@
 	<zip destfile="/share/zealotry.xpi">
 	    <zipfileset dir="." includes="zealotry.jar" 
 		prefix="chrome" />
+	    <zipfileset dir="." includes="install.js" />
 	    <zipfileset dir="." includes="install.rdf" />
 	    <zipfileset dir="." includes="chrome.manifest" />
 	    <zipfileset dir="." includes="components/**" />
