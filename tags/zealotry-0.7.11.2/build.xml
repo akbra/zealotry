@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<project name="zealotry" default="createxpi">
+    
+    <target name="createjar">
+	<zip destfile="zealotry.jar" >
+	    <zipfileset dir="." includes="content/**" />
+	    <zipfileset dir="." includes="skin/**" />
+	</zip>
+    </target>
+
+    <target name="createxpi" depends="createjar">
+	<zip destfile="/share/zealotry.xpi">
+	    <zipfileset dir="." includes="zealotry.jar" 
+		prefix="chrome" />
+	    <zipfileset dir="." includes="install.js" />
+	    <zipfileset dir="." includes="install.rdf" />
+	    <zipfileset dir="." includes="chrome.manifest" />
+	    <zipfileset dir="." includes="components/**" />
+	</zip>
+    </target>
+    
+</project>
