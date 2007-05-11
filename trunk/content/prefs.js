@@ -172,7 +172,7 @@ function openMacros()
 
 function browseThemePreference(prefDesc, prefName)
 {
-    var url = prompt("What is the URL to the left side image you'd like to use?");
+    var url = prompt("What is the URL to the " + prefDesc + " image you'd like to use?");
 
     if (false) {
         var nsIFilePicker = Components.interfaces.nsIFilePicker;
