@@ -928,27 +928,34 @@ function sendCommand(str) {
     alert("hello: " + str);
 }
 
-function escapeSkotosLink(s)
+/*
+ * This function is obsolete as of Jan 3 2008 (Kalle).
+  function escapeSkotosLink(s)
 {
         // we can't use regexp replace here, because we will overwrite
         // the global RegExp object with new regexp results. 
         var len = s.length;
         var res = "";
         var seq = 0;
-        for (var i = 0; i < len; i++)
-                /* if (s[i] == "'") {
-                        res += s.substring(seq, i) + "\\";
-                        seq  = i;
-                } else if (s[i] == '%') {
-                        res += s.substring(seq, i) + "%25";
-                        seq  = i+1;
-                } else */ if (s.substr(i, 6) == "&quot;") {
-                        res += s.substring(seq, i) + '"';
-                        seq  = i+6;
-                }
+        for (var i = 0; i < len; i++) {
+            if (s[i] == "'") {
+                res += s.substring(seq, i) + "&apos;";
+                seq  = i+1;
+            }
+            * else if (s[i] == '%') {
+               res += s.substring(seq, i) + "%25";
+               seq  = i+1;
+               } *
+            else if (s.substr(i, 6) == "&quot;") {
+                res += s.substring(seq, i) + '"';
+                seq  = i+6;
+            }
+        }
         return res + s.substring(seq);
-        /* XXX: Somehow, the necessity to escape ' and % vanished. Or did it? */
+        * XXX: Somehow, the necessity to escape ' and % vanished. Or did it? *
+        * XXX: No it didn't, but we're working on it. *
 }
+ */
 
 var cow = 0;
 function mungeForDisplay(str) {
@@ -978,14 +985,14 @@ function mungeForDisplay(str) {
     /* End SKOOT 2.0. */
 
     if (arr = (/<font color=\"([^>]*)\">/i).exec(str)) {
-	element_name = "font";
+        element_name = "font";
         style = "color: " + arr[1];
     } else if (arr = (/<font color=([^>]*)>/i).exec(str)) {
-	element_name = "font";
+        element_name = "font";
         style = "color: " + arr[1];
     } else if (arr = (/<font size=\+1>/i).exec(str)) {
-	element_name = "font";
-	style = "font-size: larger";
+        element_name = "font";
+        style = "font-size: larger";
     } else if (arr = (/<b>/i).exec(str)) {
 	element_name = "b";
         style = "font-weight: bold";
@@ -1024,13 +1031,13 @@ function mungeForDisplay(str) {
         frames["center-frame"].document.body.style.color = arr[2];
         // scrollback.contentDocument.body.style.color = arr[2];
     } else if (arr = (/<a xch_cmd='([^>]*)'>/i).exec(str)) {
-	element_name = "a";
+        element_name = "a";
         element = document.createElementNS("http://www.w3.org/1999/xhtml",
                                            "html:a");
         element.style.cursor = "pointer";
         element.skotosLink = skotosLink;
-	onclick_counter++;
-        eval("function onclick" + onclick_counter + "(e) { this.skotosLink('" + escapeSkotosLink(arr[1]) + "'); } element.onclick = onclick" + onclick_counter);
+        onclick_counter++;
+        eval("function onclick" + onclick_counter + "(e) { this.skotosLink(\"" + /* escapeSkotosLink */(arr[1]) + "\"); } element.onclick = onclick" + onclick_counter);
     } else if (arr = (/<xch_page clear=\"text\" \/>/).exec(str)) {
 	// Ignore?
     } else if (arr = (/<\/([a-z]+)>/i).exec(str)) {
