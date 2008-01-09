@@ -30,6 +30,8 @@ const ZEALOUS_VERSION = "0.7.11.2";
 const ZEALOUS_SUPPORT = "SKOOT2";
 const POLL_DELAY = 50;
 
+function alert(s) { if (!confirm(s)) window.alert = null; }
+
 var bgCrap = null;
 var munge_buffer = "";
 var onread_buffer = "";
@@ -42,6 +44,7 @@ var enableBuffer = "false";
 var madeCharName = null;
 var skip_newline = false;
 var onclick_counter = 0;
+var hotRecipient = null;
 
 function makeCharName()
 {
@@ -553,12 +556,25 @@ function onInputKeyUp(e)
             window.client.prevInputBuffer(e.target);
             break;
         }
-        
+            
     case 78:
         if (e.ctrlKey) {
             // ctrl + 'N'
             window.client.nextInputBuffer(e.target);
             break;
+        }
+
+    case 188: // ","
+        if (e.ctrlKey != true && e.shiftKey != true && e.altKey != true) {
+            // Hot-reply to a @page.
+            if (hotRecipient != null) {
+                var textBox = document.getElementById("input");
+                if (textBox.value == "" || textBox.value == ",") {
+                    textBox.value = "@page " + hotRecipient + " \"";
+                    textBox.focus();
+                    break;
+                }
+            }
         }
         
     default:
@@ -1085,14 +1101,19 @@ function mungeForDisplay(str) {
         str = RegExp.leftContext;
     }
 
-    if (pageBeep == true) {
-    	var pattern = /^\[OOC Page\] from/;
-    	if (pattern.test(str) == true) {
-    	    gSound = Components.classes["@mozilla.org/sound;1"].createInstance(Components.interfaces.nsISound);
-    	    gSound.beep();
+    // var page = (/^\[OOC Page\] from ([^:]*)/).exec(str);
+    var page = (/^\[OOC Page\]([^]*)from ([^:]*)/).exec(str);
+    if (page) {
+        if (pageBeep == true) {
+            gSound = Components.classes["@mozilla.org/sound;1"].createInstance(Components.interfaces.nsISound);
+            gSound.beep();
         }
+        var user = (/\[([^\/]*)\/([^\]]*)/).exec(page[2]);
+        user = user ? user[2] : page[2];
+        hotRecipient = user;
     }
 
+    // XXX: ignoreOOC is already available within the game; it's pointless having it here as well.
     if (ignoreOOC == true) {
         var pattern = /^OOC --+/;
         if (pattern.test(str) == true) {
