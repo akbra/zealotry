@@ -945,33 +945,42 @@ function sendCommand(str) {
 }
 
 /*
- * This function is obsolete as of Jan 3 2008 (Kalle).
-  function escapeSkotosLink(s)
-{
-        // we can't use regexp replace here, because we will overwrite
-        // the global RegExp object with new regexp results. 
-        var len = s.length;
-        var res = "";
-        var seq = 0;
-        for (var i = 0; i < len; i++) {
-            if (s[i] == "'") {
-                res += s.substring(seq, i) + "&apos;";
-                seq  = i+1;
-            }
-            * else if (s[i] == '%') {
-               res += s.substring(seq, i) + "%25";
-               seq  = i+1;
-               } *
-            else if (s.substr(i, 6) == "&quot;") {
-                res += s.substring(seq, i) + '"';
-                seq  = i+6;
-            }
-        }
-        return res + s.substring(seq);
-        * XXX: Somehow, the necessity to escape ' and % vanished. Or did it? *
-        * XXX: No it didn't, but we're working on it. *
-}
+ * This function was obsoleted, but reinstated after discovering that quotes were not
+ * parsed correctly.
  */
+function escapeSkotosLink(s)
+{
+    /*
+     * we can't use regexp replace here, because we will overwrite
+     * the global RegExp object with new regexp results.
+     */
+    var len = s.length;
+    var res = "";
+    var seq = 0;
+    for (var i = 0; i < len; i++) {
+        /*
+         * We actually have to unescape HTML entities and crap. And  there's no built-ins for
+         * that in JS. Yay.
+         */
+        if (s.substr(i, 6) == "&quot;") {
+            res += s.substring(seq, i) + "\\\"";
+            seq  = i+6;
+        }
+        else if (s.substr(i, 4) == "&lt;") {
+            res += s.substring(seq, i) + "<";
+            seq = i+4;
+        }
+        else if (s.substr(i, 4) == "&gt;") {
+            res += s.substring(seq, i) + ">";
+            seq = i+4;
+        }
+        else if (s.substr(i, 5) == "&amp;") {
+            res += s.substring(seq, i) + "&";
+            seq = i+5;
+        }
+    }
+    return res + s.substring(seq);
+}
 
 var cow = 0;
 function mungeForDisplay(str) {
@@ -1053,7 +1062,7 @@ function mungeForDisplay(str) {
         element.style.cursor = "pointer";
         element.skotosLink = skotosLink;
         onclick_counter++;
-        eval("function onclick" + onclick_counter + "(e) { this.skotosLink(\"" + /* escapeSkotosLink */(arr[1]) + "\"); } element.onclick = onclick" + onclick_counter);
+        eval("function onclick" + onclick_counter + "(e) { this.skotosLink(\"" + escapeSkotosLink(arr[1]) + "\"); } element.onclick = onclick" + onclick_counter);
     } else if (arr = (/<xch_page clear=\"text\" \/>/).exec(str)) {
 	// Ignore?
     } else if (arr = (/<\/([a-z]+)>/i).exec(str)) {
