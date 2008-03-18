@@ -8,8 +8,87 @@ var submit = null;
 var pm = netscape.security.PrivilegeManager;
 var privs = "UniversalBrowserRead UniversalBrowserWrite UniversalXPConnect";
 
+/*
+ * Request the directory in which macros should be/are stored.
+ * Returns the macros file for the current char, or null if aborted.
+ */
+function requestMacrosDirectory(returnMacrosFile) {
+    var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
+    pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
+    var nsIFilePicker = Components.interfaces.nsIFilePicker;
+    var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+    filePicker.init(window, "Where should the macro files live?", nsIFilePicker.modeGetFolder);
+    var res = filePicker.show();
+    if (res == nsIFilePicker.returnCancel) {
+        dump("result is canceled. exiting\n");
+        return null;
+    }
+    var macroFolder = filePicker.file.path;
+    // Figure out if we need \\ or /.
+    var separator = (macroFolder && macroFolder[1] == ':' ? "\\" : "/");
+    dump("separator (os dependent) detected to be: " + separator + "\n");
+    var macroFile = macroFolder + separator + pref.getCharPref("zealous.temp.filename");
+    pref.setCharPref("zealous.temp.macro", macroFile);
+    return returnMacrosFile ? macroFile : macroFolder;
+}
+
+function loadMacrosFromDisk(macro) {
+    var macros = null;
+
+    if (macro && macro != false && macro != "false") {
+        var mptr = null;
+        
+        document.getElementById('macrostore').setAttribute("value", macro);
+        mptr = new File(macro);
+        if (mptr.exists()) {
+            // alert("macro file " + macro + " exists");
+            mptr.open("r");
+            macros = mptr.read();
+            // alert("read: " + macros);
+        } else {
+            // alert("macro file does not exist; testing");
+            /*
+             * macros are gone, even though we have a macro location set ... this may mean that no macros
+             * exist (for this character) or it may mean that the macros were moved! we decide by trying
+             * to create the macros file for this char... wasteful I know.
+             */
+            try {
+                macro.open("w");
+                macro.close();
+                // alert("test OK -- moving on");
+            } catch (err) {
+                // alert("test FAILED -- asking for new macros dir");
+                /*
+                 * Okay, here's the situation: we had a macros directory, but no macros file was found.
+                 * We checked if this was a matter of the macro simply not existing for this character
+                 * by trying to create an empty macro file for the character in question, BUT...
+                 * ... that threw an exception. An exception is thrown in cases where e.g. the directory
+                 * doesn't exist or similar. Thus, we now ask the user to give us the location for macros
+                 * again.
+                 */
+                macro = requestMacrosDirectory(true);
+                /*
+                 * We call ourselves repeatedly, until user aborts. Hopefully we only end up doing it once,
+                 * and that's to fetch the macros from the new location.
+                 */
+                // alert("got \"" + macro + "\": reloading if non-nil");
+                if (macro) return loadMacrosFromDisk(macro);
+            }
+        }
+    } else {
+        document.getElementById('macrostore').setAttribute("value", "No macro file set...");
+    }
+
+    // alert("if \"" + macros + "\", set the macrotext value");
+    if (macros) {
+        document.getElementById('macrotext').value = macros;
+    }
+}
+
 function doMainLoad()
 {
+    var macro = null;
+    
     var pref = Components.classes['@mozilla.org/preferences-service;1'].getService();
     pref = pref.QueryInterface(Components.interfaces.nsIPrefBranch);
 
@@ -22,25 +101,14 @@ function doMainLoad()
     generate_themeLists();
 
     try {
-        var macro = pref.getCharPref("zealous.temp.macro");
+        macro = pref.getCharPref("zealous.temp.macro");
         if (macro == false) macro = null;
     } catch (err) {
         macro = null;
     }
 
-    if (macro && macro != false && macro != "false") {
-        document.getElementById('macrostore').setAttribute("value", macro);
-        var macro = new File(macro);
-        if (macro.exists()) {
-            macro.open("r");
-            var macros = macro.read();
-        }
-    } else {
-        document.getElementById('macrostore').setAttribute("value", "No macro file set...");
-    }
-
-    if (macros) {
-        document.getElementById('macrotext').value = macros;
+    if (macro != null) {
+        loadMacrosFromDisk(macro);
     }
 }
 
@@ -99,39 +167,46 @@ function doMainUnload()
     dump("macro = " + macro + "\n");
     if (macro && macro != false && macro != "false") {
         dump("it is, it isn't false, it isn't \"false\"\n");
-        var mptr = new File(macro);
         // Changed "var macro = new File(macro);" to "var mptr = ...".
         // XXX: Kalle removed the if case. If macros break apart, re-add it.
+        // XXX: Macros did break apart, but in File open, and for a specific reason that should be addressed.
         // if (mptr.exists()) {
-        mptr.open("w");
-        mptr.write(document.getElementById('macrotext').value);
-        mptr.close();
-        //}
-    } else if (document.getElementById('macrotext').value.length > 0) {
+        var mptr = null;
+        mptr = new File(macro);
+        try {
+            mptr.open("w");
+            mptr.write(document.getElementById('macrotext').value);
+            mptr.close();
+        } catch (err) {
+            /*
+             * It seems the macro file writing failed. This can mean a variety of things,
+             * but most probable cause is that user moved the macros.
+             */
+            macro = null;
+        }
+        //} // if (mptr.exists())
+    } else macro = null;
+    /*
+     * We add !macro to if case below because we may end up failing to open the macro
+     * file in the above if case; if that is the case, user probably moved the macros
+     * file or deleted it (CM TAS #30667).
+     */
+    if (!macro && document.getElementById('macrotext').value.length > 0) {
         dump("it isn't, or it's false, or it's \"false\"\n");
         // Player set some macros but doesn't have a place to store them. Lets fix that.
-        var nsIFilePicker = Components.interfaces.nsIFilePicker;
-        var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
-        filePicker.init(window, "Where should macro files live?", nsIFilePicker.modeGetFolder);
-        var res = filePicker.show();
-        if (res == nsIFilePicker.returnCancel) {
-            dump("result is canceled. exiting\n");
-            return;
-        }
-        macroFolder = filePicker.file.path;
-        // Figure out if we need \\ or /.
-        var separator = (macroFolder && macroFolder[1] == ':' ? "\\" : "/");
-        dump("separator (os dependent) detected to be: " + separator + "\n");
-        pref.setCharPref("zealous.temp.macro", macroFolder + separator + pref.getCharPref("zealous.temp.filename"));
+        var macroFolder = requestMacrosDirectory();
+        if (!macroFolder) return; // was aborted
 
         dump("configFile creation: " + macroFolder + "\n");
         configFile = new File(macroFolder);
         configFile.appendRelativePath(pref.getCharPref("zealous.temp.filename"));
 
+       // alert("creatin config file");
         configFile.create();
         configFile.open("w");
         configFile.write(document.getElementById('macrotext').value);
         configFile.close();
+        // alert("done with that");
         dump("done creating\n");
     }
     window.submit = true;
@@ -611,6 +686,7 @@ function doDelete()
     return;
 }
 
+// XXX: What is this, anyway?
 function parseXML()
 {
     var xmlDoc = document.implementation.createDocument("", "", null);
