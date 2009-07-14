@@ -26,7 +26,7 @@
  *
  */
 
-const ZEALOUS_VERSION = "0.7.11.5";
+const ZEALOUS_VERSION = "0.7.11.6";
 const ZEALOUS_SUPPORT = "SKOOT2";
 const POLL_DELAY = 50;
 
@@ -1061,8 +1061,9 @@ function mungeForDisplay(str) {
                                            "html:a");
         element.style.cursor = "pointer";
         element.skotosLink = skotosLink;
+	//	alert("skotosLink = " + skotosLink + "; window.skotosLink = " + window.skotosLink + "; element.skotosLink = " + element.skotosLink);
         onclick_counter++;
-        eval("function onclick" + onclick_counter + "(e) { this.skotosLink(\"" + escapeSkotosLink(arr[1]) + "\"); } element.onclick = onclick" + onclick_counter);
+        eval("function onclick" + onclick_counter + "(e) { skotosLink(\"" + escapeSkotosLink(arr[1]) + "\"); } element.onclick = onclick" + onclick_counter);
     } else if (arr = (/<xch_page clear=\"text\" \/>/).exec(str)) {
 	// Ignore?
     } else if (arr = (/<\/([a-z]+)>/i).exec(str)) {
