@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+
+<window id="pref-window"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+    onload="doMainLoad();"
+    onunload="doCancel();"
+    title="Zealotry Preferences"
+    flex="1"
+    orient="vertical" windowtype="zealotry:preferences">
+
+    <script type="application/x-javascript" src="jslib.js"/>
+    <script type="application/x-javascript" src="filesystem.js"/>
+    <script type="application/x-javascript" src="file.js"/>
+    <script type="application/x-javascript" src="prefs.js"/>
+
+    <vbox flex="1">
+	<tabbox>
+	    <tabs>
+		<tab label="General" selected="true"/>
+		<tab label="Fonts"/>
+		<tab label="Themes"/>
+		<tab label="Logging"/>
+		<tab label="Macros"/>
+	    </tabs>
+	    <tabpanels flex="1">
+		<tabpanel id="generalpanel">
+		    <vbox flex="1">
+			<box orient="horizontal" align="center">
+			    <checkbox id="echocheck" label="Echo"/>
+			</box>
+			<!-- box orient="horizontal" align="center">
+			    <checkbox id="scrollbackcheck" label="Enable Scrollback Buffer"/>
+			</box -->
+			<box orient="horizontal" align="center">
+			    <checkbox id="blinkcheck" label="Enable Title Alert"/>
+			</box>
+			<box orient="horizontal" align="center">
+			    <checkbox id="pagecheck" label="Enable Page System Beep"/>
+			</box>
+			<box orient="horizontal" align="center">
+			    <checkbox id="ooccheck" label="Ignore OOC Comments"/>
+			</box>
+		    </vbox>
+		</tabpanel>
+		<tabpanel id="fontspanel" orient="vertical">
+		    <description>
+			Your selected choice is in large, bold font.
+		    </description>
+		    <grid>
+			<columns>
+			    <column flex="1"/>
+			    <column flex="2"/>
+			</columns>
+			<rows>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Your Font List: " control="fonts" crop="end"/>
+				</hbox>
+				<menulist id="fonts" label="Select Your Font">
+				    <menupopup id="font-list"/>
+				</menulist>
+			    </row>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Font Sizes: " control="sizes" crop="end"/>
+				</hbox>
+				<menulist id="sizes" label="Select Your Font Size">
+				    <menupopup id="sizes-menu"/>
+				</menulist>
+			    </row>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Fixed Font Sizes: " control="pre-sizes" crop="end"/>
+				</hbox>
+				<menulist id="pre-sizes" label="Select Your Fixed Font Size">
+				    <menupopup id="pre-sizes-menu"/>
+				</menulist>
+			    </row>
+			    <!-- row align="center">
+				<hbox pack="start">
+				    <label value="Scrollback Font Style: " control="sb-font" crop="end"/>
+				</hbox>
+				<menulist id="sb-font" label="Select Your Scrollback Font Style">
+				    <menupopup id="sb_font"/>
+				</menulist>
+			    </row>
+                            <row align="center">
+                                <hbox pack="start">
+                                    <label value="Scrollback Font Size: " control="sb-size" crop="end"/>
+                                </hbox>
+                                <menulist id="sb-size" label="Select Your Scrollback Font Size">
+                                    <menupopup id="sb_size"/>
+                                </menulist>
+                            </row>
+                            <row align="center">
+                                <hbox pack="start">
+                                    <label value="Scrollback Fixed Font Size: " control="sb-presize" crop="end"/>
+                                </hbox>
+                                <menulist id="sb-presize" label="Select Your Scrollback Fixed Font Size">
+                                    <menupopup id="sb_presize"/>
+                                </menulist>
+                            </row -->
+			</rows>
+		    </grid>
+		</tabpanel>
+		<tabpanel id="themepanel">
+		    <grid>
+			<columns>
+			    <column flex="1"/>
+			    <column flex="2"/>
+			    <column flex="3"/>
+			    <column flex="4"/>
+			</columns>
+			<rows>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Background Image: " crop="end"/>
+				</hbox>
+				<menulist id="background" editable="true">
+				    <menupopup id="bg_image"/>
+				</menulist>
+				<button label="New" oncommand="doNewBG();"/>
+				<button label="Delete" oncommand="doDelete();"/>
+			    </row>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Left Side Image: " crop="end"/>
+				</hbox>
+				<menulist id="leftsidebar" editable="true" sizetopopup="false">
+				    <menupopup id="left_side"/>
+				</menulist>
+				<button label="New" oncommand="doNewLS();"/>
+				<button label="Delete" oncommand="doDelete();"/>
+			    </row>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Right Side Image: " crop="end"/>
+				</hbox>
+				<menulist id="rightsidebar" editable="true">
+				    <menupopup id="right_side"/>
+				</menulist>
+				<button label="New" oncommand="doNewRS();"/>
+				<button label="Delete" oncommand="doDelete();"/>
+			    </row>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Left Logo Image: " crop="end"/>
+				</hbox>
+				<menulist id="leftlogo" editable="true">
+				    <menupopup id="left_logo"/>
+				</menulist>
+				<button label="New" oncommand="doNewLL();"/>
+				<button label="Delete" oncommand="doDelete();"/>
+			    </row>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Right Logo Image: " crop="end"/>
+				</hbox>
+				<menulist id="rightlogo" editable="true">
+				    <menupopup id="right_logo"/>
+				</menulist>
+				<button label="New" oncommand="doNewRL();"/>
+				<button label="Delete" oncommand="doDelete();"/>
+			    </row>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Getting Started Button: " crop="end"/>
+				</hbox>
+				<menulist id="getbutton" editable="true">
+				    <menupopup id="get_button"/>
+				</menulist>
+				<button label="New" oncommand="doNewGB();"/>
+				<button label="Delete" oncommand="doDelete();"/>
+			    </row>
+			    <row align="center">
+				<hbox pack="start">
+				    <label value="Mastering Chat Button: " crop="end"/>
+				</hbox>
+				<menulist id="masterbutton" editable="true">
+				    <menupopup id="master_button"/>
+				</menulist>
+				<button label="New" oncommand="doNewMB();"/>
+				<button label="Delete" oncommand="doDelete();"/>
+			    </row>
+			</rows>
+		    </grid>
+		</tabpanel>
+		<tabpanel id="loggingpanel" orient="vertical"/>
+		<tabpanel id="macropanel" orient="vertical" flex="1">
+		    <description>
+			From here you can add, remove or edit your macros. Macros must start with MACRO ADD, all in capital letters.
+		    </description>
+		    <grid>
+		    	<columns>
+			    <column flex="1"/>
+			    <column flex="1"/>
+			    <column flex="1"/>
+		    	</columns>
+                    	<rows>
+                            <row align="center">
+                            	<hbox pack="start">
+                                    <label value="Macros stored in: " crop="end"/>
+                            	</hbox>
+				<label id="macrostore"/>
+				<button label="Show Macros" id="openmacro" oncommand="openMacros();"/>
+			    </row>
+                        </rows>
+		    </grid>
+		</tabpanel>
+	    </tabpanels>
+	</tabbox>
+        <vbox flex="1">
+            <textbox id="macrotext" flex="1" rows="10" collapsed="true" multiline="true"/>
+        </vbox>
+	<!-- spacer style="height: 10px"/ -->
+	<hbox>
+	<button id="submit-button" label="Submit Changes" default="true" onclick="doMainUnload();"/>
+	<button id="cancel-button" label="Cancel" onclick="doCancel();"/>
+	</hbox>
+    </vbox>
+</window>
+

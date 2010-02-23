@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<zealotry>
+    <skin
+  	background    = "http://age.eternalis.com/desktops/smoke-grey.jpg"
+  	left_bar      = "http://age.eternalis.com/marrach/zealotry/side_panels_background.gif"
+  	right_bar     = "http://age.eternalis.com/marrach/zealotry/side_panels_background.gif"
+  	left_logo     = "http://age.eternalis.com/marrach/zealotry/skotos_left_banner.gif"
+  	right_logo    = "http://age.eternalis.com/marrach/zealotry/skotos_right_banner.gif"
+  	get_button    = "http://age.eternalis.com/marrach/zealotry/getting_started.gif"
+  	master_button = "http://age.eternalis.com/marrach/zealotry/mastering_chat.gif"
+	/>
+</zealotry>
