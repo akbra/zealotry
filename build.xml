@@ -10,7 +10,7 @@
     </target>
 
     <target name="createxpi" depends="createjar">
-	<zip destfile="/share/zealotry.xpi">
+	<zip destfile="zealotry.xpi">
 	    <zipfileset dir="." includes="zealotry.jar" 
 		prefix="chrome" />
 	    <zipfileset dir="." includes="install.js" />
