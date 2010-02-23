@@ -26,7 +26,7 @@
  *
  */
 
-const ZEALOUS_VERSION = "0.7.11.6";
+const ZEALOUS_VERSION = "0.7.11.7";
 const ZEALOUS_SUPPORT = "SKOOT2";
 const POLL_DELAY = 50;
 
