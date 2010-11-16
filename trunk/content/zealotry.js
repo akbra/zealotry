@@ -1055,6 +1055,10 @@ function mungeForDisplay(str) {
         setTheme(arr);
         frames["center-frame"].document.body.style.color = arr[2];
         // scrollback.contentDocument.body.style.color = arr[2];
+    } else if (arr = (/<body bgcolor=\'([^\']*)\'>/i).exec(str)) {
+	dump("body [" + arr + "]");
+	setTheme(arr);
+	// No 'text' provided. Not changing anything.
     } else if (arr = (/<a xch_cmd='([^>]*)'>/i).exec(str)) {
         element_name = "a";
         element = document.createElementNS("http://www.w3.org/1999/xhtml",
