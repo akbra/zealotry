@@ -6,7 +6,7 @@
 
 // Editable Items Begin
 var displayName         = "Skotos Zealotry"; // The name displayed to the user (don't include the version)
-var version             = "0.7.11.7";
+var version             = "0.7.11.8";
 var name                = "zealotry"; // The leafname of the JAR file (without the .jar part)
 
 // The following three sets of variables tell this installer script how your
