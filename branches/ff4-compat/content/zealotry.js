@@ -763,7 +763,8 @@ function onRead(bigstr) {
                     break;
                 }
                 try {
-                    window.center_frame.newSkootMessage
+		    // at this point, we should have compatted center_frame, so no need to do it repeatedly
+                    window.center_frame.wrappedJSObject.newSkootMessage
                         (str.substring(6, sppos),
                          str.substring(sppos + 1),
                          window.left_frame,
@@ -774,7 +775,7 @@ function onRead(bigstr) {
             case "MAPURL":
                 // XXX: This is obsolete.
                 try {
-                    window.center_frame.newSkootMessage
+                    window.center_frame.wrappedJSObject.newSkootMessage
                         ("1",
                          str.substring(7),
                          window.left_frame,
