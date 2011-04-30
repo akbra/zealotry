@@ -288,6 +288,7 @@ function pollFrames() {
 	// we do a final check here, because the above is not working very well in FF 4. we need output_body element in the center frame,
 	// and if we don't have it, we'll puke; it sometimes does not appear instantly, so we have to double check its existence
 	dump("got docs, probably; checking for output element... \n");
+	bcEnsureWrapped(window.center_frame.document);
 	if (window
 	    && window.center_frame
 	    && window.center_frame.document
@@ -313,6 +314,7 @@ function mainStep()
 
     window.client = new CClient(document, window);
 
+    bcEnsureWrapped(output.wrappedJSObject);
     dump("output = " + output + "\n");
     dump("output.wrappedJSObject = " + output.wrappedJSObject + "\n");
     var realOutput = window.center_frame.document.createElement("div");
@@ -335,6 +337,7 @@ function mainStep()
     }
 
     dump("connecting...\n\thost: ");
+    bcEnsureWrapped(center_frame);
     try { dump(window.center_frame.wrappedJSObject.getHost()); } catch (exc) { dump("[host retrieval failed: exception = " + exc + "]"); }
     dump("\n\tport: ");
     try { dump(window.center_frame.wrappedJSObject.getPort()); } catch (exc) { dump("[port retrieval failed: exception = " + exc + "]"); }
@@ -679,6 +682,7 @@ function onClose(status, errStr)
 }
 
 function loadCookie(name) {
+    bcEnsureWrapped(center_frame);
     var allcookies = center_frame.wrappedJSObject.dacookie();
 
     if (!allcookies) {
