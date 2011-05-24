@@ -43,7 +43,6 @@ const kPROTOCOL_CONTRACTID = "@mozilla.org/network/protocol;1?name=" + kSCHEME;
 const kPROTOCOL_CID = Components.ID("375cf7be-84f5-11da-bdd5-00a0cc5ad2cf");
 
 // Mozilla defined
-const kCHROMEHANDLER_CID_STR = "{61ba33c0-3031-11d3-8cd0-0060b0fc14a3}";
 const kSIMPLEURI_CONTRACTID = "@mozilla.org/network/simple-uri;1";
 const kIOSERVICE_CONTRACTID = "@mozilla.org/network/io-service;1";
 const nsISupports = Components.interfaces.nsISupports;
@@ -51,12 +50,12 @@ const nsIIOService = Components.interfaces.nsIIOService;
 const nsIProtocolHandler = Components.interfaces.nsIProtocolHandler;
 const nsIURI = Components.interfaces.nsIURI;
 
-function WoeProtocol()
+function Protocol()
 {
 }
 
-WoeProtocol.prototype =
-    {
+Protocol.prototype =
+{
         QueryInterface: function(iid)
         {
             if (!iid.equals(nsIProtocolHandler) &&
@@ -68,7 +67,7 @@ WoeProtocol.prototype =
         scheme: kSCHEME,
         defaultPort: 5090,
         protocolFlags: nsIProtocolHandler.URI_NORELATIVE |
-        nsIProtocolHandler.URI_NOAUTH,
+                        nsIProtocolHandler.URI_NOAUTH,
 
         allowPort: function(port, scheme)
         {
@@ -87,12 +86,25 @@ WoeProtocol.prototype =
         newChannel: function(aURI)
         {
             /* create dummy nsIURI and nsIChannel instances */
+            dump("woe:newChannel(" + aURI + ")\n");
             var ios = Components.classes[kIOSERVICE_CONTRACTID].getService(nsIIOService);
             
             return ios.newChannel("chrome://zealotry/content/woe.xul", null, null);
         },
+
+        // XPCOMUtils stuff
+        classDescription: "Skotos Tree of Woe protocol handler",
+        classID: kPROTOCOL_CID,
+        contractID: kPROTOCOL_CONTRACTID,
     }
 
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+if (XPCOMUtils.generateNSGetFactory)
+    var NSGetFactory = XPCOMUtils.generateNSGetFactory([Protocol]);
+else
+    var NSGetModule = XPCOMUtils.generateNSGetModule([Protocol]);
+
+if (0) {
 var WoeProtocolFactory = new Object();
 
 WoeProtocolFactory.createInstance = function (outer, iid)
@@ -147,4 +159,6 @@ WoeModule.canUnload = function (compMgr)
 function NSGetModule(compMgr, fileSpec)
 {
     return WoeModule;
+}
+
 }
