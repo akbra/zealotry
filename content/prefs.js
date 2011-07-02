@@ -390,30 +390,21 @@ function setMasterButton(url)
 
 function generate_fontmenu()
 {
-    var langgroup = new Array("x-western");
-    var fonttype  = new Array("serif", "sans-serif", "cursive", "fantasy", "monospace");
-    var fontList  = Components.classes["@mozilla.org/gfx/fontlist;1"].createInstance(Components.interfaces.nsIFontList);
-    var results   = new Array();
-    var lsz       = langgroup.length;
-    var fsz       = fonttype.length;
+    // 2011-07-02:Kalle :: fontlist was removed in FF 2.0 or so. New way to do it below.
+    var fontEnumerator = Components.classes["@mozilla.org/gfx/fontenumerator;1"]
+	.getService(Components.interfaces.nsIFontEnumerator);
+    var fontlist  = fontEnumerator.EnumerateAllFonts({});
+
+    var resultx = 0;
+    var results   = new Array(fontlist.length);
+    var fontKey;
     var fontNameStr;
     var fontName;
-    var found     = new Array();
-    var i, j;
     
-    for (i = 0; i < lsz; i++) {
-        for (j = 0; j < fsz; j++) {
-            var fontEnumerator = fontList.availableFonts(langgroup[i], fonttype[j]);
-            while (fontEnumerator.hasMoreElements()) {
-                fontName = fontEnumerator.getNext();
-                fontName = fontName.QueryInterface(Components.interfaces.nsISupportsString);
-                fontNameStr = fontName.toString();
-                if (!found[fontNameStr]) {
-                    results[results.length] = fontNameStr;
-                    found[fontNameStr] = 1;
-                }
-            }
-        }
+    for (fontKey in fontlist) {
+	fontName = fontlist[fontKey];
+	fontNameStr = fontName.toString();
+	results[resultx++] = fontNameStr;
     }
     
     results.sort();
