@@ -1,0 +1,14 @@
+content 	zealotry  					jar:chrome/zealotry.jar!/content/
+skin    	zealotry  zealotry				jar:chrome/zealotry.jar!/skin/zealotry/
+style   	chrome://browser/content/browser.xul    	chrome://zealotry/skin/browserOverlay.css
+
+# zealotry:[char@]game protocol 
+# [mozilla] The {classID} here must match the classID in mycomponent.js
+component {c8c7dbba-8405-11da-b434-00a0cc5ad2cf} components/zealotry-service.js
+contract @mozilla.org/network/protocol;1?name=zealotry {c8c7dbba-8405-11da-b434-00a0cc5ad2cf}
+category profile-after-change ZealotryModule @mozilla.org/network/protocol;1?name=zealotry
+
+# woe:[game] protocol
+component {375cf7be-84f5-11da-bdd5-00a0cc5ad2cf} components/woe-service.js
+contract @mozilla.org/network/protocol;1?name=woe {375cf7be-84f5-11da-bdd5-00a0cc5ad2cf}
+category profile-after-change ZealotryWoeModule @mozilla.org/network/protocol;1?name=woe
