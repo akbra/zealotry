@@ -86,13 +86,15 @@ function bubbleSettings()
         ('<html><head><style></style></head><body></body>');
     sb.close();
     */
-    centerStyleTag = document.getElementById('center-frame').contentDocument.getElementsByTagName("style")[0];
+
+    centerStyleTag =// window.center_frame.wrappedJSObject.document.getElementsByTagName("style")[0];
+	document.getElementById('center-frame').contentDocument.getElementsByTagName("style")[0];
     // scrollbackStyleTag = sb.getElementsByTagName("style")[0];
 
-    var rwin = frames["right-frame"]; // document.getElementById('right-frame');
+    var rwin = window.right_frame.wrappedJSObject; //frames["right-frame"]; // document.getElementById('right-frame');
     var rframe = rwin.document;
-    var cframe = frames["center-frame"].document; // document.getElementById('center-frame').contentDocument;
-    var lframe = frames["left-frame"].document;
+    var cframe = frames["center-frame"].wrappedJSObject.document; // document.getElementById('center-frame').contentDocument;
+    var lframe = frames["left-frame"].wrappedJSObject.document;
 
     rframe.rs = submitSkotosSelectCommand;
     rframe.rc = submitSkotosClickCommand;
@@ -106,9 +108,10 @@ function bubbleSettings()
 
     window.skotosLink = submitSkotosLink;
 
-    frames["center-frame"].document.
+    cframe.skotosLink = submitSkotosLink;
+    //frames["center-frame"].document.
             // document.getElementById('center-frame').contentWindow.
-            skotosLink = submitSkotosLink;
+    //        skotosLink = submitSkotosLink;
     generate_bgList();
     // rwin.window.wrap_skotos_events();
 }
