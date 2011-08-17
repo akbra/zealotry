@@ -1,6 +1,6 @@
 content 	zealotry  					jar:chrome/zealotry.jar!/content/
 skin    	zealotry  zealotry				jar:chrome/zealotry.jar!/skin/zealotry/
-style   	chrome://browser/content/browser.xul    	chrome://zealotry/skin/browserOverlay.css
+style   	chrome://browser/content/browser.xul    	chrome://zealotry/skin/browserOverlay.xul
 
 # zealotry:[char@]game protocol 
 # [mozilla] The {classID} here must match the classID in mycomponent.js
